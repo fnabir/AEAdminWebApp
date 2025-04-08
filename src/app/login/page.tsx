@@ -18,7 +18,7 @@ import {login, logout} from "@/lib/functions";
 export default function LoginPage() {
   const router = useRouter();
   const [submit, setSubmit] = useState<boolean>(false);
-  const access = ["wGCJbfgAZIQgM6Wh5wz4x7KZlpF2"]
+  const access = ["wGCJbfgAZIQgM6Wh5wz4x7KZlpF2", "Q34DP3VFxwTzJqnENDetTiMUZQv1", "kclUN4PVCeW69y6X28rbzr2p4kW2"]
 
   const {
     register,

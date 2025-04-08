@@ -19,8 +19,8 @@ export default function Home() {
   ]
 
   const currentYear = new Date().getFullYear()
-  const [snapshotFileLastYear, loadingFileLastYear] = useListKeys(getDatabaseReference(`files/${currentYear-1}`));
-  const [snapshotFileCurrentYear, loadingFileCurrentYear] = useListKeys(getDatabaseReference(`files/${currentYear}`));
+  const [snapshotFileLastYear] = useListKeys(getDatabaseReference(`files/${currentYear-1}`));
+  const [snapshotFileCurrentYear] = useListKeys(getDatabaseReference(`files/${currentYear}`));
 
   const FilesCard = ({title, count, date, year} : {title: string, count: number, date?: string, year: string|number}) => {
     return (

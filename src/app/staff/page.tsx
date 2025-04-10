@@ -80,7 +80,7 @@ export default function StaffBalancePage() {
               </CardIcon>
             : <div className={"space-y-2"}>
               {
-                balanceData.sort((a: DataSnapshot, b: DataSnapshot) => (a.val().position - b.val().position)).map((item: DataSnapshot, index: number) => {
+                balanceData.sort((a: DataSnapshot, b: DataSnapshot) => (a.val().position - b.val().position)).map((item: DataSnapshot) => {
                   const snapshot = item.val();
                   return (
                     <div key={item.key}>

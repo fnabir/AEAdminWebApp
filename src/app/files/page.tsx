@@ -17,7 +17,7 @@ export default function FilesPage() {
 
 	const searchParams = useSearchParams()
 	const year = searchParams.has('year') ? searchParams.get('year') : new Date().getFullYear()
-
+  console.log(year)
 	if (loading) return <Loading />;
 
 	if (!loading && !user) {

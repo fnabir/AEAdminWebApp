@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { toast } from "sonner"
-import {child, DatabaseReference, push, ref} from "@firebase/database";
+import {child, DatabaseReference, DataSnapshot, push, ref} from "@firebase/database";
 import {database} from "@/firebase/config";
 
 export function cn(...inputs: ClassValue[]) {
@@ -33,6 +33,16 @@ export function generateDatabaseKey(databaseReference: string) : string {
 
 export function getDatabaseReference(databaseReference: string) : DatabaseReference {
   return child(ref(database), databaseReference);
+}
+
+export function getTotalValue(data:DataSnapshot[] | undefined) : number {
+  if (!data) return 0;
+  else {
+    return data.reduce((sum, snap) => {
+      const data = snap.val();
+      return sum + (data.value || 0);
+    }, 0);
+  }
 }
 
 export function formatCurrency(initialValue: number, precision: number=0): string {

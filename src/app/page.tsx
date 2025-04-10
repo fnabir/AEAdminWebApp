@@ -5,6 +5,7 @@ import Loading from "@/components/loading";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth } from "@/firebase/config";
 import { getDatabaseReference } from "@/lib/utils";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -24,8 +25,8 @@ export default function Home() {
 
   const FilesCard = ({title, count, date, year} : {title: string, count: number, date?: string, year: string|number}) => {
     return (
-      <div className="w-full sm:w-1/2 md:w-1/3 p-1">
-        <Card className="relative overflow-hidden">
+      <Link className="w-full sm:w-1/2 md:w-1/3 p-1" href={`/files?year=${year}`}>
+        <Card className="relative hover:border-sky-800 overflow-hidden">
           <div className="absolute right-1 top-0 text-primary/30 z-0 pointer-events-none select-none text-6xl font-bold leading-none">
             {year}
           </div>
@@ -41,7 +42,7 @@ export default function Home() {
             </CardFooter>
           </div>
         </Card>
-      </div>
+      </Link>
     )
   }
 

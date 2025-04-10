@@ -12,10 +12,12 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import {
+  FaBriefcase,
   FaFileContract,
   FaGlobe,
   FaMicrosoft, FaMoneyBill,
   FaSquareFacebook,
+  FaUser,
 } from "react-icons/fa6";
 import Image from "next/image";
 import Logo from "@/images/logo.svg"
@@ -39,10 +41,22 @@ const navData = {
       icon: FaFileContract,
     },
     {
-      title: "Balance",
-      url: "/balance",
+      title: "Expense",
+      url: "/expense",
       icon: FaMoneyBill,
       access: "admin",
+    },
+  ],
+  balance: [
+    {
+      title: "Client",
+      url: "/client",
+      icon: FaBriefcase,
+    },
+    {
+      title: "Staff",
+      url: "/staff",
+      icon: FaUser,
     },
   ],
   links: [
@@ -92,6 +106,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={navData.dashboard} />
         <NavMain items={navData.main} userAccess={userRole}/>
+        {userRole == "admin" && <NavMain label={"Balance"} items={navData.balance}/>}
         <NavLinks items={navData.links}/>
       </SidebarContent>
       <SidebarFooter>

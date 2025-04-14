@@ -8,7 +8,7 @@ const CardIcon: FC<{title: string, number?: number, description?: string, route?
 	return(
 		<Link
 			href={route ? route : "#"}>
-			<Card className={`flex w-full px-6 py-4 items-center rounded-xl bg-muted/50 hover:cursor-pointer hover:bg-muted/100 space-x-4 ${className}`}>
+			<Card className={`flex-row w-full px-6 py-4 items-center rounded-xl bg-muted/50 hover:cursor-pointer hover:bg-muted/100 space-x-4 ${className}`}>
 				{children}
 				<div className={"flex-1"}>
 					<div className={"text-xl font-bold"}>{title}</div>

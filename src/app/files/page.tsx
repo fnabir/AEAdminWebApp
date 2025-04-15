@@ -28,6 +28,7 @@ import InputText from "@/components/generic/input-text";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { fileStatusOptions } from "@/lib/arrays";
 import { addNewFile } from "@/lib/functions";
+import { Badge } from "@/components/ui/badge";
 
 const breadcrumb: {text: string, link?: string}[] = [
   { text: "Home", link: "/" },
@@ -41,14 +42,11 @@ const getYearsRange = (start = 2024, end = getCurrentYear()) =>
   })).reverse();
 
 const FileCard = ({
-  fileNo, 
-  fileYear, 
-  importer, 
-  itemPackage, 
-  itemName,
+  fileNo, fileYear, importer, 
+  itemPackage, itemName,
   bl, be, lc,
+  status
 } : {
-  type: "Import" | "Export", 
   fileNo: number, 
   fileYear: number, 
   importer: string,
@@ -56,7 +54,8 @@ const FileCard = ({
   itemName?: string,
   bl?: string,
   be?: string,
-  lc?: string,}) => {
+  lc?: string,
+  status?: string,}) => {
   return (
     <Card className="w-full md:w-1/4 md:min-w-fit flex-row p-2 items-center transition-all duration-150 border-1 border-foreground/50">
       <div className="wrap w-14 uppercase font-bold font-mono border-1 border-accent-foreground rounded-lg text-center p-2 text-xl">{fileNo}</div>
@@ -64,9 +63,10 @@ const FileCard = ({
         <div className="text-xl font-bold">{importer}</div>
         <div>{itemPackage}</div>
         <div>{itemName}</div>
-        <CopyText text={`B/L: ${bl}`} copyText={bl}/>
-        <CopyText text={`LC: ${lc}`} copyText={lc}/>
-        <CopyText text={`B/E: ${be}`} copyText={be} />
+        {bl && <CopyText text={`B/L: ${bl}`} copyText={bl}/>}
+        {lc && <CopyText text={`LC: ${lc}`} copyText={lc}/>}
+        {be && <CopyText text={`B/E: ${be}`} copyText={be} />}
+        {status && <Badge className={`text-md`}>{status}</Badge>}
       </div>
       <Link href={`/files/${fileYear}${fileNo}`}>
         <TooltipProvider>
@@ -187,7 +187,7 @@ export default function FilesPage() {
                       <InputText id="newFileNo"
                         type="text"
                         label="New File No"
-                        onChange={(e) => setNewFileNo(e.target.value)}
+                        onChange={(e) => setNewFileNo(Number(e.target.value))}
                       />
                       <Button type="button" size="lg" onClick={checkNewFile}>Check</Button>
                     </div>
@@ -289,8 +289,7 @@ export default function FilesPage() {
                 filesData.map((file: DataSnapshot) => {
                   const snapshot = file.val();
                   return (
-                    <FileCard key={file.key} 
-                              type={snapshot.type} 
+                    <FileCard key={file.key}
                               fileNo={Number(file.key)} 
                               fileYear={year} 
                               importer={snapshot.importer}
@@ -298,7 +297,8 @@ export default function FilesPage() {
                               itemName={snapshot.itemName}
                               bl={snapshot.bl}
                               be={snapshot.be}
-                              lc={snapshot.lc}/>
+                              lc={snapshot.lc}
+                              status={snapshot.status}/>
                   )
                 })
               }

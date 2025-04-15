@@ -12,7 +12,7 @@ interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   className?: string
 }
 
-const CustomDropDown: FC<Props> = ({
+const InputDropDown: FC<Props> = ({
                           options, id, label, helperText, color, disabled = false, required = false, className, ...rest
 }) => {
 
@@ -50,4 +50,4 @@ const CustomDropDown: FC<Props> = ({
   );
 };
 
-export default CustomDropDown;
+export default InputDropDown;

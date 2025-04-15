@@ -5,7 +5,7 @@ import {useObject} from "react-firebase-hooks/database";
 import {getDatabaseReference, showToast} from "@/lib/utils";
 import {useAuth} from "@/hooks/use-auth";
 import {useRouter} from "next/navigation";
-import CustomInput from "@/components/generic/CustomInput";
+import InputText from "@/components/generic/input-text";
 import {useForm} from "react-hook-form";
 import {AccountFormData, AccountFormSchema} from "@/lib/schemas";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -64,31 +64,31 @@ export default function AccountPage() {
 		<Layout breadcrumb={breadcrumb}>
 			<div className={"flex flex-col h-full"}>
 				<form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm mx-auto mt-5 items-center">
-					<CustomInput id={"name"}
-											 type={"text"}
-											 label={"Full Name"}
-											 defaultValue={user ? user.displayName! : undefined}
-											 {...register("name")}
+					<InputText id={"name"}
+										 type={"text"}
+										 label={"Full Name"}
+										 defaultValue={user ? user.displayName! : undefined}
+										 {...register("name")}
 					/>
-					<CustomInput id={"email"}
-											 type={"email"}
-											 label={"Email"}
-											 defaultValue={user ? user.email! : undefined}
-											 readOnly={true}
+					<InputText id={"email"}
+										 type={"email"}
+										 label={"Email"}
+										 defaultValue={user ? user.email! : undefined}
+										 readOnly={true}
 					/>
-					<CustomInput id={"title"}
-											 type={"text"}
-											 label={"Title"}
-											 defaultValue={userInfoData?.val().title}
-											 readOnly={true}
+					<InputText id={"title"}
+										 type={"text"}
+										 label={"Title"}
+										 defaultValue={userInfoData?.val().title}
+										 readOnly={true}
 					/>
-					<CustomInput id={"phone"}
-											 type={"tel"}
-											 label={"Phone Number"}
-											 defaultValue={userInfoData?.val().phone}
-											 helperText={errors.phone ? errors.phone.message : ""}
-											 color={errors.phone ? "error" : "default"}
-											 {...register("phone")}
+					<InputText id={"phone"}
+										 type={"tel"}
+										 label={"Phone Number"}
+										 defaultValue={userInfoData?.val().phone}
+										 helperText={errors.phone ? errors.phone.message : ""}
+										 color={errors.phone ? "error" : "default"}
+										 {...register("phone")}
 					/>
 					<Button type="submit" variant="accent" className="w-full mt-5">Update</Button>
 				</form>

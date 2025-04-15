@@ -14,7 +14,7 @@ import {useForm} from "react-hook-form";
 import {ForgotPasswordFormData, ForgotPasswordSchema} from "@/lib/schemas";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {showToast} from "@/lib/utils";
-import CustomInput from "@/components/generic/CustomInput";
+import InputText from "@/components/generic/input-text";
 import React, {useEffect, useState} from "react";
 
 export default function ResetPassword() {
@@ -65,13 +65,13 @@ export default function ResetPassword() {
 								password</DrawerDescription>
 						</DrawerHeader>
 						<form onSubmit={handleSubmit(onSubmit)}>
-							<CustomInput id={"email"}
-													 type={"email"}
-													 label={"Email"}
-													 {...register('email')}
-													 helperText={errors.email ? errors.email.message : ""}
-													 color={errors.email ? "error" : "default"}
-													 required
+							<InputText id={"email"}
+												 type={"email"}
+												 label={"Email"}
+												 {...register('email')}
+												 helperText={errors.email ? errors.email.message : ""}
+												 color={errors.email ? "error" : "default"}
+												 required
 							/>
 							<DrawerFooter>
 								<Button type="submit" disabled={loading}>{loading ? "Sending..." : "Send Reset Password Link"}</Button>

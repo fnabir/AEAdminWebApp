@@ -9,7 +9,7 @@ import {showToast} from "@/lib/utils";
 import Image from "next/image";
 import TextLogo from "@/images/logo.svg";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import CustomInput from "@/components/generic/CustomInput";
+import InputText from "@/components/generic/input-text";
 import {Button} from "@/components/ui/button";
 import ResetPassword from "@/app/login/resetPassword";
 import {useState} from "react";
@@ -77,25 +77,25 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
-              <CustomInput id={"email"}
-                           type={"email"}
-                           label={"Email"}
-                           floating={false}
-                           {...register('email')}
-                           placeholder="user@ahsanenterprise.com"
-                           helperText={errors.email ? errors.email.message : ""}
-                           color={errors.email ? "error" : "default"}
-                           required
+              <InputText id={"email"}
+                         type={"email"}
+                         label={"Email"}
+                         floating={false}
+                         {...register('email')}
+                         placeholder="user@ahsanenterprise.com"
+                         helperText={errors.email ? errors.email.message : ""}
+                         color={errors.email ? "error" : "default"}
+                         required
               />
-              <CustomInput id={"password"}
-                           type={"password"}
-                           label={"Password"}
-                           floating={false}
-                           {...register('password')}
-                           placeholder="******"
-                           helperText={errors.password ? errors.password.message : ""}
-                           color={errors.password ? "error" : "default"}
-                           required
+              <InputText id={"password"}
+                         type={"password"}
+                         label={"Password"}
+                         floating={false}
+                         {...register('password')}
+                         placeholder="******"
+                         helperText={errors.password ? errors.password.message : ""}
+                         color={errors.password ? "error" : "default"}
+                         required
               />
               <Button type="submit" className="w-full" disabled={submit}>
                 {submit ? "Logging in..." : "Login"}

@@ -15,7 +15,7 @@ import {useForm} from "react-hook-form";
 import {ChangePasswordFormData, ChangePasswordSchema} from "@/lib/schemas";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {showToast} from "@/lib/utils";
-import CustomInput from "@/components/generic/CustomInput";
+import InputText from "@/components/generic/input-text";
 import React, {useState} from "react";
 
 export default function ChangePassword() {
@@ -73,29 +73,29 @@ export default function ChangePassword() {
 								password</DrawerDescription>
 						</DrawerHeader>
 						<form onSubmit={handleSubmit(onSubmit)}>
-							<CustomInput id={"currentPassword"}
-													 type={"password"}
-													 label={"Current Password"}
-													 {...register('currentPassword')}
-													 helperText={errors.currentPassword ? errors.currentPassword.message : ""}
-													 color={errors.currentPassword ? "error" : "default"}
-													 required
+							<InputText id={"currentPassword"}
+												 type={"password"}
+												 label={"Current Password"}
+												 {...register('currentPassword')}
+												 helperText={errors.currentPassword ? errors.currentPassword.message : ""}
+												 color={errors.currentPassword ? "error" : "default"}
+												 required
 							/>
-							<CustomInput id={"newPassword"}
-													 type={"password"}
-													 label={"New Password"}
-													 {...register('newPassword')}
-													 helperText={errors.newPassword ? errors.newPassword.message : ""}
-													 color={errors.newPassword ? "error" : "default"}
-													 required
+							<InputText id={"newPassword"}
+												 type={"password"}
+												 label={"New Password"}
+												 {...register('newPassword')}
+												 helperText={errors.newPassword ? errors.newPassword.message : ""}
+												 color={errors.newPassword ? "error" : "default"}
+												 required
 							/>
-							<CustomInput id={"confirmNewPassword"}
-													 type={"password"}
-													 label={"Confirm New Password"}
-													 {...register('confirmNewPassword')}
-													 helperText={errors.confirmNewPassword ? errors.confirmNewPassword.message : ""}
-													 color={errors.confirmNewPassword ? "error" : "default"}
-													 required
+							<InputText id={"confirmNewPassword"}
+                         type={"password"}
+												 label={"Confirm New Password"}
+												 {...register('confirmNewPassword')}
+												 helperText={errors.confirmNewPassword ? errors.confirmNewPassword.message : ""}
+												 color={errors.confirmNewPassword ? "error" : "default"}
+												 required
 							/>
 							<DrawerFooter>
 								<Button type="submit" disabled={submit}>{submit ? "Updating..." : "Update Password"}</Button>

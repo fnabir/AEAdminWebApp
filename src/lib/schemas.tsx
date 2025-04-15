@@ -33,3 +33,38 @@ export const AccountFormSchema = z.object({
 });
 
 export type AccountFormData = z.infer<typeof AccountFormSchema>;
+
+export const FileInfoFormSchema = z.object({
+	importer: z.string().nonempty("Importer Name is required")
+            .refine((val) => val != "Select", {message: "Choose Importer"}),
+	itemPackage: z.string().nonempty("Package Details is required"),
+	itemName: z.string().nonempty("Item Name is required"),
+	lc: z.string().optional(),
+  be: z.string().optional(),
+  bl: z.string().optional(),
+  status: z.string().optional(),
+});
+
+export type FileInfoFormData = z.infer<typeof FileInfoFormSchema>;
+
+export const FileDetailsFormSchema = z.object({
+	importer: z.string().nonempty("Importer Name is required")
+            .refine((val) => val != "Select", {message: "Choose Importer"}),
+  itemPackage: z.string().nonempty("Package Details is required"),
+  itemName: z.string().nonempty("Item Name is required"),
+	lc: z.string().optional(),
+	vessel: z.string().optional(),
+  rotNo: z.string().optional(),
+  bl: z.string().optional(),
+  cnfValue: z.string().optional(),
+  assessmentValue: z.string().optional(),
+  be: z.string().optional(),
+  beDate: z.string().optional(),
+  assessmentDate: z.string().optional(),
+  dutyPaymentDate: z.string().optional(),
+  deliveryDate: z.string().optional(),
+  customExpense: z.string().optional(),
+  deliveryExpense: z.string().optional(),
+});
+
+export type FileDetailsFormData = z.infer<typeof FileDetailsFormSchema>;

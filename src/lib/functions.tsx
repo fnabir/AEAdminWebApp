@@ -1,6 +1,6 @@
 import { auth } from "@/firebase/config";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { update } from "firebase/database";
+import { set, update } from "firebase/database";
 import { getDatabaseReference, showToast } from "@/lib/utils";
 
 export async function login(email: string, password: string) {
@@ -21,6 +21,14 @@ export async function updateAccountInfo(uid: string, data: object) {
 		showToast("Successful", "Updated the account info successfully.", "success");
 	}).catch ((error) => {
 		showToast("Error", `Failed to update the account info record: ${error.message}`, "error");
+	})
+}
+
+export async function addNewFile(fileNo: number, fileYear: number, data: object) {
+	await set(getDatabaseReference(`files/info/${fileYear}/${fileNo}`), data).then(() => {
+		showToast("Successful", "Added the new file successfully.", "success");
+	}).catch ((error) => {
+		showToast("Error", `Failed to add the new file: ${error.message}`, "error");
 	})
 }
 

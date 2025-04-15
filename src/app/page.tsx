@@ -3,6 +3,7 @@
 import Layout from "@/components/layout";
 import Loading from "@/components/loading";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { auth } from "@/firebase/config";
 import { getCurrentYear, getDatabaseReference } from "@/lib/utils";
 import Link from "next/link";
@@ -15,7 +16,7 @@ const breadcrumb: {text: string, link?: string}[] = [
   { text: "Home"},
 ]
 
-const FilesCard = ({title, count, date, year} : {title: string, count: number, date?: string, year: string|number}) => {
+const FilesCard = ({title, countLoading, count, date, year} : {title: string, countLoading:boolean, count: number, date?: string, year: string|number}) => {
   return (
     <Link className="w-full sm:w-1/2 md:w-1/3 p-1" href={`/files?year=${year}`}>
       <Card className="relative hover:border-sky-800 overflow-hidden">
@@ -27,7 +28,10 @@ const FilesCard = ({title, count, date, year} : {title: string, count: number, d
             <CardTitle className="text-xl">{title}</CardTitle>
           </CardHeader>
           <CardContent className="-mt-2">
-            <div className="text-5xl font-bold">{count}</div>
+            {
+              countLoading ? <Skeleton className="h-12 w-24 bg-accent-foreground/50"/>
+              : <div className="text-5xl font-bold">{count}</div>
+            }
           </CardContent>
           <CardFooter>
             {date ? `Last updated on ${date}` : ""}
@@ -42,8 +46,8 @@ export default function Home() {
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
 
-  const [snapshotFileLastYear] = useListKeys(getDatabaseReference(`files/info/${getCurrentYear()-1}`));
-  const [snapshotFileCurrentYear] = useListKeys(getDatabaseReference(`files/info/${getCurrentYear()}`));
+  const [snapshotFileLastYear, loadingFileLastYear] = useListKeys(getDatabaseReference(`files/info/${getCurrentYear()-1}`));
+  const [snapshotFileCurrentYear, loadingFileCurrentYear] = useListKeys(getDatabaseReference(`files/info/${getCurrentYear()}`));
 
   useEffect(() => {
     if (!loading && (!user || error)) {
@@ -57,8 +61,8 @@ export default function Home() {
     return (
       <Layout breadcrumb={breadcrumb}>
         <div className="flex flex-wrap">
-          <FilesCard title={"Total Files"} count={snapshotFileCurrentYear? snapshotFileCurrentYear.length : 0} year={getCurrentYear()}/>
-          <FilesCard title={"Total Files"} count={snapshotFileLastYear? snapshotFileLastYear.length : 0} year={getCurrentYear()-1}/>
+          <FilesCard title={"Total Files"} countLoading={loadingFileCurrentYear} count={snapshotFileCurrentYear? snapshotFileCurrentYear.length : 0} year={getCurrentYear()}/>
+          <FilesCard title={"Total Files"} countLoading={loadingFileLastYear} count={snapshotFileLastYear? snapshotFileLastYear.length : 0} year={getCurrentYear()-1}/>
         </div>
       </Layout>
     )

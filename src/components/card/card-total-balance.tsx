@@ -31,20 +31,19 @@ const CardTotalBalance: React.FC<Props> = ({
 	};
 
     return (
-      <Card className={`rounded-xl shadow bg-muted flex pl-6 pr-2 pt-2 ${className}`}>
-          <div className={(updateState && update ? "" : "pr-2") + " w-full mx-auto md:flex md:items-center md:justify-between text-primary"}>
-              <div>
-                  <div className="text-xl text-center md:text-start">{titleText}</div>
-                  <p id="updatedate" className="text-sm pb-2 sm:text-center md:text-start">{dateText}</p>
-              </div>
-              <div className="items-center text-right mt-3 text-3xl font-medium font-mono sm:mt-0">
-                  {formatCurrency(value)}
-              </div>
-          </div>
-          <button className={updateState && update ? "w-10 bg-black bg-opacity-40 rounded-lg hover:bg-opacity-70 m-2 p-2" : "hidden"}
-                  onClick={handleOnClick}>
-              <MdUpdate className='w-6 h-6'/>
+      <Card className={`flex flex-row rounded-xl shadow bg-accent px-6 pt-2 items-center ${className}`}>
+        <div className="flex-grow">
+          <div className="text-xl text-center md:text-start">{titleText}</div>
+          <p id="updatedate" className="text-sm pb-2 sm:text-center md:text-start">{dateText}</p>
+        </div>
+
+        <div className="items-center text-right mt-3 text-3xl font-medium font-mono sm:mt-0">{formatCurrency(value)}</div>
+
+        { 
+          updateState && update && <button className="border-1 border-primary rounded-lg hover:bg-primary/20 ml-2 p-2 cursor-pointer duration-150" onClick={handleOnClick}>
+            <MdUpdate size={24}/>
           </button>
+        }
       </Card>
     )
 }

@@ -11,7 +11,7 @@ const CardTransaction: React.FC<TransactionInterface> = ({title, details, value,
         </div>
         <div className="grow flex flex-col md:flex-row text-sm md:text-base md:space-x-1">
             <div className="font-semibold">{title}</div>
-            <div className="hidden md:block">-</div>
+            {details && <div className="hidden md:block">-</div>}
             {details && <div>{details}</div>}
           </div>
           <div className="text-sm md:text-2xl font-mono font-medium">

@@ -48,7 +48,7 @@ const Layout: FC<{ breadcrumb: breadcrumbItem[], children: ReactNode }> = ({
               </Breadcrumb>
               <ThemeToggle/>
             </header>
-            <div className="flex-1 gap-4 px-4 overflow-y-auto">
+            <div className="flex-1 gap-4 px-2 md:px-4 overflow-y-auto">
               {children}
             </div>
             <footer

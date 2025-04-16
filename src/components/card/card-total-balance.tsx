@@ -31,13 +31,13 @@ const CardTotalBalance: React.FC<Props> = ({
 	};
 
     return (
-      <Card className={`flex flex-row rounded-xl shadow bg-accent px-6 pt-2 items-center ${className}`}>
+      <Card className={`flex flex-row rounded-xl shadow bg-accent px-2 md:px-6 py-1 md:py-2 items-center ${className}`}>
         <div className="flex-grow">
-          <div className="text-xl text-center md:text-start">{titleText}</div>
-          <p id="updatedate" className="text-sm pb-2 sm:text-center md:text-start">{dateText}</p>
+          <div className="text-xl text-start">{titleText}</div>
+          <p id="updatedate" className="text-sm sm:text-center md:text-start">{dateText}</p>
         </div>
 
-        <div className="items-center text-right mt-3 text-3xl font-medium font-mono sm:mt-0">{formatCurrency(value)}</div>
+        <div className="items-center text-right text-lg md:text-3xl font-medium font-mono">{formatCurrency(value)}</div>
 
         { 
           updateState && update && <button className="border-1 border-primary rounded-lg hover:bg-primary/20 ml-2 p-2 cursor-pointer duration-150" onClick={handleOnClick}>

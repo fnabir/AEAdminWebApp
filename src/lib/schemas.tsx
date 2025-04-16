@@ -39,8 +39,8 @@ export const FileInfoFormSchema = z.object({
             .refine((val) => val != "Select", {message: "Choose Importer"}),
 	itemPackage: z.string().nonempty("Package Details is required"),
 	itemName: z.string().nonempty("Item Name is required"),
-	lc: z.string().optional(),
-  be: z.string().optional(),
+	lc: z.number().optional(),
+  be: z.number().optional(),
   bl: z.string().optional(),
   status: z.string().optional(),
 });
@@ -50,21 +50,29 @@ export type FileInfoFormData = z.infer<typeof FileInfoFormSchema>;
 export const FileDetailsFormSchema = z.object({
 	importer: z.string().nonempty("Importer Name is required")
             .refine((val) => val != "Select", {message: "Choose Importer"}),
+  itemCount: z.string().nonempty("Item Count is required"),
   itemPackage: z.string().nonempty("Package Details is required"),
   itemName: z.string().nonempty("Item Name is required"),
-	lc: z.string().optional(),
+	lc: z.number().optional(),
 	vessel: z.string().optional(),
   rotNo: z.string().optional(),
   bl: z.string().optional(),
-  cnfValue: z.string().optional(),
-  assessmentValue: z.string().optional(),
-  be: z.string().optional(),
+  cnfValue: z.number().nonnegative("Amount must be positive")
+              .refine((val) => !isNaN(val), {
+                message: "Input cannot be empty or not a number",
+              }).optional(),
+  assessmentValue: z.number().nonnegative("Amount must be positive")
+                    .refine((val) => !isNaN(val), {
+                      message: "Input cannot be empty or not a number",
+                    }).optional(),
+  be: z.number().optional(),
   beDate: z.string().optional(),
   assessmentDate: z.string().optional(),
   dutyPaymentDate: z.string().optional(),
   deliveryDate: z.string().optional(),
   customExpense: z.string().optional(),
   deliveryExpense: z.string().optional(),
+  status: z.string().optional(),
 });
 
 export type FileDetailsFormData = z.infer<typeof FileDetailsFormSchema>;

@@ -53,20 +53,20 @@ const FileCard = ({
   itemPackage?: string, 
   itemName?: string,
   bl?: string,
-  be?: string,
-  lc?: string,
+  be?: number,
+  lc?: number,
   status?: string,}) => {
   return (
     <Card className="w-full md:w-1/4 md:min-w-fit flex-row p-2 items-center transition-all duration-150 border-1 border-foreground/50">
       <div className="wrap w-14 uppercase font-bold font-mono border-1 border-accent-foreground rounded-lg text-center p-2 text-xl">{fileNo}</div>
-      <div className="grow">
+      <div className="grow flex flex-col">
         <div className="text-xl font-bold">{importer}</div>
         <div>{itemPackage}</div>
         <div>{itemName}</div>
         {bl && <CopyText text={`B/L: ${bl}`} copyText={bl}/>}
-        {lc && <CopyText text={`LC: ${lc}`} copyText={lc}/>}
-        {be && <CopyText text={`B/E: ${be}`} copyText={be} />}
-        {status && <Badge className={`text-md`}>{status}</Badge>}
+        {lc && lc != 0 ? <CopyText text={`LC: ${lc}`} copyText={lc.toString()}/> : null}
+        {be && be != 0 ? <CopyText text={`B/E: ${be}`} copyText={be.toString()}/> : null}
+        {status && status != "Select" && <Badge className={`text-md`}>{status}</Badge>}
       </div>
       <Link href={`/files/${fileYear}${fileNo}`}>
         <TooltipProvider>
@@ -107,7 +107,7 @@ export default function FilesPage() {
   const [newFile, setNewFile] = useState(false);
   const [newFileNo, setNewFileNo] = useState<number | undefined>();
   const importerNames = useListKeys(getDatabaseReference(`info/importer`))[0];
-	const importerNameOptions = importerNames?.map((importerName) => ({ value: importerName, label: importerName}))
+	const importerNameOptions = importerNames?.map((importerName) => ({ value: importerName}))
 
   const {
 		register,
@@ -221,16 +221,24 @@ export default function FilesPage() {
 															   type="text"
 															   label="B/L No"
 															   {...register("bl")}
+                                 helperText={errors.bl ? errors.bl.message : ""}
+															   color={errors.bl ? "error" : "default"}
 									    />
                       <InputText id="lc"
-															   type="text"
+															   type="number"
 															   label="LC No"
-															   {...register("lc")}
+                                 defaultValue={0}
+															   {...register("lc", {valueAsNumber: true})}
+                                 helperText={errors.lc ? errors.lc.message : ""}
+															   color={errors.lc ? "error" : "default"}
 									    />
                       <InputText id="be"
-															   type="text"
+															   type="number"
 															   label="B/E No"
-															   {...register("be")}
+                                 defaultValue={0}
+															   {...register("be", {valueAsNumber: true})}
+                                 helperText={errors.be ? errors.be.message : ""}
+															   color={errors.be ? "error" : "default"}
                                  pre="C"
 									    />
                       <InputDropDown id="status"

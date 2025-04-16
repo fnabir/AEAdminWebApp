@@ -1,5 +1,5 @@
 import Loading from "@/components/loading";
 
-export default function ClientBalancePageLoading() {
+export default function ImporterBalancePageLoading() {
 	return <Loading/>
 };

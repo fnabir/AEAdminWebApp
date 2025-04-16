@@ -17,19 +17,19 @@ import { DataSnapshot } from "firebase/database";
 import CardBalance from "@/components/card/card-balance";
 import { updateTotalBalance } from "@/lib/functions";
 
-export default function ClientBalancePage() {
+export default function ImporterBalancePage() {
 	const {user, loading} = useAuth();
 	const router = useRouter();
 	const breadcrumb: {text: string, link?: string}[] = [
 		{ text: "Home", link: "/" },
 		{ text: "/" },
-		{ text: "Client Balance" },
+		{ text: "Importer Balance" },
 	]
 
-	const [balanceData, balanceLoading, balanceError] = useList(getDatabaseReference("balance/client"))
-	const [totalBalanceData, totalBalanceLoading] = useObject(getDatabaseReference("balance/total/client"))
+	const [balanceData, balanceLoading, balanceError] = useList(getDatabaseReference("balance/importer"))
+	const [totalBalanceData, totalBalanceLoading] = useObject(getDatabaseReference("balance/total/importer"))
 	const total: number = getTotalValue(balanceData)
-	const totalBalanceValue = totalBalanceData?.val().value;
+	const totalBalanceValue = totalBalanceData && totalBalanceData.val().value ? totalBalanceData.val().value : 0;
 
 	const handleUpdateTotalBalance = () => {
 		updateTotalBalance("project", total).then(() => {

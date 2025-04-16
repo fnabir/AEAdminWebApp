@@ -49,8 +49,8 @@ const navData = {
   ],
   balance: [
     {
-      title: "Client",
-      url: "/client",
+      title: "Importer",
+      url: "/importer",
       icon: FaBriefcase,
     },
     {

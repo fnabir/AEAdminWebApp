@@ -32,8 +32,26 @@ export async function addNewFile(fileNo: number, fileYear: number, data: object)
 	})
 }
 
+export async function updateFile(fileNo: number, fileYear: number, dataInfo: object, dataDetails: object) {
+	await update(getDatabaseReference(`files/info/${fileYear}/${fileNo}`), dataInfo).then(async () => {
+    await update(getDatabaseReference(`files/details/${fileYear}/${fileNo}`), dataDetails).then(() => {
+		  showToast("Successful", "Updated the file details successfully.", "success");
+    }).catch ((error) => {
+      showToast("Error", `Failed to update the file details: ${error.message}`, "error");
+    })
+	}).catch ((error) => {
+		showToast("Error", `Failed to update the file details: ${error.message}`, "error");
+	})
+}
+
 export async function updateTotalBalance(type: string, value: number) {
 	await update(getDatabaseReference(`balance/total/${type}`), {
+		value: value
+	})
+}
+
+export async function updateBalance(type: string, id: string, value: number) {
+	await update(getDatabaseReference(`balance/${type}/${id}`), {
 		value: value
 	})
 }

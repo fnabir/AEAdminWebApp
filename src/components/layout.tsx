@@ -24,7 +24,7 @@ const Layout: FC<{ breadcrumb: breadcrumbItem[], children: ReactNode }> = ({
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
-          <div className={"flex flex-col h-screen"}>
+          <div className={"flex flex-col h-screen pb-2"}>
             <header
               className="flex px-4 py-2 h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
               <SidebarTrigger className="-ml-1"/>
@@ -52,7 +52,7 @@ const Layout: FC<{ breadcrumb: breadcrumbItem[], children: ReactNode }> = ({
               {children}
             </div>
             <footer
-              className={`hidden md:flex text-center shrink-0 items-center md:justify-between gap-2 mx-4 my-2 transition-[width,height] ease-linear p-4 rounded-xl bg-muted/100 text-sm text-primary`}>
+              className={`hidden md:flex text-center shrink-0 items-center md:justify-between gap-2 mx-4 mt-2 transition-[width,height] ease-linear p-4 rounded-xl bg-muted/100 text-sm text-primary`}>
               <span className="flex-1 text-center md:text-left">
                 © {new Date().getFullYear()} Ahsan Enterprise. All Rights Reserved.
               </span>

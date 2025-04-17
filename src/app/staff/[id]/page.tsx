@@ -13,7 +13,6 @@ import CardIcon from "@/components/card/card-icon";
 import { MdError } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import CardTotalBalance from "@/components/card/card-total-balance";
-import { DataSnapshot } from "firebase/database";
 import { updateBalance } from "@/lib/functions";
 import CardTransaction from "@/components/card/card-transaction";
 
@@ -88,8 +87,8 @@ export default function StaffTransactionPage() {
               </CardIcon>
             : <div className={"space-y-1 lg:space-y-2"}>
               {
-                transactionData.map((item: DataSnapshot) => {
-                  const snapshot = item.val();
+                transactionData.map((item) => {
+                  const snapshot = item.val()
                   return (
                     <div key={item.key}>
                       <CardTransaction type={"staff"} uid={staffUid} transactionId={item.key!}

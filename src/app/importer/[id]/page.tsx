@@ -13,7 +13,6 @@ import CardIcon from "@/components/card/card-icon";
 import { MdError } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import CardTotalBalance from "@/components/card/card-total-balance";
-import { DataSnapshot } from "firebase/database";
 import { updateBalance } from "@/lib/functions";
 import CardTransaction from "@/components/card/card-transaction";
 

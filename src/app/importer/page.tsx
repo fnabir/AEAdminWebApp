@@ -32,7 +32,7 @@ export default function ImporterBalancePage() {
 	const totalBalanceValue = totalBalanceData && totalBalanceData.val().value ? totalBalanceData.val().value : 0;
 
 	const handleUpdateTotalBalance = () => {
-		updateTotalBalance("project", total).then(() => {
+		updateTotalBalance("importer", total).then(() => {
 			showToast("Success", "Total balance updated successfully", "success");
 		}).catch((error) => {
 			showToast("Error", `Error updating total balance: ${error.message}`, "error");
@@ -84,7 +84,7 @@ export default function ImporterBalancePage() {
                   const snapshot = item.val();
                   return (
                     <div key={item.key}>
-                      <CardBalance type={"client"} id={item.key!}
+                      <CardBalance type={"importer"} id={item.key!}
                                     name={item.key!} value={snapshot.value}
                                     date={snapshot.date}
                                     status={snapshot.status}/>

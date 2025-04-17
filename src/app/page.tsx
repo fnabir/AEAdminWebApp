@@ -45,7 +45,7 @@ const FilesCard = ({title, countLoading, count, date, year} : {title: string, co
 const BalanceCard = ({title, balanceLoading, balance, date, link} : {title:string, balanceLoading:boolean, balance:number, date:string, link:string}) => {
   return (
     <Link className="w-full md:w-1/2 lg:w-1/3 p-1" href={`/${link}`}>
-      <Card className="hover:border-sky-800 gap-2">
+      <Card className="hover:border-sky-800 !gap-2">
         <CardHeader>
           <CardTitle className="text-lg lg:text-xl">{title}</CardTitle>
         </CardHeader>

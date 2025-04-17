@@ -86,7 +86,7 @@ export default function StaffTransactionPage() {
                 title={"No Record Found"}>
                 <MdError size={28}/>
               </CardIcon>
-            : <div className={"space-y-2"}>
+            : <div className={"space-y-1 lg:space-y-2"}>
               {
                 transactionData.map((item: DataSnapshot) => {
                   const snapshot = item.val();

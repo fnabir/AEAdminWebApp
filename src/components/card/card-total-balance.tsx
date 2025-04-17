@@ -32,9 +32,9 @@ const CardTotalBalance: React.FC<Props> = ({
 
     return (
       <Card className={`flex flex-row rounded-xl shadow bg-accent px-2 md:px-6 py-1 md:py-2 items-center ${className}`}>
-        <div className="flex-grow">
-          <div className="text-xl text-start">{titleText}</div>
-          <p id="updatedate" className="text-sm sm:text-center md:text-start">{dateText}</p>
+        <div className="grow text-start">
+          <div className="text-xl ">{titleText}</div>
+          <p id="updatedate" className="text-sm">{dateText}</p>
         </div>
 
         <div className="items-center text-right text-lg md:text-3xl font-medium font-mono">{formatCurrency(value)}</div>

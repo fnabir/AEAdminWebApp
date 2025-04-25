@@ -7,3 +7,9 @@ export type options = {
   value: string,
   label?: string,
 }
+
+export type expenseDataType = {
+  id: number,
+  details: string,
+  value: number,
+}

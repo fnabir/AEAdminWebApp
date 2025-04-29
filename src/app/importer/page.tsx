@@ -16,11 +16,12 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { DataSnapshot } from "firebase/database";
 import CardBalance from "@/components/card/card-balance";
 import { updateTotalBalance } from "@/lib/functions";
+import { breadcrumbItem } from "@/lib/types";
 
 export default function ImporterBalancePage() {
 	const {user, loading} = useAuth();
 	const router = useRouter();
-	const breadcrumb: {text: string, link?: string}[] = [
+	const breadcrumb: breadcrumbItem[] = [
 		{ text: "Home", link: "/" },
 		{ text: "/" },
 		{ text: "Importer Balance" },

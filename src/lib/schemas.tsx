@@ -72,6 +72,7 @@ export const FileDetailsFormSchema = z.object({
   deliveryDate: z.string().optional(),
   customExpense: z.string().optional(),
   deliveryExpense: z.string().optional(),
+  remarks: z.string().optional(),
   status: z.string().optional(),
 });
 

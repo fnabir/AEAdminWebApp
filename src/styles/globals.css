@@ -112,6 +112,22 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+@media print {
+  @page {
+    size: A4;
+    margin-left: 0.25in;
+    margin-right: 0.25in;
+    margin-top: 0.75in;
+    margin-bottom: 0.75in;
+    orientation: portrait;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

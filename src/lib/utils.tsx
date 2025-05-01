@@ -60,3 +60,15 @@ export function formatCurrency(initialValue: number, precision: number = 0, symb
 
   return `${signed ? '-' : '' } ${symbol} ${formattedValue.split('').join('')}${precision > 0 ? '.' + cents : ''}`;
 }
+
+export function generateFileCode(fileNo: number, fileYear: number, type?: "export" | "import"): string {
+  if (fileNo < 0) {
+    throw new Error("File number cannot be negative.");
+  }
+  if (fileYear < 2000 || fileYear > 9999) {
+    throw new Error("Invalid file year.");
+  }
+  const typeCode = type ? type.slice(0, 3).toUpperCase() : "IMP";
+  const fileNoFormatted = fileNo.toString().padStart(2, "0");
+  return `AE/${typeCode}/${fileNoFormatted}/${fileYear}`;
+}

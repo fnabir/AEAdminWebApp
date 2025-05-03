@@ -12,7 +12,7 @@ import { MdAdd, MdEdit } from "react-icons/md";
 interface ExpenseDialogProps {
   fileNo: number;
   fileYear: number;
-  type: "port" | "custom" | "other" | "delivery";
+  type: "duty" | "port" | "custom" | "other" | "delivery";
   data: DataSnapshot[] | undefined;
   title: string;
 }
@@ -30,7 +30,7 @@ const ExpenseDialog = ({
       { id: 1, details: "", value: 0 },
     ]);
 
-  const maxLength = type === "port" ? 8 : 3
+  const maxLength = type === "port" || "duty" ? 8 : 3
 
   const addDataSet = () => {
     if (dataSets.length < maxLength) {
@@ -86,13 +86,14 @@ const ExpenseDialog = ({
           {
             dataSets.map((set, index) => (
               <div key={set.id} className="flex flex-row gap-x-2 items-baseline">
-                <InputText label={`Port Expense ${index + 1}`}
-                            className={`flex-[0.8]`}
+                <InputText label={`Details ${index + 1}`}
+                            className={`flex-[0.75]`}
                             defaultValue={dataSets[index].details}
                             onChange={(e) => {handleDataChange(set.id, "details", e.target.value)}}
                 />
                 <InputText label={`Amount ${index + 1}`}
-                            type="number" pre={`৳`} className={`flex-[0.2]`}
+                            type="number" pre={`৳`} className={`flex-[0.25]`}
+                            step={0.01}
                             defaultValue={dataSets[index].value}
                             onChange={(e) => handleDataChange(set.id, "value", Number(e.target.value))}
                 />

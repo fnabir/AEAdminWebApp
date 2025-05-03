@@ -45,7 +45,7 @@ export async function updateFile(fileNo: number, fileYear: number, dataInfo: obj
 	})
 }
 
-export async function updateFileExpense(fileNo: number, fileYear: number, type: "port" | "custom" | "other" | "delivery", dataSet: expenseDataType[]) {
+export async function updateFileExpense(fileNo: number, fileYear: number, type: string, dataSet: expenseDataType[]) {
 	const data = dataSet.reduce((acc, item) => {
 		if (item.details != "" && item.value != 0) 
 			acc[item.id] = {details: item.details, value: item.value}

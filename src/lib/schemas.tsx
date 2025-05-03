@@ -61,17 +61,22 @@ export const FileDetailsFormSchema = z.object({
               .refine((val) => !isNaN(val), {
                 message: "Input cannot be empty or not a number",
               }).optional(),
-  assessmentValue: z.number().nonnegative("Amount must be positive")
-                    .refine((val) => !isNaN(val), {
-                      message: "Input cannot be empty or not a number",
-                    }).optional(),
+  assessableValue: z.number().nonnegative("Amount must be positive")
+              .refine((val) => !isNaN(val), {
+                message: "Input cannot be empty or not a number",
+              }).optional(),
   be: z.number().optional(),
   beDate: z.string().optional(),
   assessmentDate: z.string().optional(),
   dutyPaymentDate: z.string().optional(),
   deliveryDate: z.string().optional(),
-  customExpense: z.string().optional(),
-  deliveryExpense: z.string().optional(),
+  dutyPaid: z.string().optional(),
+  dutyValue: z.number().nonnegative("Amount must be positive")
+              .refine((val) => !isNaN(val), {
+                message: "Input cannot be empty or not a number",
+              }).optional(),
+  assessmentRef: z.number().optional(),
+  dutyRef: z.number().optional(),
   remarks: z.string().optional(),
   status: z.string().optional(),
 });

@@ -14,7 +14,6 @@ import { useListKeys } from "react-firebase-hooks/database";
 import { getDatabaseReference } from "@/lib/utils";
 import InputDropDown from "@/components/generic/input-dropdown";
 import { InputDate } from "@/components/generic/input-date";
-import InputTextarea from "@/components/generic/input-textarea";
 import { fileStatusOptions } from "@/lib/arrays";
 
 interface DetailsDialogProps {
@@ -66,11 +65,8 @@ const DetailsDialog = ({
       assessmentDate: data.assessmentDate ? format(new Date(data.assessmentDate), "dd.MM.yy") : null,
       dutyPaymentDate: data.dutyPaymentDate ? format(new Date(data.dutyPaymentDate), "dd.MM.yy") : null,
       deliveryDate: data.deliveryDate ? format(new Date(data.deliveryDate), "dd.MM.yy") : null,
-      dutyPaid: data.dutyPaid,
-      dutyValue: data.dutyValue,
       dutyRef: data.dutyRef,
-      assessmentRef: data.assessmentRef,
-      remarks: data.remarks
+      assessmentRef: data.assessmentRef
     }
     updateFile(fileNo, fileYear, dataInfo, dataDetails).finally(() => {
       setOpen(false);
@@ -127,8 +123,7 @@ const DetailsDialog = ({
                       label="Package Details"
                       defaultValue={fileInfo.itemPackage}
                       {...register("itemPackage")}
-                      helperText={errors.itemPackage ? errors.itemPackage.message : ""}
-                      color={errors.itemPackage ? "error" : "default"}
+                      error={errors?.itemPackage?.message}
                       required
           />
           <InputText id="itemName"
@@ -136,8 +131,7 @@ const DetailsDialog = ({
                       label="Item Name"
                       defaultValue={fileInfo.itemName}
                       {...register("itemName")}
-                      helperText={errors.itemName ? errors.itemName.message : ""}
-                      color={errors.itemName ? "error" : "default"}
+                      error={errors?.itemName?.message}
                       required
           />
           <div className="flex space-x-2">
@@ -178,8 +172,7 @@ const DetailsDialog = ({
                     defaultValue={fileDetails?.cnfValue ? fileDetails.cnfValue : 0}
                     {...register("cnfValue", {valueAsNumber: true})}
                     pre="$"
-                    helperText={errors.cnfValue ? errors.cnfValue.message : ""}
-                    color={errors.cnfValue ? "error" : "default"}
+                    helperText={errors?.cnfValue?.message}
                     className="flex-[1]"
                     step={0.01}
             />
@@ -188,8 +181,7 @@ const DetailsDialog = ({
                       defaultValue={fileDetails?.assessableValue ? fileDetails.assessableValue : 0}
                       {...register("assessableValue", {valueAsNumber: true})}
                       pre="৳"
-                      helperText={errors.assessableValue ? errors.assessableValue.message : ""}
-                      color={errors.assessableValue ? "error" : "default"}
+                      error={errors?.assessableValue?.message}
                       className="flex-[1]"
                       step={0.01}
             />
@@ -232,7 +224,7 @@ const DetailsDialog = ({
           </div>
           <div className="flex space-x-2">
             <InputText type="number"
-                      label="Duty Reference"
+                      label="Release Order No"
                       defaultValue={fileDetails?.dutyRef ? fileDetails.dutyRef : 0}
                       {...register("dutyRef", {valueAsNumber: true})}
                       pre="R"
@@ -246,27 +238,6 @@ const DetailsDialog = ({
                       className="flex-[1]"
             />  
           </div>
-          <div className="flex space-x-2">
-            <InputText label={"Duty Paid Details"}
-                        className={`flex-[0.7]`}
-                        defaultValue={fileDetails?.dutyPaid}
-                        {...register("dutyPaid")}
-                        error={errors.dutyPaid ? errors.dutyPaid.message : ""}
-            />
-            <InputText type="number"
-                      label="Total Duty"
-                      defaultValue={fileDetails?.dutyValue ? fileDetails.dutyValue : 0}
-                      {...register("dutyValue", {valueAsNumber: true})}
-                      pre="৳"
-                      error={errors.dutyValue ? errors.dutyValue.message : ""}
-                      className="flex-[0.3]"
-                      step={0.01}
-            />
-          </div>
-          <InputTextarea label="Remarks"
-                          defaultValue={fileDetails?.remarks}
-                          {...register("remarks")}
-          />
           <InputDropDown id="status"
                           label="Status"
                           options={fileStatusOptions}

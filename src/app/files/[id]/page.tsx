@@ -60,7 +60,7 @@ export default function FileDetailsPage() {
   const minCommission = fileDetails?.assessableValue && importerInfo?.commission && importerInfo?.minCommission ? 
                         fileDetails.assessableValue * importerInfo.commission / 100 < importerInfo.minCommission : false
   const commissionValue = fileDetails?.assessableValue && importerInfo?.commission && importerInfo?.minCommission ? 
-                          minCommission ? importerInfo.minCommission : Math.ceil(fileDetails.assessmentValue * importerInfo.commission / 100)  
+                          minCommission ? importerInfo.minCommission : Math.ceil(fileDetails.assessableValue * importerInfo.commission / 100)  
                           : 0
   const totalValue = totalPortExpense + totalCustomExpense + totalOtherExpense + totalDeliveryExpense + miscellaneousValue + commissionValue
   const paidValue = fileDetails && fileDetails.paid ? fileDetails.paid : 0

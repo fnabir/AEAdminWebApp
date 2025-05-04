@@ -21,13 +21,13 @@ const PrintDutyRow = ({data, dutyRef, assessmentRef, total, paid} : PrintDutyRow
           }}
         >
           <div>Duty</div>
-          <div className="border-x border-accent-foreground py-2.5 text-xs">
+          <div className="h-full flex flex-col items-center justify-center border-x border-accent-foreground text-xs">
             {dutyRef && dutyRef !== 0 ? <div>{`R-${dutyRef}`}</div> : null}
             {assessmentRef && assessmentRef != 0 ? <div>{`A-${assessmentRef}`}</div> : null}
           </div>
           {
           data.map((item, index) => 
-            <div key={index} className="border-r border-accent-foreground min-h-full items-center justify-center">
+            <div key={index} className="border-r border-accent-foreground h-full flex flex-col items-center justify-center">
               <div className="w-full py-1 border-b border-accent-foreground">{item.val().details}</div>
               <div className="py-1">{formatCurrency(item.val().value, 2)}</div>
             </div>
@@ -35,9 +35,9 @@ const PrintDutyRow = ({data, dutyRef, assessmentRef, total, paid} : PrintDutyRow
         }
         </div>
         </td>
-        <td className={"w-1/6 px-2 py-1 text-end"}>
+        <td className={"w-1/6 p-1 text-end"}>
           {paid && <div className="text-center text-sm">{paid}</div>}
-          <div>{formatCurrency(total, 2)}</div>
+          <div className="text-[15px]">{formatCurrency(total, 2)}</div>
         </td>
       </tr>
   )

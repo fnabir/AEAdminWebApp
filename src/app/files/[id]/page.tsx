@@ -22,6 +22,7 @@ import PrintSingleExpenseRow from "./print-single-expense-row";
 import PrintTotalRow from "./print-total-row";
 import { format, parse } from "date-fns";
 import PrintDutyRow from "./print-duty-row";
+import PaidDialog from "./paid-remarks-dialog";
 
 export default function FileDetailsPage() {
 	const {user, loading, userRole} = useAuth()
@@ -137,6 +138,14 @@ export default function FileDetailsPage() {
               type="delivery"
               data={deliveryExpenseData}
               title="Delivery Expenses"
+            />
+          }
+          {
+            userRole == "admin" &&
+            <PaidDialog 
+              fileNo={fileNo}
+              fileYear={fileYear}
+              data={fileDetailsData}
             />
           }
           {

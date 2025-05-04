@@ -22,8 +22,8 @@ const PrintDutyRow = ({data, dutyRef, assessmentRef, total, paid} : PrintDutyRow
         >
           <div>Duty</div>
           <div className="border-x border-accent-foreground py-2.5 text-xs">
-            {dutyRef && dutyRef !== 0 && <div>{`R-${dutyRef}`}</div>}
-            {assessmentRef && assessmentRef !== 0 && <div>{`A-${assessmentRef}`}</div>}
+            {dutyRef && dutyRef !== 0 ? <div>{`R-${dutyRef}`}</div> : null}
+            {assessmentRef && assessmentRef != 0 ? <div>{`A-${assessmentRef}`}</div> : null}
           </div>
           {
           data.map((item, index) => 

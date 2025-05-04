@@ -60,7 +60,7 @@ const DetailsDialog = ({
       vessel: data.vessel,
       rotNo: data.rotNo,
       cnfValue: data.cnfValue,
-      assessmentValue: data.assessableValue,
+      assessableValue: data.assessableValue,
       beDate: data.beDate ? format(new Date(data.beDate), "dd.MM.yyyy") : null,
       assessmentDate: data.assessmentDate ? format(new Date(data.assessmentDate), "dd.MM.yy") : null,
       dutyPaymentDate: data.dutyPaymentDate ? format(new Date(data.dutyPaymentDate), "dd.MM.yy") : null,

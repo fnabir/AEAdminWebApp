@@ -172,7 +172,7 @@ const DetailsDialog = ({
                     defaultValue={fileDetails?.cnfValue ? fileDetails.cnfValue : 0}
                     {...register("cnfValue", {valueAsNumber: true})}
                     pre="$"
-                    helperText={errors?.cnfValue?.message}
+                    error={errors?.cnfValue?.message}
                     className="flex-[1]"
                     step={0.01}
             />

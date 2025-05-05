@@ -211,7 +211,7 @@ export default function FileDetailsPage() {
                             fileDetails?.deliveryDate && 
                             <div className="flex flex-row w-full space-x-2">
                               <div className="grow">DATE:</div>
-                              <div className="flex-wrap">{format(parse(fileDetails.deliveryDate, "dd.MM.yy", new Date()), "dd.MM.yyyy")}</div>
+                              <div className="flex-wrap">{format(parse(fileDetails.deliveryDate, "dd/MM/yy", new Date()), "dd/MM/yyyy")}</div>
                             </div>
                           }
                         </div>

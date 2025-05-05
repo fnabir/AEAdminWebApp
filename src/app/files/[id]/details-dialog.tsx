@@ -61,10 +61,10 @@ const DetailsDialog = ({
       rotNo: data.rotNo,
       cnfValue: data.cnfValue,
       assessableValue: data.assessableValue,
-      beDate: data.beDate ? format(new Date(data.beDate), "dd.MM.yyyy") : null,
-      assessmentDate: data.assessmentDate ? format(new Date(data.assessmentDate), "dd.MM.yy") : null,
-      dutyPaymentDate: data.dutyPaymentDate ? format(new Date(data.dutyPaymentDate), "dd.MM.yy") : null,
-      deliveryDate: data.deliveryDate ? format(new Date(data.deliveryDate), "dd.MM.yy") : null,
+      beDate: data.beDate ? format(new Date(data.beDate), "dd/MM/yyyy") : null,
+      assessmentDate: data.assessmentDate ? format(new Date(data.assessmentDate), "dd/MM/yy") : null,
+      dutyPaymentDate: data.dutyPaymentDate ? format(new Date(data.dutyPaymentDate), "dd/MM/yy") : null,
+      deliveryDate: data.deliveryDate ? format(new Date(data.deliveryDate), "dd/MM/yy") : null,
       dutyRef: data.dutyRef,
       assessmentRef: data.assessmentRef
     }
@@ -75,10 +75,10 @@ const DetailsDialog = ({
 
   useEffect(() => {
     if (fileDetails) {
-      setValue("beDate", fileDetails.beDate ? format(parse(fileDetails.beDate, "dd.MM.yyyy", new Date()), "yyyy-MM-dd") : "");
-      setValue("assessmentDate", fileDetails.assessmentDate ? format(parse(fileDetails.assessmentDate, "dd.MM.yy", new Date()), "yyyy-MM-dd") : "");
-      setValue("dutyPaymentDate", fileDetails.dutyPaymentDate ? format(parse(fileDetails.dutyPaymentDate, "dd.MM.yy", new Date()), "yyyy-MM-dd") : "");
-      setValue("deliveryDate", fileDetails.deliveryDate ? format(parse(fileDetails.deliveryDate, "dd.MM.yy", new Date()), "yyyy-MM-dd") : "");
+      setValue("beDate", fileDetails.beDate ? format(parse(fileDetails.beDate, "dd/MM/yyyy", new Date()), "yyyy-MM-dd") : "");
+      setValue("assessmentDate", fileDetails.assessmentDate ? format(parse(fileDetails.assessmentDate, "dd/MM/yy", new Date()), "yyyy-MM-dd") : "");
+      setValue("dutyPaymentDate", fileDetails.dutyPaymentDate ? format(parse(fileDetails.dutyPaymentDate, "dd/MM/yy", new Date()), "yyyy-MM-dd") : "");
+      setValue("deliveryDate", fileDetails.deliveryDate ? format(parse(fileDetails.deliveryDate, "dd/MM/yy", new Date()), "yyyy-MM-dd") : "");
     }
   }, [fileDetails, setValue]);
 

@@ -236,10 +236,10 @@ export default function FileDetailsPage() {
                               </div>
                             }
                             { 
-                              fileDetails && fileDetails.assessmentValue &&
+                              fileDetails && fileDetails.assessableValue &&
                               <div className="flex flex-row w-full space-x-2">
                                 <div className="grow">ASSESSABLE VALUE:</div>
-                                <div className="flex-wrap">{formatCurrency(fileDetails.assessmentValue, 2)}</div>
+                                <div className="flex-wrap">{formatCurrency(fileDetails.assessableValue, 2)}</div>
                               </div>
                             }
                             { 

@@ -13,3 +13,14 @@ export type expenseDataType = {
   details: string,
   value: number,
 }
+
+export type FileInfoType = {
+  key : string,
+  importer: string,
+  itemName: string,
+  itemPackage: string,
+  bl: string,
+  lc: number,
+  be: number,
+  status: string,
+}

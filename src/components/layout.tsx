@@ -28,7 +28,7 @@ const Layout: FC<{ breadcrumb: breadcrumbItem[], children: ReactNode }> = ({
             <header
               className="flex px-4 py-2 h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
               <SidebarTrigger className="-ml-1"/>
-              <Separator orientation="vertical" className="mr-2 h-5"/>
+              <Separator orientation="vertical" className="mr-2 max-h-3/4 bg-slate-600"/>
               <Breadcrumb className={"flex-auto"}>
                 <BreadcrumbList>
                   {breadcrumb.map((crumb, index) => (

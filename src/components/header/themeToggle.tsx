@@ -11,6 +11,17 @@ export function ThemeToggle() {
 		setTheme(theme === "light" ? "dark" : "light");
 	};
 
+  React.useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme !== null) {
+      setTheme(storedTheme);
+    }
+  });
+  
+  React.useEffect(() => {
+    localStorage.setItem('theme', String(theme));
+  }, [theme]);
+
 	return (
 		<Button variant="outline"
 				size="icon"

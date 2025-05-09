@@ -67,13 +67,11 @@ const ExpenseDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <MdEdit/> {title}
-        </Button>
+        <Button>{title}</Button>
       </DialogTrigger>
       <DialogContent className={"border border-accent"}>
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle>{`${title} Expenses`}</DialogTitle>
           <DialogDescription>Click submit to update the expenses</DialogDescription>
         </DialogHeader>
         <Separator orientation={"horizontal"}/>

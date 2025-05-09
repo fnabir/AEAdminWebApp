@@ -23,6 +23,7 @@ import PrintTotalRow from "./print-total-row";
 import { format, parse } from "date-fns";
 import PrintDutyRow from "./print-duty-row";
 import PaidDialog from "./paid-remarks-dialog";
+import Separator from "@/components/generic/separator";
 
 export default function FileDetailsPage() {
 	const {user, loading, userRole} = useAuth()
@@ -102,43 +103,39 @@ export default function FileDetailsPage() {
           />
           {
             userRole == "admin" &&
-            <ExpenseDialog 
-              fileNo={fileNo}
-              fileYear={fileYear}
-              type="port"
-              data={portExpenseData}
-              title="Port Expenses"
-            />
-          }
-          {
-            userRole == "admin" &&
-            <ExpenseDialog 
-              fileNo={fileNo}
-              fileYear={fileYear}
-              type="custom"
-              data={customExpenseData}
-              title="Custom Expenses"
-            />
-          }
-          {
-            userRole == "admin" &&
-            <ExpenseDialog 
-              fileNo={fileNo}
-              fileYear={fileYear}
-              type="other"
-              data={otherExpenseData}
-              title="Other Expenses"
-            />
-          }
-          {
-            userRole == "admin" &&
-            <ExpenseDialog 
-              fileNo={fileNo}
-              fileYear={fileYear}
-              type="delivery"
-              data={deliveryExpenseData}
-              title="Delivery Expenses"
-            />
+            <div className="h-full flex space-x-2 items-center">
+              <Separator orientation="vertical"/>
+              <div>Expenses</div>
+              <ExpenseDialog 
+                fileNo={fileNo}
+                fileYear={fileYear}
+                type="port"
+                data={portExpenseData}
+                title="Port"
+              />
+              <ExpenseDialog 
+                fileNo={fileNo}
+                fileYear={fileYear}
+                type="custom"
+                data={customExpenseData}
+                title="Custom"
+              />
+              <ExpenseDialog 
+                fileNo={fileNo}
+                fileYear={fileYear}
+                type="other"
+                data={otherExpenseData}
+                title="Other"
+              />
+              <ExpenseDialog 
+                fileNo={fileNo}
+                fileYear={fileYear}
+                type="delivery"
+                data={deliveryExpenseData}
+                title="Delivery"
+              />
+              <Separator orientation="vertical"/>
+            </div>
           }
           {
             userRole == "admin" &&

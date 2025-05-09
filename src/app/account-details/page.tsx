@@ -11,20 +11,22 @@ import {AccountFormData, AccountFormSchema} from "@/lib/schemas";
 import {zodResolver} from "@hookform/resolvers/zod";
 import Loading from "@/components/loading";
 import {Button} from "@/components/ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import {useUpdateProfile} from "react-firebase-hooks/auth";
 import {auth} from "@/firebase/config";
 import {updateAccountInfo} from "@/lib/functions";
 import ChangePassword from "@/app/account-details/changePassword";
+import { breadcrumbItem } from "@/lib/types";
+
+const breadcrumb: breadcrumbItem[] = [
+	{ text: "Home", link: "/" },
+	{ text: "/" },
+	{ text: "Account Details" },
+]
 
 export default function AccountPage() {
 	const {user, loading} = useAuth();
 	const router = useRouter();
-	const breadcrumb: {text: string, link?: string}[] = [
-		{ text: "Home", link: "/" },
-		{ text: "/" },
-		{ text: "Account Details" },
-	]
 
 	const [updateProfile] = useUpdateProfile(auth);
 	const [userInfoData, userInfoLoading] = useObject(getDatabaseReference(`info/user/${user?.uid}`));
@@ -38,27 +40,34 @@ export default function AccountPage() {
 	});
 
 	const onSubmit = async (data: AccountFormData) => {
-		updateAccountInfo(user!.uid, {
-			name: data.name,
-			phone: data.phone,
-		}).then(async () => {
-			if (data.name != user?.displayName) {
-				const success = await updateProfile({displayName: data.name});
-				if (success) {
-					showToast("Success", "Updated user display name successfully.", "success");
-				} else {
-					showToast("Error", "Failed to update user display name.", "error");
-				}
-			}
-		})
-	};
+    if (!user) return;
 
-	if (loading || userInfoLoading) return <Loading />;
+    await updateAccountInfo(user.uid, {
+      name: data.name,
+      phone: data.phone,
+    });
 
-	if (!loading && !user) {
-		router.push("/login");
-		return null;
-	}
+    if (data.name !== user.displayName) {
+      const success = await updateProfile({displayName: data.name});
+      if (success) {
+        showToast("Success", "Updated user display name successfully.", "success");
+      } else {
+        showToast("Error", "Failed to update user display name.", "error");
+      }
+    }
+  };
+
+	useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
+
+  if (loading || userInfoLoading) return <Loading />;
+
+  if (!user) return null;
+
+	const userInfo = userInfoData?.val();
 
 	return (
 		<Layout breadcrumb={breadcrumb}>
@@ -67,31 +76,33 @@ export default function AccountPage() {
 					<InputText id={"name"}
 										 type={"text"}
 										 label={"Full Name"}
-										 defaultValue={user ? user.displayName! : undefined}
+										 defaultValue={user.displayName || ""}
 										 {...register("name")}
+										 error={errors.name?.message || ""}
+										 required
 					/>
 					<InputText id={"email"}
 										 type={"email"}
 										 label={"Email"}
-										 defaultValue={user ? user.email! : undefined}
-										 readOnly={true}
+										 defaultValue={user.email || ""}
+										 readOnly
 					/>
 					<InputText id={"title"}
 										 type={"text"}
 										 label={"Title"}
-										 defaultValue={userInfoData?.val().title}
-										 readOnly={true}
+										 defaultValue={userInfo?.title || ""}
+										 readOnly
 					/>
 					<InputText id={"phone"}
 										 type={"tel"}
 										 label={"Phone Number"}
-										 defaultValue={userInfoData?.val().phone}
-										 helperText={errors.phone ? errors.phone.message : ""}
-										 color={errors.phone ? "error" : "default"}
+										 defaultValue={userInfo?.phone || ""}
 										 {...register("phone")}
+										 error={errors.phone?.message || ""}
 					/>
-					<Button type="submit" variant="accent" className="w-full mt-5">Update</Button>
+					<Button type="submit" variant="default" className="w-full mt-5">Update</Button>
 				</form>
+
 				<ChangePassword/>
 			</div>
 		</Layout>

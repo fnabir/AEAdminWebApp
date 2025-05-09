@@ -15,12 +15,13 @@ import {useForm} from "react-hook-form";
 import {ChangePasswordFormData, ChangePasswordSchema} from "@/lib/schemas";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {showToast} from "@/lib/utils";
-import InputText from "@/components/generic/input-text";
 import React, {useState} from "react";
+import InputPassword from "@/components/generic/input-password";
+import { useChangePassword } from "@/hooks/use-change-password";
 
 export default function ChangePassword() {
 	const [open, setOpen] = useState<boolean>(false);
-	const [submit, setSubmit] = useState<boolean>(false);
+	
 	const {
 		register,
 		handleSubmit,
@@ -30,75 +31,59 @@ export default function ChangePassword() {
 		resolver: zodResolver(ChangePasswordSchema),
 	});
 
+	const { changePassword, loading } = useChangePassword();
+
 	const onSubmit = async (data: ChangePasswordFormData) => {
-		setSubmit(true);
-		const user = auth.currentUser;
-
-		if (!user) {
-			showToast("Error", "No user is signed in.", "error");
-			return;
-		}
-
-		const credential = EmailAuthProvider.credential(user.email as string, data.currentPassword);
-		try {
-			await reauthenticateWithCredential(user, credential);
-			try {
-				if (data.currentPassword === data.newPassword) {
-					showToast("Success", "Password didn't change", "success");
-				} else {
-					await updatePassword(user, data.newPassword);
-					showToast("Success", "Password updated successfully", "success");
-				}
-				setOpen(false);
-			} catch {
-				showToast("Error", "An error occurred while updating the password.", "error");
-			}
-		} catch {
-			showToast("Error", "Wrong current password.", "error");
-		}
-		setSubmit(false);
-	}
+    const success = await changePassword(data);
+    if (success) {
+			setOpen(false);
+			reset();
+    }
+  };
 
 	return (
 		<div>
-			<Drawer open={open} onOpenChange={setOpen}>
+			<Drawer open={open} onOpenChange={(state) => { 
+				setOpen(state);
+				reset();
+				if (!state && document.activeElement instanceof HTMLElement) {
+					document.activeElement.blur();
+				}
+			}}>
 				<DrawerTrigger asChild>
-					<Button variant="link" className="w-full mt-3" onClick={() => reset()}>Change Password</Button>
+					<Button variant="accent" className="w-full max-w-sm flex mt-3 mx-auto">Change Password</Button>
 				</DrawerTrigger>
 				<DrawerContent>
-					<div className="mx-auto w-full max-w-sm">
+					<div className="mx-auto w-full max-w-sm px-2">
 						<DrawerHeader>
 							<DrawerTitle className={"text-center"}>Change Password</DrawerTitle>
-							<DrawerDescription className={"text-center"}>Enter your registered mail with us to get the link to reset
-								password</DrawerDescription>
+							<DrawerDescription className={"text-center"}>
+								Enter your current and new password to update your account credentials.
+							</DrawerDescription>
 						</DrawerHeader>
 						<form onSubmit={handleSubmit(onSubmit)}>
-							<InputText id={"currentPassword"}
-												 type={"password"}
-												 label={"Current Password"}
-												 {...register('currentPassword')}
-												 helperText={errors.currentPassword ? errors.currentPassword.message : ""}
-												 color={errors.currentPassword ? "error" : "default"}
-												 required
+							<InputPassword label="Current Password"
+														{...register('currentPassword')}
+														error={errors.currentPassword?.message || ""}
+														disabled={loading}
+														required
 							/>
-							<InputText id={"newPassword"}
-												 type={"password"}
-												 label={"New Password"}
-												 {...register('newPassword')}
-												 helperText={errors.newPassword ? errors.newPassword.message : ""}
-												 color={errors.newPassword ? "error" : "default"}
-												 required
+							<InputPassword label="New Password"
+														{...register('newPassword')}
+														error={errors.newPassword?.message || ""}
+														disabled={loading}
+														required
 							/>
-							<InputText id={"confirmNewPassword"}
-                         type={"password"}
-												 label={"Confirm New Password"}
-												 {...register('confirmNewPassword')}
-												 helperText={errors.confirmNewPassword ? errors.confirmNewPassword.message : ""}
-												 color={errors.confirmNewPassword ? "error" : "default"}
-												 required
+							<InputPassword label="Confirm New Password"
+														{...register('confirmNewPassword')}
+														error={errors.confirmNewPassword?.message || ""}
+														disabled={loading}
+														required
 							/>
 							<DrawerFooter>
-								<Button type="submit" disabled={submit}>{submit ? "Updating..." : "Update Password"}</Button>
+								<Button type="submit" disabled={loading}>
+									{loading ? "Updating..." : "Update Password"}
+								</Button>
 								<DrawerClose asChild>
 									<Button variant="outline">Cancel</Button>
 								</DrawerClose>
@@ -108,5 +93,5 @@ export default function ChangePassword() {
 				</DrawerContent>
 			</Drawer>
 		</div>
-	)
+	);
 }

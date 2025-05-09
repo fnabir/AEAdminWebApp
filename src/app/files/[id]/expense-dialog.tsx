@@ -7,7 +7,7 @@ import { expenseDataType } from "@/lib/types";
 import { showToast } from "@/lib/utils";
 import { DataSnapshot } from "firebase/database";
 import { useEffect, useState } from "react";
-import { MdAdd, MdEdit } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 
 interface ExpenseDialogProps {
   fileNo: number;

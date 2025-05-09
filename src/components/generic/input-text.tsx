@@ -51,7 +51,6 @@ const InputText = forwardRef<HTMLInputElement, Props>(({
                             : "bg-transparent text-primary border-gray-600 focus:border-blue-500"}`}
             placeholder={placeholder}
             disabled={disabled}
-            required={required}
             readOnly={readOnly}
             autoComplete={"off"}
             {...rest}

@@ -39,21 +39,25 @@ export default function Home() {
     }
   }, [user, loading, router]);
 
-  const [showBalance, setShowBalance] = useState<boolean>(true);
-  const toggleShowBalance = () => {
-		setShowBalance(prev => !prev);
-	};
-
-  useEffect(() => {
-    const storedShowBalance = localStorage.getItem('showBalance');
-    if (storedShowBalance !== null) {
-      setShowBalance(storedShowBalance === 'true');
+  const getInitialShowBalance = () => {
+    if (typeof window !== 'undefined') {
+      const storedShowBalance = localStorage.getItem('showBalance');
+      return storedShowBalance !== null ? storedShowBalance === 'true' : true;
     }
-  }, []);
+    return true;
+  };
 
-  useEffect(() => {
-    localStorage.setItem('showBalance', String(showBalance));
-  }, [showBalance]);
+  const [showBalance, setShowBalance] = useState<boolean>(getInitialShowBalance);
+  
+  const toggleShowBalance = () => {
+    setShowBalance(prev => {
+      const newValue = !prev;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('showBalance', String(newValue));
+      }
+      return newValue;
+    });
+	};
 
   const fileCount = fileCurrentYear?.length || 0;
 
@@ -171,7 +175,7 @@ export default function Home() {
                   Object.entries(statusFiles).map(([status, files]) => (
                     status !== "done" && (
                       <FileStatusCount
-                        key   = {status}
+                        key = {status}
                         title = {status.replace(/([A-Z])/g, ' $1').trim()}
                         count = {files.length}
                         total = {fileCount - (statusFiles["done"]?.length || 0)}

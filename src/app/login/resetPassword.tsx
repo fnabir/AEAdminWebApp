@@ -30,9 +30,8 @@ export default function ResetPassword() {
 	});
 
 	const onSubmit = async (data: ForgotPasswordFormData) => {
-		await sendPasswordResetEmail(data.email).then(() => {
-			setSubmit(true);
-		})
+		await sendPasswordResetEmail(data.email);
+		setSubmit(true);
 	}
 
 	useEffect(() => {
@@ -65,16 +64,19 @@ export default function ResetPassword() {
 								password</DrawerDescription>
 						</DrawerHeader>
 						<form onSubmit={handleSubmit(onSubmit)}>
-							<InputText id={"email"}
-												 type={"email"}
+							<InputText type={"email"}
 												 label={"Email"}
 												 {...register('email')}
-												 helperText={errors.email ? errors.email.message : ""}
-												 color={errors.email ? "error" : "default"}
+												 error={errors.email?.message || ""}
 												 required
 							/>
 							<DrawerFooter>
-								<Button type="submit" disabled={loading}>{loading ? "Sending..." : "Send Reset Password Link"}</Button>
+								<Button type="submit" disabled={loading}>
+									{(submit || loading) && (
+										<div className="size-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+									)}
+									{submit || loading ? "Sending..." : "Send Reset Password Link"}
+								</Button>
 								<DrawerClose asChild>
 									<Button variant="outline">Cancel</Button>
 								</DrawerClose>
@@ -84,5 +86,5 @@ export default function ResetPassword() {
 				</DrawerContent>
 			</Drawer>
 		</div>
-)
+	)
 }

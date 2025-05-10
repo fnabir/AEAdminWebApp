@@ -1,6 +1,6 @@
 import { auth } from "@/firebase/config";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { set, update } from "firebase/database";
+import { DataSnapshot, set, update } from "firebase/database";
 import { getDatabaseReference, showToast } from "@/lib/utils";
 import { expenseDataType } from "@/lib/types";
 
@@ -23,6 +23,12 @@ export async function updateAccountInfo(uid: string, data: object) {
 	}).catch ((error) => {
 		showToast("Error", `Failed to update the account info record: ${error.message}`, "error");
 	})
+}
+
+export function getNextFileNo(filesData: DataSnapshot[] | undefined): number {
+  if (!filesData || filesData.length === 0) return 1;
+  const existingFileNos = filesData.map((snapshot) => Number(snapshot.key));
+  return Math.max(...existingFileNos) + 1;
 }
 
 export async function addNewFile(fileNo: number, fileYear: number, data: object) {

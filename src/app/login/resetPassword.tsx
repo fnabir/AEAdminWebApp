@@ -73,6 +73,7 @@ export default function ResetPassword() {
 							/>
 							<DrawerFooter>
                 <ButtonLoading
+                  type = "submit"
                   loading = {submit || loading}
                   text = "Send Reset Password Link"
                   loadingText = "Sending..."

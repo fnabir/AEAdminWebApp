@@ -34,7 +34,7 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FileInfoFormData>({
     resolver: zodResolver(FileInfoFormSchema),
   });
@@ -148,7 +148,7 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
 
           <DialogFooter className={"sm:justify-center pt-8 gap-4"}>
             <DialogClose asChild>
-              <Button type="button" size="lg" variant="destructive">
+              <Button type="button" variant="destructive">
                 Close
               </Button>
             </DialogClose>
@@ -160,8 +160,15 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
                 loadingText = "Checking..."
               />
             }
-            {newFile && <Button type="submit" size="lg">Submit</Button>}
-            {newFile && <Button type="reset" size="lg" variant={"accent"}>Reset</Button>}
+            {newFile && (
+              <ButtonLoading
+              type="submit"
+              loading = {isSubmitting}
+              text = "Submit"
+              loadingText="Submitting..."
+            />
+            )}
+            {newFile && <Button type="reset" variant={"accent"}>Reset</Button>}
           </DialogFooter>
         </form>
       </DialogContent>

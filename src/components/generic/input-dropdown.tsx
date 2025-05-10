@@ -1,20 +1,19 @@
-import React, {FC} from "react";
+import React, {FC, useId} from "react";
 import {options} from "@/lib/types";
 
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: options[];
-  id?: string,
   label: string,
   helperText?: string,
-  color?: string,
+  error?: string,
   disabled?: boolean,
   required?: boolean,
   className?: string
 }
 
-const InputDropDown: FC<Props> = ({
-                          options, id, label, helperText, color, disabled = false, required = false, className, ...rest
-}) => {
+const InputDropDown: FC<Props> = ({options, label, helperText, error, disabled = false, required = false, className, ...rest}) => {
+  const autoId = useId();
+  const id = rest.id || autoId;
 
   return (
     <div className={className}>
@@ -22,7 +21,7 @@ const InputDropDown: FC<Props> = ({
         <select id={id}
                 className={`w-full p-2 rounded-lg border focus:border-blue-400 focus:outline-hidden focus:ring-0 peer
                             ${disabled ? "bg-gray-700 text-primary/50" : "text-primary bg-transparent"} 
-                            ${color == "error" ? "text-red-500 border-red-500" : "border-gray-600"}`}
+                            ${error ? "text-red-500 border-red-500" : "border-gray-600"}`}
                 disabled={disabled}
                 {...rest}>
           <option className={"bg-primary-foreground text-primary"}>
@@ -42,10 +41,11 @@ const InputDropDown: FC<Props> = ({
           <span className={required ? "absolute text-red-500 text-xl pl-[0.1rem] -translate-y-1" : "hidden"}>*</span>
         </label>
       </div>
-      <div
-        className={helperText ? ((color == "error" ? "text-red-500" : "text-sky-300") + " flex mt-1 ml-1 text-sm") : "hidden"}>
-        {helperText}
-      </div>
+      {
+        error ? <div className="m-1 text-sm text-red-500">{error}</div>
+        : helperText ? <div className="m-1 text-sm text-sky-500">{helperText}</div>
+        : null
+      }
     </div>
   );
 };

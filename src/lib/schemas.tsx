@@ -26,9 +26,7 @@ export type ChangePasswordFormData = z.infer<typeof ChangePasswordSchema>;
 
 export const AccountFormSchema = z.object({
 	name: z.string().nonempty("Full Name is required").min(4, "Name must be at least 4 characters long"),
-	email: z.string().optional(),
 	phone: z.string().optional(),
-	title: z.string().optional(),
 	role: z.string().optional(),
 });
 

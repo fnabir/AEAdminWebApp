@@ -9,15 +9,13 @@ import {
 	DrawerTrigger
 } from "@/components/ui/drawer";
 import {Button} from "@/components/ui/button";
-import { reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
-import {auth} from "@/firebase/config";
 import {useForm} from "react-hook-form";
 import {ChangePasswordFormData, ChangePasswordSchema} from "@/lib/schemas";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {showToast} from "@/lib/utils";
 import React, {useState} from "react";
 import InputPassword from "@/components/generic/input-password";
 import { useChangePassword } from "@/hooks/use-change-password";
+import { ButtonLoading } from "@/components/generic/button-loading";
 
 export default function ChangePassword() {
 	const [open, setOpen] = useState<boolean>(false);
@@ -81,9 +79,12 @@ export default function ChangePassword() {
 														required
 							/>
 							<DrawerFooter>
-								<Button type="submit" disabled={loading}>
-									{loading ? "Updating..." : "Update Password"}
-								</Button>
+                <ButtonLoading
+                  type = "submit"
+                  loading = {loading}
+                  text = "Update Password"
+                  loadingText = "Updating..."
+                />
 								<DrawerClose asChild>
 									<Button variant="outline">Cancel</Button>
 								</DrawerClose>

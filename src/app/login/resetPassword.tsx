@@ -16,6 +16,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {showToast} from "@/lib/utils";
 import InputText from "@/components/generic/input-text";
 import React, {useEffect, useState} from "react";
+import { ButtonLoading } from "@/components/generic/button-loading";
 
 export default function ResetPassword() {
 	const [sendPasswordResetEmail, loading, error] = useSendPasswordResetEmail(auth);
@@ -71,12 +72,11 @@ export default function ResetPassword() {
 												 required
 							/>
 							<DrawerFooter>
-								<Button type="submit" disabled={loading}>
-									{(submit || loading) && (
-										<div className="size-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-									)}
-									{submit || loading ? "Sending..." : "Send Reset Password Link"}
-								</Button>
+                <ButtonLoading
+                  loading = {submit || loading}
+                  text = "Send Reset Password Link"
+                  loadingText = "Sending..."
+                />
 								<DrawerClose asChild>
 									<Button variant="outline">Cancel</Button>
 								</DrawerClose>

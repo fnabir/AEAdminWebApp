@@ -17,6 +17,7 @@ import {auth} from "@/firebase/config";
 import {updateAccountInfo} from "@/lib/functions";
 import ChangePassword from "@/app/account-details/changePassword";
 import { breadcrumbItem } from "@/lib/types";
+import { ButtonLoading } from "@/components/generic/button-loading";
 
 const breadcrumb: breadcrumbItem[] = [
 	{ text: "Home", link: "/" },
@@ -34,7 +35,7 @@ export default function AccountPage() {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm<AccountFormData>({
 		resolver: zodResolver(AccountFormSchema),
 	});
@@ -100,7 +101,12 @@ export default function AccountPage() {
 										 {...register("phone")}
 										 error={errors.phone?.message || ""}
 					/>
-					<Button type="submit" variant="default" className="w-full mt-5">Update</Button>
+					<ButtonLoading
+            type="submit"
+            loading = {isSubmitting}
+            text = "Update"
+            loadingText = "Updating..."
+            className="mt-5"/>
 				</form>
 
 				<ChangePassword/>

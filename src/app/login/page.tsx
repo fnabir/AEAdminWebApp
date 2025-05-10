@@ -16,6 +16,7 @@ import {login, logout} from "@/lib/functions";
 import { FirebaseError } from "firebase/app";
 import InputPassword from "@/components/generic/input-password";
 import { get } from "firebase/database";
+import { ButtonLoading } from "@/components/generic/button-loading";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -101,12 +102,12 @@ export default function LoginPage() {
                             error={errors.password?.message || ""}
                             required
               />
-              <Button type="submit" className="w-full transition-all duration-150" disabled={isSubmitting }>
-                {isSubmitting && (
-                  <div className="size-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-                )}
-                {isSubmitting ? "Logging in..." : "Login"}
-              </Button>
+              <ButtonLoading
+                type = "submit"
+                loading = {isSubmitting}
+                text = "Login"
+                loadingText = "Logging in..."
+              />
             </form>
             <div className="text-center">
               <ResetPassword/>

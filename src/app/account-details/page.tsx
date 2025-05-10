@@ -106,7 +106,7 @@ export default function AccountPage() {
             loading = {isSubmitting}
             text = "Update"
             loadingText = "Updating..."
-            className="mt-5"/>
+            className="w-full mt-5"/>
 				</form>
 
 				<ChangePassword/>

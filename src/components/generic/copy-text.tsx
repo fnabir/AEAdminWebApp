@@ -27,7 +27,7 @@ export function CopyText({ text, copyText=text, showFeedback = true, className =
 
   return (
     <div className={`items-center gap-1 ${className}`}>
-      <div className="relative h-6.25 -translate-x-1 overflow-hidden">
+      <div className="relative h-5 -translate-x-1 overflow-hidden">
         <div
           className={clsx(
             'transition-transform duration-300',

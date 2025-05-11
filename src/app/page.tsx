@@ -95,7 +95,7 @@ export default function Home() {
     <Layout breadcrumb={breadcrumb}>
       <div className={"flex flex-col h-full space-y-2"}>
         <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 lg:col-span-8 space-y-6">
+          <div className="col-span-12 lg:col-span-9 space-y-6">
 
             {userRole == "admin" && 
               <Card className="backdrop-blur-sm overflow-hidden">
@@ -157,12 +157,32 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
-          <div className="col-span-12 lg:col-span-4 space-y-6 pb-6">
-            <Card className="border-slate-500/50 backdrop-blur-sm overflow-hidden">
-              <CardContent className="-m-2 p-4 bg-secondary text-center">
-                <div className="text-sm">VERSION</div>
-                <div className="text-3xl font-mono text-cyan-500">{packageJson.version}</div>
-                <div className="text-sm text-secondary-foreground">{format(new Date(packageJson.releaseDate), "dd MMMM yyyy")}</div>
+          <div className="col-span-12 lg:col-span-3 space-y-6 pb-6">
+            <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm overflow-hidden">
+              <CardContent className="-m-2 p-0 text-center">
+                <div className="bg-secondary p-2 border-b border-slate-700/50">
+                  <div className="text-center">
+                    <div className="text-sm">VERSION</div>
+                    <div className="text-3xl font-mono text-cyan-500">{packageJson.version}</div>
+                    <div className="text-sm text-secondary-foreground">{format(new Date(packageJson.releaseDate), "dd MMMM yyyy")}</div>
+                  </div>
+                </div>
+                <div className="p-4 text-sm text-start divide-y divide-slate-500 space-y-1">
+                  <div className="pb-1">
+                    <div>ADDED</div>
+                    <ul className="list-disc pl-4">
+                      <li>Theme and Show Balance persists after refresh.</li>
+                      <li>Suggestion for new file no in add new dialog.</li>
+                      <li>Password field in login and change password now have option to show/hide</li>
+                    </ul>
+                  </div>
+                  <div className="pb-1">
+                    <div>FIXED</div>
+                    <ul className="list-disc pl-4">
+                      <li>Pressing check new file button in add new file dialog would show error for required field before pressing submit button.</li>
+                    </ul>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 

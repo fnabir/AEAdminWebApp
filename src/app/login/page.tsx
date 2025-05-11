@@ -10,7 +10,6 @@ import Image from "next/image";
 import TextLogo from "@/images/logo.svg";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import InputText from "@/components/generic/input-text";
-import {Button} from "@/components/ui/button";
 import ResetPassword from "@/app/login/resetPassword";
 import {login, logout} from "@/lib/functions";
 import { FirebaseError } from "firebase/app";

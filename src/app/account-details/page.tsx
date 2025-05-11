@@ -10,7 +10,6 @@ import {useForm} from "react-hook-form";
 import {AccountFormData, AccountFormSchema} from "@/lib/schemas";
 import {zodResolver} from "@hookform/resolvers/zod";
 import Loading from "@/components/loading";
-import {Button} from "@/components/ui/button";
 import React, { useEffect } from "react";
 import {useUpdateProfile} from "react-firebase-hooks/auth";
 import {auth} from "@/firebase/config";

@@ -3,6 +3,7 @@ import { auth } from "@/firebase/config";
 import { reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
 import { showToast } from "@/lib/utils";
 import { ChangePasswordFormData } from "@/lib/schemas";
+import { FirebaseError } from "firebase/app";
 
 export function useChangePassword() {
   const [loading, setLoading] = useState(false);
@@ -31,11 +32,12 @@ export function useChangePassword() {
       
       return true;
 
-    } catch (error: any) {
-      if (error.code === "auth/wrong-password") {
+    } catch (error) {
+      const e = error as FirebaseError
+      if (e.code === "auth/wrong-password") {
         showToast("Error", "Wrong current password.", "error");
       } else {
-        showToast("Error", error?.message || "An error occurred.", "error");
+        showToast("Error", e?.message || "An error occurred.", "error");
       }
       return false;
     } finally {

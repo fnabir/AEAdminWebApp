@@ -23,7 +23,6 @@ type AddFileDialogProps = {
 export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
 
   const [open, setOpen] = useState<boolean>(false);
-  const [submit, setSubmit] = useState<boolean>(false);
   const [newFile, setNewFile] = useState<boolean>(false);
   const [newFileNo, setNewFileNo] = useState<number | undefined>();
   const suggestedFileNo = getNextFileNo(filesData)
@@ -47,11 +46,9 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
   };
 
   const handleCheckNewFile = () => {
-    setSubmit(true);
     if (!newFileNo) {
       showToast("Error", "Input New File No", "error");
       setNewFile(false);
-      setSubmit(false);
       return;
     }
     if (filesData && filesData.some(snapshot => Number(snapshot.key) === newFileNo)) {
@@ -61,7 +58,6 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
       setNewFile(true);
       reset();
     }
-    setSubmit(false);
   };
 
   const onSubmit = async (data: FileInfoFormData) => {

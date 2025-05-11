@@ -152,14 +152,7 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
                 Close
               </Button>
             </DialogClose>
-            {!newFile && 
-              <ButtonLoading
-                type="button"
-                loading={submit}
-                text = "Check"
-                loadingText = "Checking..."
-              />
-            }
+            {!newFile && <Button type="button" onClick={handleCheckNewFile}>Check</Button>}
             {newFile && (
               <ButtonLoading
               type="submit"

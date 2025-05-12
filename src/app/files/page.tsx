@@ -2,9 +2,9 @@
 
 import Layout from "@/components/layout";
 import {useAuth} from "@/hooks/use-auth";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import Loading from "@/components/loading";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useList } from "react-firebase-hooks/database";
 import { getCurrentYear, getDatabaseReference } from "@/lib/utils";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
@@ -20,6 +20,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Badge } from "@/components/ui/badge";
 import { breadcrumbItem } from "@/lib/types";
 import AddFileDialog from "./add-file-dialog";
+import { useFilesYear } from "@/hooks/use-files-year";
 
 const breadcrumb: breadcrumbItem[] = [
   { text: "Home", link: "/" },
@@ -27,68 +28,59 @@ const breadcrumb: breadcrumbItem[] = [
   { text: "Files" },
 ]
 
-const getYearsRange = (start = 2024, end = getCurrentYear()) =>
+const currentYear = getCurrentYear();
+const getYearsRange = (start = 2024, end = currentYear) =>
   Array.from({ length: end - start + 1 }, (_, i) => ({
     value: String(start + i)
   })).reverse();
+const validYears = getYearsRange().map((y) => Number(y.value));
 
 export default function FilesPage() {
-	const {user, loading} = useAuth()
-  const searchParams = useSearchParams()
-	const router = useRouter()
-
-	const selectedYear = searchParams.has("year") ? Number(searchParams.get('year')) : getCurrentYear()
-  const [year, setYear] = useState(selectedYear)
+	const {user, loading} = useAuth();
+	const router = useRouter();
+  const { year, changeYear } = useFilesYear(validYears);
+  
+  const [filesData, filesLoading, filesError] = useList(getDatabaseReference(`files/info/${year}`));
 
   useEffect(() => {
-    setYear(selectedYear)
-  }, [selectedYear])
-
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newYear = e.target.value
-    if (newYear != "Select") router.push(`?year=${newYear}`)
-  }
-  
-  const [filesData, filesLoading, filesError] = useList(getDatabaseReference(`files/info/${year}`))
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
 
 	if (loading) return <Loading />
 
-	if (!loading && !user) {
-		router.push("/login")
-		return null
-	}
+	if (!user) return null;
 
 	return (
 		<Layout breadcrumb={breadcrumb}>
 			<div className="flex flex-col h-full">
         <div className="flex items-center space-x-2 divide-x-2 divide-slate-500">
-          <InputDropDown id="year-select"
-                        label={"Year"}
+          <InputDropDown label={"Year"}
                         className="max-w-full w-36 -translate-y-2 pr-2"
                         options={getYearsRange()}
-                        onChange={handleYearChange}
-                        defaultValue={year}
-          />
+                        value={year.toString()}
+                        onChange={(e) => changeYear(Number(e.target.value))}
+            />
           <AddFileDialog year={year} filesData={filesData}/>
         </div>
         <ScrollArea className={"grow overflow-auto -mr-4 pr-4"}>
           {
             filesLoading ?
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
-                <Skeleton className="h-48"/>
-                <Skeleton className="h-48"/>
-                <Skeleton className="h-48"/>
-                <Skeleton className="h-48"/>
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-48 rounded-lg" />
+                ))}
               </div>
             : filesError ?
               <CardIcon
                 title={"Error"}
-                description={filesError.message}>
+                description={filesError?.message ?? "Unexpected error. Please try again."}>
                 <MdError size={28}/>
               </CardIcon>
             : !filesData || filesData.length === 0 ?
               <CardIcon
-                title={`No files found of year ${year}`}>
+                title={`No files found for ${year}`}>
                 <MdError size={28}/>
               </CardIcon>
             : <div className={"grid grid-cols-1 lg:grid-cols-4 gap-2"}>
@@ -118,10 +110,10 @@ function FilesCard({fileNo, fileYear, data}: { fileNo: number; fileYear: number;
   const be = val.be;
   const status = val.status;
   return (
-    <Card className="col-span-1 p-2 transition-all duration-150 border border-slate-500 hover:border-blue-500 -space-y-1">
+    <Card className="col-span-1 backdrop-blur-sm overflow-hidden p-2 transition-all duration-150 border border-slate-500 hover:border-blue-500 -space-y-1">
       <div className="w-full flex items-center justify-between">
         <div className="wrap w-14 font-bold font-mono border border-slate-500 rounded-lg text-center p-1 text-lg">{fileNo}</div>
-        {status && status != "Select" && <Badge className="text-sm h-6">{status}</Badge>}
+        {status && status !== "Select" && <Badge className="text-sm h-6">{status}</Badge>}
         <Link href={`/files/${fileYear}${fileNo}`}>
           <TooltipProvider>
             <Tooltip>
@@ -143,8 +135,8 @@ function FilesCard({fileNo, fileYear, data}: { fileNo: number; fileYear: number;
         <div>
           {bl && <CopyText text={`B/L: ${bl}`} copyText={bl} className="text-sm"/>}
           <div className="flex divide-x divide-slate-500 text-sm">
-            {lc && lc != 0 ? <CopyText text={`LC: ${lc}`} copyText={lc.toString()} className="mr-1"/> : null}
-            {be && be != 0 ? <CopyText text={`B/E: ${be}`} copyText={be.toString()} className="ml-1"/> : null}
+            {be && be != 0 ? <CopyText text={`B/E: ${be}`} copyText={be.toString()} className="mr-1"/> : null}
+            {lc && lc != 0 ? <CopyText text={`LC: ${lc}`} copyText={lc.toString()} className="ml-1"/> : null}
           </div>
         </div>
     </Card>

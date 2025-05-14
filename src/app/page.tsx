@@ -62,7 +62,7 @@ export default function Home() {
   const fileCount = fileCurrentYear?.length || 0;
 
   const statusFiles = useMemo(() => {
-    const statusMap: Record<string, FileInfoType[]> = {
+    const statusMap: Record<string, (FileInfoType & { key: string })[]> = {
       new: [],
       assessment: [],
       dutyPayment: [],
@@ -229,7 +229,7 @@ function FileCard({ title, value, year, loading}: { title: string; value: number
   )
 }
 
-function FileStatus({ title, files, loading}: { title: string; files: FileInfoType[]; loading: boolean}) {
+function FileStatus({ title, files, loading}: { title: string; files: (FileInfoType & { key: string })[]; loading: boolean}) {
   return (
     loading ? <Skeleton className="min-h-36 rounded-lg"/>
     :

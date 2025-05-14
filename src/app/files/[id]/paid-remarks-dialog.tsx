@@ -1,4 +1,3 @@
-import { DataSnapshot } from "firebase/database";
 import { useState } from "react";
 import InputText from "@/components/generic/input-text";
 import Separator from "@/components/generic/separator";
@@ -10,20 +9,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FilePaymentFormData, FilePaymentFormSchema } from "@/lib/schemas";
 import InputTextarea from "@/components/generic/input-textarea";
+import { FileDetailsType } from "@/lib/types";
 
 interface PaidDialogProps {
   fileNo: number;
   fileYear: number;
-  data: DataSnapshot | undefined;
+  fileDetails: FileDetailsType;
 }
 
 const PaidDialog = ({
   fileNo,
   fileYear,
-  data
+  fileDetails
 }: PaidDialogProps) => {
   const [open, setOpen] = useState(false)
-  const fileDetails = data?.val()
 
   const {
       register,

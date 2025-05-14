@@ -171,15 +171,19 @@ export default function Home() {
                   <div className="pb-1">
                     <div>ADDED</div>
                     <ul className="list-disc pl-4">
-                      <li>Theme and Show Balance persists after refresh.</li>
-                      <li>Suggestion for new file no in add new dialog.</li>
-                      <li>Password field in login and change password now have option to show/hide</li>
+                      <li>Toggle button to see print layout of a file.</li>
+                    </ul>
+                  </div>
+                  <div className="pb-1">
+                    <div>CHANGED</div>
+                    <ul className="list-disc pl-4">
+                      <li>Default layout introduced differnet than print layout.</li>
                     </ul>
                   </div>
                   <div className="pb-1">
                     <div>FIXED</div>
                     <ul className="list-disc pl-4">
-                      <li>Pressing check new file button in add new file dialog would show error for required field before pressing submit button.</li>
+                      <li>Total value was wrong not calculating duty value.</li>
                     </ul>
                   </div>
                 </div>

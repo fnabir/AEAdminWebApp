@@ -83,7 +83,7 @@ export default function FilesPage() {
                 title={`No files found for ${year}`}>
                 <MdError size={28}/>
               </CardIcon>
-            : <div className={"grid grid-cols-1 lg:grid-cols-4 gap-2"}>
+            : <div className={"grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-2"}>
               {
                 filesData.map((file: DataSnapshot) => {
                   return (

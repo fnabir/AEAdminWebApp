@@ -5,9 +5,8 @@ import {useAuth} from "@/hooks/use-auth";
 import {usePathname, useRouter} from "next/navigation";
 import Loading from "@/components/loading";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { cn, formatCurrency, generateFileCode } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
 import CardIcon from "@/components/card/card-icon";
 import { MdError } from "react-icons/md";
 import { Button } from "@/components/ui/button";
@@ -27,7 +26,6 @@ import { ExpenseSection } from "./expense-section";
 import { FileInfoRow } from "./file-info-row";
 import { useFileTotalExpenses } from "@/hooks/use-file-total-expense";
 import { useFileData } from "@/hooks/use-file-data";
-import { breadcrumbItem } from "@/lib/types";
 
 export default function FileDetailsPage() {
 	const {user, loading, userRole} = useAuth();

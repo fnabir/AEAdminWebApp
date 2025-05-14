@@ -15,9 +15,30 @@ export type expenseDataType = {
 }
 
 export type FileInfoType = {
-  key: string,
-  importer: string,
-  itemName: string,
-  itemPackage: string,
-  status: string,
+  importer: string;
+  itemCount?: number;
+  itemName: string;
+  itemPackage: string;
+  bl?: string;
+  lc?: number;
+  be?: number;
+  type?: "export" | "import";
+  status: string;
+}
+
+export type FileDetailsType = {
+  vessel?: string;
+  rotNo?: string;
+  cnfValue?: number;
+  assessableValue?: number;
+  beDate?:string;
+  assessmentDate?: string;
+  dutyPaymentDate?: string;
+  deliveryDate?: string;
+  assessmentRef: number;
+  dutyRef?: number;
+  dutyPaid?: string;
+  dutyValue?: number;
+  paid?: number;
+  remarks?: string;
 }

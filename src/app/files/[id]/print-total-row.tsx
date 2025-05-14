@@ -1,12 +1,13 @@
 import { formatCurrency } from "@/lib/utils";
 
 interface PrintTotalRowProps {
-  remarks?: string,
-  total: number,
-  paid:number
+  remarks?: string;
+  total: number;
+  paid:number;
+  balance:number
 }
 
-const PrintTotalRow = ({remarks, total, paid} : PrintTotalRowProps) => {
+const PrintTotalRow = ({remarks, total, paid, balance} : PrintTotalRowProps) => {
   return (
     <tr className="w-full border-4 border-double border-accent-foreground">
       <td className={`w-2/3 py-2 pl-6 pr-2 items-center`}>
@@ -24,7 +25,7 @@ const PrintTotalRow = ({remarks, total, paid} : PrintTotalRowProps) => {
       <td className={`w-1/6 text-end`}>
         <div className="px-2 py-1">{formatCurrency(total, 2)}</div>
         <div className="px-2 py-1 border border-y-accent-foreground">{formatCurrency(paid, 2)}</div>
-        <div className="px-2 py-1">{formatCurrency(total - paid, 2)}</div>
+        <div className="px-2 py-1">{formatCurrency(balance, 2)}</div>
       </td>
     </tr>
   )

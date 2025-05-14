@@ -1,10 +1,8 @@
-import { DataSnapshot } from "firebase/database";
 import { useEffect, useState } from "react";
 import InputText from "@/components/generic/input-text";
 import Separator from "@/components/generic/separator";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { MdEdit } from "react-icons/md";
 import { updateFile } from "@/lib/functions";
 import { format, parse } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,26 +13,25 @@ import { getDatabaseReference } from "@/lib/utils";
 import InputDropDown from "@/components/generic/input-dropdown";
 import { InputDate } from "@/components/generic/input-date";
 import { fileStatusOptions } from "@/lib/arrays";
+import { FileDetailsType, FileInfoType } from "@/lib/types";
 
 interface DetailsDialogProps {
   fileNo: number;
   fileYear: number;
-  fileInfoData: DataSnapshot | undefined;
-  fileDetailsData: DataSnapshot | undefined;
+  fileInfo: FileInfoType;
+  fileDetails: FileDetailsType;
 }
 
 const DetailsDialog = ({
   fileNo,
   fileYear,
-  fileInfoData,
-  fileDetailsData
+  fileInfo,
+  fileDetails
 }: DetailsDialogProps) => {
   const [open, setOpen] = useState(false)
 
   const importerNames = useListKeys(getDatabaseReference(`info/importer`))[0];
   const importerNameOptions = importerNames?.map((importerName) => ({ value: importerName}))
-  const fileInfo = fileInfoData?.val()
-  const fileDetails = fileDetailsData?.val()
 
   const {
       register,
@@ -86,7 +83,7 @@ const DetailsDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <MdEdit/> File Details
+          File Details
         </Button>
       </DialogTrigger>
       <DialogContent className={"border border-accent"}>

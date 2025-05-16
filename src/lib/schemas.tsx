@@ -95,3 +95,19 @@ export const FilePaymentFormSchema = z.object({
 });
 
 export type FilePaymentFormData = z.infer<typeof FilePaymentFormSchema>;
+
+export const TransactionFormSchema = z.object({
+	title: z.string().nonempty("Title is required")
+		.refine((val) => val != "Select", {message: "Choose Bill No"}),
+	details: z.string().optional(),
+	value: z.number({
+			required_error: "Number is required",
+			invalid_type_error: "Input must be a number",
+		}).nonnegative("Amount must be positive")
+		.refine((val) => !isNaN(val), {
+			message: "Input cannot be empty or not a number",
+		}),
+	date: z.string().nonempty("Date is required"),
+});
+
+export type TransactionFormData = z.infer<typeof TransactionFormSchema>;

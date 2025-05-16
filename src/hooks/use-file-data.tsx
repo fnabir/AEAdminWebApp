@@ -1,7 +1,8 @@
 import { useObject, useList } from "react-firebase-hooks/database";
 import { generateFileCode, getDatabaseReference } from "@/lib/utils";
-import { breadcrumbItem, FileDetailsType, FileInfoType } from "@/lib/types";
+import { FileDetailsType, FileInfoType } from "@/lib/types";
 import { useMemo } from "react";
+import { BreadcrumbInterface } from "@/lib/interfaces";
 
 export function useFileData(fileYear: number, fileNo: number) {
   const [fileInfoData, fileInfoLoading, fileInfoError] = useObject(getDatabaseReference(`files/info/${fileYear}/${fileNo}`));
@@ -17,12 +18,10 @@ export function useFileData(fileYear: number, fileNo: number) {
   const importerInfo = importerData?.val();
 
   const fileName = useMemo(() => generateFileCode(fileNo, fileYear, fileInfo?.type), [fileNo, fileYear, fileInfo?.type]);
-  const breadcrumb: breadcrumbItem[] = useMemo(() => [
-    { text: "Home", link: "/" },
-    { text: "/" },
-    { text: "Files", link: `/files?year=${fileYear}` },
-    { text: "/" },
-    { text: fileName }
+  const breadcrumb: BreadcrumbInterface[] = useMemo(() => [
+    { label: "Home", href: "/" },
+    { label: "Files", href: `/files?year=${fileYear}` },
+    { label: fileName }
   ], [fileYear, fileName]);
 
   const dutyData = useList(getDatabaseReference(`files/expense/${fileYear}/${fileNo}/duty`))[0];

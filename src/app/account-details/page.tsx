@@ -15,13 +15,12 @@ import {useUpdateProfile} from "react-firebase-hooks/auth";
 import {auth} from "@/firebase/config";
 import {updateAccountInfo} from "@/lib/functions";
 import ChangePassword from "@/app/account-details/changePassword";
-import { breadcrumbItem } from "@/lib/types";
 import { ButtonLoading } from "@/components/generic/button-loading";
+import { BreadcrumbInterface } from "@/lib/interfaces";
 
-const breadcrumb: breadcrumbItem[] = [
-	{ text: "Home", link: "/" },
-	{ text: "/" },
-	{ text: "Account Details" },
+const breadcrumb: BreadcrumbInterface[] = [
+	{ label: "Home", href: "/" },
+	{ label: "Account Details" },
 ]
 
 export default function AccountPage() {

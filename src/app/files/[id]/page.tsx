@@ -21,14 +21,14 @@ import PrintTotalRow from "./print-total-row";
 import { format, parse } from "date-fns";
 import PrintDutyRow from "./print-duty-row";
 import PaidDialog from "./paid-remarks-dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExpenseSection } from "./expense-section";
 import { FileInfoRow } from "./file-info-row";
 import { useFileTotalExpenses } from "@/hooks/use-file-total-expense";
 import { useFileData } from "@/hooks/use-file-data";
+import CardSection from "@/components/card/card-section";
 
 export default function FileDetailsPage() {
-	const {user, userLoading, userRole} = useAuth();
+	const {user, userLoading, isAdmin} = useAuth();
   const router = useRouter();
   
   const path = usePathname();
@@ -129,7 +129,7 @@ export default function FileDetailsPage() {
             />
           </div>
           {
-            userRole == "admin" &&
+            isAdmin &&
             <div className="flex space-x-1 items-center pr-1">
               <div>Expense</div>
               <ExpenseDialog 
@@ -163,7 +163,7 @@ export default function FileDetailsPage() {
             </div>
           }
           {
-            userRole == "admin" && (
+            isAdmin && (
               <div className="flex space-x-1 items-center">
                 <PaidDialog 
                   fileNo={fileNo}
@@ -200,70 +200,61 @@ export default function FileDetailsPage() {
             :
               <div>
                 <div className={`${showPrintLayout ? "hidden" : ""} grid grid-cols-1 lg:grid-cols-8 xl:grid-cols-12 gap-2`}>
-                  <Card className="col-span-1 lg:col-span-5 backdrop-blur-sm overflow-hidden">
-                    <CardHeader className="flex items-center border-b-2 border-slate-700 pb-3">
-                      <CardTitle id="file-info-header" className="text-2xl font-bold w-full flex items-center justify-start space-x-2">
-                        <div>{fileName}</div>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="px-6 py-2 flex flex-col divide-y divide-slate-500">
-                      <FileInfoRow title="Importer" value={fileInfo.importer} className="font-bold"/>
-                      <FileInfoRow title="Package Details" value={fileInfo.itemPackage}/>
-                      <FileInfoRow title="Item Details" value={fileInfo.itemName}/>
-                      <FileInfoRow title="B/L No" value={fileInfo?.bl}/>
-                      <FileInfoRow title="LC No" value={fileInfo?.lc}/>
-                      <FileInfoRow title="Vessel" value={fileDetails?.vessel}/>
-                      <FileInfoRow title="Rotation No" value={fileDetails?.rotNo}/>
-                      {fileDetails?.cnfValue && <FileInfoRow title="C&F Value" value={formatCurrency(fileDetails.cnfValue, 2)}/>}
-                      {fileDetails?.assessableValue && <FileInfoRow title="Assessable Value" value={formatCurrency(fileDetails.assessableValue, 2)}/>}
-                      {(fileInfo?.be || fileInfo?.be !== 0) && <FileInfoRow title="B/E No" value={`C-${fileInfo.be}`}/>}
-                      <FileInfoRow title="B/E Date" value={fileDetails?.beDate}/>
-                      <FileInfoRow title="Assessment Date" value={fileDetails?.assessmentDate}/>
-                      <FileInfoRow title="Duty Payment Date" value={fileDetails?.dutyPaymentDate}/>
-                      <FileInfoRow title="Delivery Date" value={fileDetails?.deliveryDate}/>
-                    </CardContent>
-                  </Card>
-                  
-                  { dutyData && dutyData.length !== 0 &&
-                    <Card className="col-span-1 lg:col-span-3 backdrop-blur-sm overflow-hidden">
-                      <CardHeader className="flex items-center border-b-2 border-slate-700 pb-3">
-                        <CardTitle className="text-2xl font-bold w-full flex items-center justify-start space-x-2">
-                          <div>Duty</div>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="px-6 py-2 flex flex-col divide-y divide-slate-500">
-                        {(fileDetails?.assessmentRef && fileDetails.assessmentRef !== 0) && <FileInfoRow title="Assessment Reference" value={`A-${fileDetails.assessmentRef}`}/>}
-                        {(fileDetails?.dutyRef && fileDetails.dutyRef !== 0) && <FileInfoRow title="Release Order No" value={`R-${fileDetails.dutyRef}`}/>}
-                        {dutyData.map((item, index) => 
-                          <div key={index}>
-                            <FileInfoRow title={item.val().details} value={formatCurrency(item.val().value, 2)}/>
-                          </div>
-                        )}
-                        {totalDuty !== 0 && <FileInfoRow title="Total Duty" value={formatCurrency(totalDuty, 2)} className="font-bold"/>}
-                        {fileDetails?.dutyPaid && <FileInfoRow title="Duty Paid Details" value={fileDetails?.dutyPaid}/>}
-                      </CardContent>
-                    </Card>
+                  <CardSection
+                    title={fileName}
+                    className="col-span-1 lg:col-span-5"
+                    contentClassName="flex flex-col divide-y divide-slate-500"
+                  >
+                    <FileInfoRow title="Importer" value={fileInfo.importer} className="font-bold"/>
+                    <FileInfoRow title="Package Details" value={fileInfo.itemPackage}/>
+                    <FileInfoRow title="Item Details" value={fileInfo.itemName}/>
+                    <FileInfoRow title="B/L No" value={fileInfo?.bl}/>
+                    <FileInfoRow title="LC No" value={fileInfo?.lc}/>
+                    <FileInfoRow title="Vessel" value={fileDetails?.vessel}/>
+                    <FileInfoRow title="Rotation No" value={fileDetails?.rotNo}/>
+                    {fileDetails?.cnfValue && <FileInfoRow title="C&F Value" value={formatCurrency(fileDetails.cnfValue, 2)}/>}
+                    {fileDetails?.assessableValue && <FileInfoRow title="Assessable Value" value={formatCurrency(fileDetails.assessableValue, 2)}/>}
+                    {(fileInfo?.be || fileInfo?.be !== 0) && <FileInfoRow title="B/E No" value={`C-${fileInfo.be}`}/>}
+                    <FileInfoRow title="B/E Date" value={fileDetails?.beDate}/>
+                    <FileInfoRow title="Assessment Date" value={fileDetails?.assessmentDate}/>
+                    <FileInfoRow title="Duty Payment Date" value={fileDetails?.dutyPaymentDate}/>
+                    <FileInfoRow title="Delivery Date" value={fileDetails?.deliveryDate}/>
+                  </CardSection>
+
+                  { (dutyData && dutyData.length !== 0) &&
+                    <CardSection
+                      title="Duty"
+                      className="col-span-1 lg:col-span-3"
+                      contentClassName="flex flex-col divide-y divide-slate-500"
+                    >
+                      {(fileDetails?.assessmentRef && fileDetails.assessmentRef !== 0) && <FileInfoRow title="Assessment Reference" value={`A-${fileDetails.assessmentRef}`}/>}
+                      {(fileDetails?.dutyRef && fileDetails.dutyRef !== 0) && <FileInfoRow title="Release Order No" value={`R-${fileDetails.dutyRef}`}/>}
+                      {dutyData.map((item, index) => 
+                        <div key={index}>
+                          <FileInfoRow title={item.val().details} value={formatCurrency(item.val().value, 2)}/>
+                        </div>
+                      )}
+                      {totalDuty !== 0 && <FileInfoRow title="Total Duty" value={formatCurrency(totalDuty, 2)} className="font-bold"/>}
+                      {fileDetails?.dutyPaid && <FileInfoRow title="Duty Paid Details" value={fileDetails?.dutyPaid}/>}
+                    </CardSection>
                   }
 
-                  { userRole === "admin" &&
-                    <Card className="col-span-1 lg:col-span-4 backdrop-blur-sm overflow-hidden">
-                      <CardHeader className="flex items-center border-b-2 border-slate-700 pb-3">
-                        <CardTitle  className="text-2xl font-bold w-full flex items-center justify-start space-x-2">
-                          <div>Total</div>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="px-6 py-2 flex flex-col divide-y divide-slate-500">
-                        {miscellaneousValue !== 0 && <FileInfoRow title="Miscellaneous Expense" value={formatCurrency(miscellaneousValue, 2)}/>}
-                        {commissionValue !== 0 && <FileInfoRow title="Agency Commission" value={formatCurrency(commissionValue, 2)}/>}
-                        <FileInfoRow title={"Total"} value={formatCurrency(totalValue, 2)}/>
-                        <FileInfoRow title={"Paid"} value={formatCurrency(paidValue, 2)}/>
-                        <FileInfoRow title={"Balance"} value={formatCurrency(totalValue - paidValue, 2)}/>
-                        {fileDetails?.remarks && <div className="flex">
-                          <div className="grow">Remarks</div>
-                          <pre className="font-sans text-sm py-1">{fileDetails.remarks}</pre>
-                        </div>}
-                      </CardContent>
-                    </Card>
+                  { isAdmin &&
+                    <CardSection
+                      title="Total"
+                      className="col-span-1 lg:col-span-4"
+                      contentClassName="flex flex-col divide-y divide-slate-500"
+                    >
+                      {miscellaneousValue !== 0 && <FileInfoRow title="Miscellaneous Expense" value={formatCurrency(miscellaneousValue, 2)}/>}
+                      {commissionValue !== 0 && <FileInfoRow title="Agency Commission" value={formatCurrency(commissionValue, 2)}/>}
+                      <FileInfoRow title={"Total"} value={formatCurrency(totalValue, 2)}/>
+                      <FileInfoRow title={"Paid"} value={formatCurrency(paidValue, 2)}/>
+                      <FileInfoRow title={"Balance"} value={formatCurrency(totalValue - paidValue, 2)}/>
+                      {fileDetails?.remarks && <div className="flex">
+                        <div className="grow">Remarks</div>
+                        <pre className="font-sans text-sm py-1">{fileDetails.remarks}</pre>
+                      </div>}
+                    </CardSection>
                   }
                   <ExpenseSection title="Port Expense" data={portExpenseData} total={totalPortExpense} />
                   <ExpenseSection title="Custom Expense" data={customExpenseData} total={totalCustomExpense} />

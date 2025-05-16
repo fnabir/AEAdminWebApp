@@ -1,6 +1,5 @@
 "use client"
 
-import packageJson from '../../package.json';
 import Layout from "@/components/layout";
 import Loading from "@/components/loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,33 +10,29 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useList, useObject } from "react-firebase-hooks/database";
-import { breadcrumbItem, FileInfoType } from "@/lib/types";
 import { IconType } from "react-icons";
 import { DataSnapshot } from "firebase/database";
 import { FaBookOpen, FaBriefcase, FaRegEye, FaRegEyeSlash, FaRegUser } from "react-icons/fa6";
 import { FaRegMoneyBillAlt } from "react-icons/fa";
-import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
+import ChangelogSection from "./changelog-section";
+import { BreadcrumbInterface } from "@/lib/interfaces";
+import { FileInfoType } from "@/lib/types";
+import CardSection from "@/components/card/card-section";
 
-const breadcrumb: breadcrumbItem[] = [
-  { text: "Home"},
+const breadcrumb: BreadcrumbInterface[] = [
+  { label: "Home"},
 ]
 const currentYear = getCurrentYear();
 
 export default function Home() {
-  const {user, loading, userRole} = useAuth();
+  const {user, userLoading, isAdmin} = useAuth();
   const router = useRouter();
 
   const [fileLastYear, fileLastYearLoading] = useList(getDatabaseReference(`files/info/${currentYear - 1}`));
   const [fileCurrentYear, fileCurrentYearLoading] = useList(getDatabaseReference(`files/info/${currentYear}`));
   const [importerBalanceData, importerBalanceLoading] = useObject(getDatabaseReference(`balance/total/importer`));
   const [staffBalanceData, staffBalanceLoading] = useObject(getDatabaseReference(`balance/total/staff`));
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
 
   const getInitialShowBalance = () => {
     if (typeof window !== 'undefined') {
@@ -87,7 +82,13 @@ export default function Home() {
     return statusMap;
   }, [fileCurrentYear, fileLastYear]);
 
-  if (loading) return <Loading/>
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, userLoading, router]);
+  
+  if (userLoading) return <Loading/>
 
   if (!user) return null;
     
@@ -97,7 +98,7 @@ export default function Home() {
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 lg:col-span-9 space-y-6">
 
-            {userRole == "admin" && 
+            {isAdmin && 
               <Card className="backdrop-blur-sm overflow-hidden">
                 <div className="-z-1 absolute -top-5 -right-5 size-30 rounded-full opacity-40 blur-2xl bg-cyan-500"/>
                 <CardHeader className="flex items-center border-b-2 border-slate-700 pb-3">
@@ -128,16 +129,13 @@ export default function Home() {
               </Card>
             }
 
-            <Card className="backdrop-blur-sm overflow-hidden">
-              <div className="absolute -top-5 -right-5 size-30 rounded-full opacity-40 blur-2xl bg-blue-500"/>
-              <CardHeader className="flex items-center border-b-2 border-slate-700 pb-3">
-                  <CardTitle className="text-2xl font-bold w-full flex items-center justify-center">
-                    <div className="grow">Job Files</div>
-                    <FaBookOpen className="size-7 text-blue-500" />
-                  </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 border-b-2 border-slate-700 pb-6">
+            <CardSection 
+              title="Job Files"
+              backdropColor="bg-blue-500"
+              icon= {FaBookOpen}
+              iconColor="text-blue-500"
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 border-b-2 border-slate-700 pb-6">
                   <FileCard title="Total Files" value={fileCount} year={currentYear} loading={fileCurrentYearLoading} />
                   <FileCard title="Last Year Files" value={fileLastYear?.length || 0} year={currentYear - 1} loading={fileLastYearLoading} />
                 </div>
@@ -154,61 +152,29 @@ export default function Home() {
                     )
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+            </CardSection>
           </div>
-          <div className="col-span-12 lg:col-span-3 space-y-6 pb-6">
-            <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm overflow-hidden">
-              <CardContent className="-m-2 p-0 text-center">
-                <div className="bg-secondary p-2 border-b border-slate-700/50">
-                  <div className="text-center">
-                    <div className="text-sm">VERSION</div>
-                    <div className="text-3xl font-mono text-cyan-500">{packageJson.version}</div>
-                    <div className="text-sm text-secondary-foreground">{format(new Date(packageJson.releaseDate), "dd MMMM yyyy")}</div>
-                  </div>
-                </div>
-                <div className="p-4 text-sm text-start divide-y divide-slate-500 space-y-1">
-                  <div className="pb-1">
-                    <div>ADDED</div>
-                    <ul className="list-disc pl-4">
-                      <li>Toggle button to see print layout of a file.</li>
-                    </ul>
-                  </div>
-                  <div className="pb-1">
-                    <div>CHANGED</div>
-                    <ul className="list-disc pl-4">
-                      <li>Default layout introduced differnet than print layout.</li>
-                    </ul>
-                  </div>
-                  <div className="pb-1">
-                    <div>FIXED</div>
-                    <ul className="list-disc pl-4">
-                      <li>Total value was wrong not calculating duty value.</li>
-                    </ul>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
 
-            <Card className="backdrop-blur-sm">
-              <CardHeader className='border-b-2 border-slate-700 pb-2'>
-                <CardTitle className="text-xl">Status Overview</CardTitle>
-              </CardHeader>
-              <CardContent className='space-y-2 pt-2 pb-6'>
-                {
-                  Object.entries(statusFiles).map(([status, files]) => (
-                    status !== "done" && (
-                      <FileStatusCount
-                        key = {status}
-                        title = {status.replace(/([A-Z])/g, ' $1').trim()}
-                        count = {files.length}
-                        total = {fileCount - (statusFiles["done"]?.length || 0)}
-                        loading = {fileCurrentYearLoading}
-                      />
-                    )
-                  ))}
-              </CardContent>
-            </Card>
+          <div className="col-span-12 lg:col-span-3 space-y-6 pb-6">
+            <ChangelogSection isAdmin={isAdmin}/>
+
+            <CardSection
+              title="Status Overview"
+              contentClassName="space-y-2"
+            >
+              {
+                Object.entries(statusFiles).map(([status, files]) => (
+                  status !== "done" && (
+                    <FileStatusCount
+                      key = {status}
+                      title = {status.replace(/([A-Z])/g, ' $1').trim()}
+                      count = {files.length}
+                      total = {fileCount - (statusFiles["done"]?.length || 0)}
+                      loading = {fileCurrentYearLoading}
+                    />
+                  )
+                ))}
+            </CardSection>
           </div>
         </div>
       </div>

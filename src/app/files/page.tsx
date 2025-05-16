@@ -36,21 +36,21 @@ const getYearsRange = (start = 2024, end = currentYear) =>
 const validYears = getYearsRange().map((y) => Number(y.value));
 
 export default function FilesPage() {
-	const {user, loading} = useAuth();
+	const {user, userLoading} = useAuth();
 	const router = useRouter();
   const { year, changeYear } = useFilesYear(validYears);
   
   const [filesData, filesLoading, filesError] = useList(getDatabaseReference(`files/info/${year}`));
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login");
+    if (!userLoading && !user) {
+      router.push('/login');
     }
-  }, [user, loading, router]);
+  }, [user, userLoading, router]);
 
-	if (loading) return <Loading />
+  if (userLoading) return <Loading />
 
-	if (!user) return null;
+  if (!user) return null;
 
 	return (
 		<Layout breadcrumb={breadcrumb}>

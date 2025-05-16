@@ -25,7 +25,7 @@ const breadcrumb: breadcrumbItem[] = [
 ]
 
 export default function AccountPage() {
-	const {user, loading} = useAuth();
+	const {user, userLoading} = useAuth();
 	const router = useRouter();
 
 	const [updateProfile] = useUpdateProfile(auth);
@@ -58,12 +58,12 @@ export default function AccountPage() {
   };
 
 	useEffect(() => {
-    if (!loading && !user) {
+    if (!userLoading && !user) {
       router.push("/login");
     }
-  }, [user, loading, router]);
+  }, [user, userLoading, router]);
 
-  if (loading || userInfoLoading) return <Loading />;
+  if (userLoading || userInfoLoading) return <Loading />;
 
   if (!user) return null;
 

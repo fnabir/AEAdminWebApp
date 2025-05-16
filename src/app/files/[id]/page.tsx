@@ -28,7 +28,7 @@ import { useFileTotalExpenses } from "@/hooks/use-file-total-expense";
 import { useFileData } from "@/hooks/use-file-data";
 
 export default function FileDetailsPage() {
-	const {user, loading, userRole} = useAuth();
+	const {user, userLoading, userRole} = useAuth();
   const router = useRouter();
   
   const path = usePathname();
@@ -100,12 +100,12 @@ export default function FileDetailsPage() {
   };
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login");
+    if (!userLoading && !user) {
+      router.push('/login');
     }
-  }, [user, loading, router]);
+  }, [user, userLoading, router]);
 
-  if (loading  || fileLoading) return <Loading />
+  if (userLoading || fileLoading) return <Loading />
 
   if (!user) return null;
 

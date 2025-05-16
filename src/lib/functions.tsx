@@ -1,8 +1,11 @@
 import { auth } from "@/firebase/config";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { DataSnapshot, set, update } from "firebase/database";
-import { getDatabaseReference, showToast } from "@/lib/utils";
+import { DataSnapshot, remove, set, update } from "firebase/database";
+import { generateDatabaseKey, getDatabaseReference, showToast } from "@/lib/utils";
 import { expenseDataType } from "@/lib/types";
+import { format } from "date-fns";
+import {formatInTimeZone} from "date-fns-tz";
+import { TransactionFormData } from "./schemas";
 
 export async function login(email: string, password: string) {
 	return signInWithEmailAndPassword(auth, email, password);
@@ -37,6 +40,53 @@ export async function addNewFile(fileNo: number, fileYear: number, data: object)
 	}).catch ((error) => {
 		showToast("Error", `Failed to add the new file: ${error.message}`, "error");
 	})
+}
+
+export async function addNewTransaction(type: string, id: string, transactionType: string, transactionDate: string, data:TransactionFormData) {
+  const newKey: string = `${format(new Date(transactionDate), "yyMMdd")}${generateDatabaseKey(`transaction/${type}/${id}/${transactionType}`)}`;
+	await set(getDatabaseReference(`transaction/${type}/${id}/${transactionType}/${newKey}`), data).then(() => {
+    updateBalanceUpdateDate(type, id);
+		showToast("Added", `Added the new ${transactionType} transaction successfully.`, "success");
+	}).catch ((error) => {
+		showToast("Failed", `Failed to save the new ${transactionType} transaction: ${error.message}`, "error");
+	})
+}
+
+export async function updateTransaction(type: string, id: string, transactionType: string, transactionId: string, data:TransactionFormData) {
+	await update(getDatabaseReference(`transaction/${type}/${id}/${transactionType}/${transactionId}`), data).then(() => {
+    updateBalanceUpdateDate(type, id);
+		showToast("Success", `Updated the ${transactionType} transaction successfully.`, "success");
+	}).catch ((error) => {
+		showToast("Failed", `Failed to update the ${transactionType} transaction: ${error.message}`, "error");
+	})
+}
+
+export async function deleteTransaction(type: string, id: string, transactionType: string, transactionId: string) {
+	await remove(getDatabaseReference(`transaction/${type}/${id}/${transactionType}/${transactionId}`)).then(() => {
+		showToast("Deleted", "Deleted the transaction successfully.", "success");
+	}).catch ((error) => {
+		showToast("Failed", `Faield to delete the transaction: ${error.message}`, "error");
+	})
+}
+
+export async function updateBalanceUpdateDate(type: string, id: string) {
+		const today = new Date();
+		const todayTZ = formatInTimeZone(today, 'Asia/Dhaka', 'dd MMM yyyy');
+		const formattedDate = format(todayTZ, "dd MMM yyyy")
+
+		await update(getDatabaseReference(`balance/total/${type}`), {
+			date: formattedDate,
+		}).catch((error) => {
+			console.error(error.message);
+			showToast(error.name, error.message, "error");
+		})
+
+		await update(getDatabaseReference(`balance/${type}/${id}`), {
+			date: formattedDate,
+		}).catch((error) => {
+			console.error(error.message);
+			showToast(error.name, error.message, "error");
+		})
 }
 
 export async function updateFile(fileNo: number, fileYear: number, dataInfo: object, dataDetails: object) {

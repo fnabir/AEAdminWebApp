@@ -15,6 +15,9 @@ export function useFileData(fileYear: number, fileNo: number) {
   const [importerData, importerLoading, importerError] = useObject(
     shouldFetchImporter ? getDatabaseReference(`info/importer/${fileInfo.importer}`) : null
   );
+  const importerTransactionInfo = useObject(
+    shouldFetchImporter ? getDatabaseReference(`transaction/importer/${fileInfo.importer}/bill/${fileYear}-${fileNo}`) : null
+  )[0]?.val();
   const importerInfo = importerData?.val();
 
   const fileName = useMemo(() => generateFileCode(fileNo, fileYear, fileInfo?.type), [fileNo, fileYear, fileInfo?.type]);
@@ -44,6 +47,7 @@ export function useFileData(fileYear: number, fileNo: number) {
     customExpenseData,
     otherExpenseData,
     deliveryExpenseData,
+    importerTransactionInfo,
     fileLoading,
     fileError,
   };

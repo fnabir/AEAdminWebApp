@@ -18,14 +18,13 @@ import { CopyText } from "@/components/generic/copy-text";
 import InputDropDown from "@/components/generic/input-dropdown";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
-import { breadcrumbItem } from "@/lib/types";
 import AddFileDialog from "./add-file-dialog";
 import { useFilesYear } from "@/hooks/use-files-year";
+import { BreadcrumbInterface } from "@/lib/interfaces";
 
-const breadcrumb: breadcrumbItem[] = [
-  { text: "Home", link: "/" },
-  { text: "/" },
-  { text: "Files" },
+const breadcrumb: BreadcrumbInterface[] = [
+  { label: "Home", href: "/" },
+  { label: "Files" },
 ]
 
 const currentYear = getCurrentYear();
@@ -114,7 +113,7 @@ function FilesCard({fileNo, fileYear, data}: { fileNo: number; fileYear: number;
       <div className="w-full flex items-center justify-between">
         <div className="wrap w-14 font-bold font-mono border border-slate-500 rounded-lg text-center p-1 text-lg">{fileNo}</div>
         {status && status !== "Select" && <Badge className="text-sm h-6">{status}</Badge>}
-        <Link href={`/files/${fileYear}${fileNo}`}>
+        <Link href={`/files/${fileYear}-${fileNo}`}>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>

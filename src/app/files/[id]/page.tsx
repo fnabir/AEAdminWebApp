@@ -32,9 +32,9 @@ export default function FileDetailsPage() {
   const router = useRouter();
   
   const path = usePathname();
-	const file: string = decodeURIComponent(path.substring(path.lastIndexOf("/") + 1));
-  const fileNo = Number(file.slice(4));
-  const fileYear = Number(file.slice(0,4));
+	const file = decodeURIComponent(path.substring(path.lastIndexOf("/") + 1)).split("-");
+  const fileNo = Number(file[1]);
+  const fileYear = Number(file[0]);
 
   const [showPrintLayout, setShowPrintLayout] = useState<boolean>(false);
 

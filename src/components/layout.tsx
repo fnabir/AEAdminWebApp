@@ -1,12 +1,4 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -16,6 +8,7 @@ import {
 import React, { FC, ReactNode } from "react";
 import {ThemeToggle} from "@/components/header/themeToggle";
 import { BreadcrumbInterface } from "@/lib/interfaces";
+import BreadcrumbSection from "./header/breadcrumbSection";
 
 const Layout: FC<{ breadcrumb: BreadcrumbInterface[], children: ReactNode }> = ({breadcrumb, children}) => {
   return(
@@ -27,22 +20,7 @@ const Layout: FC<{ breadcrumb: BreadcrumbInterface[], children: ReactNode }> = (
             className="flex px-4 py-2 h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
             <SidebarTrigger className="-ml-1"/>
             <Separator orientation="vertical" className="mr-2 max-h-3/4 bg-slate-600"/>
-            <Breadcrumb className={"flex-auto"}>
-              <BreadcrumbList>
-                {breadcrumb.map((crumb, index) => (
-                  <React.Fragment key={index}>
-                    <BreadcrumbItem>
-                      {index === breadcrumb.length - 1 ? (
-                        <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
-                      ) : (
-                        <BreadcrumbLink href={crumb.href}>{crumb.label}</BreadcrumbLink>
-                      )}
-                    </BreadcrumbItem>
-                    {index < breadcrumb.length - 1 && <BreadcrumbSeparator />}
-                  </React.Fragment>
-                ))}
-              </BreadcrumbList>
-            </Breadcrumb>
+            <BreadcrumbSection breadcrumb={breadcrumb}/>
             <ThemeToggle/>
           </header>
           <div className="flex-1 px-2 md:px-4 overflow-y-auto">

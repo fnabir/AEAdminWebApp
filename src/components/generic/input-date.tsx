@@ -25,6 +25,7 @@ export const InputDate = forwardRef<HTMLInputElement, InputDateProps>(({
 				<input
 					id={id}
           ref={ref}
+          type="date"
 					className={`w-full px-2.5 py-2 border rounded-lg focus:border-blue-400 focus:outline-none focus:ring-0 peer
             ${disabled ? "bg-muted text-gray-400 border-gray-500" : ""}
             ${error ? "text-red-500 border-red-500" : "text-card-foreground border-gray-500"}

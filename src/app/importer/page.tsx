@@ -4,7 +4,7 @@ import Layout from "@/components/layout";
 import {useAuth} from "@/hooks/use-auth";
 import {useRouter} from "next/navigation";
 import Loading from "@/components/loading";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { getDatabaseReference, getTotalValue, showToast } from "@/lib/utils";
 import { useList, useObject } from "react-firebase-hooks/database";
 import CardTotalBalance from "@/components/card/card-total-balance";
@@ -12,25 +12,32 @@ import { Button } from "@/components/ui/button";
 import { MdError } from "react-icons/md";
 import CardIcon from "@/components/card/card-icon";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { DataSnapshot } from "firebase/database";
 import CardBalance from "@/components/card/card-balance";
 import { updateTotalBalance } from "@/lib/functions";
-import { breadcrumbItem } from "@/lib/types";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { BreadcrumbInterface } from "@/lib/interfaces";
 
-export default function ImporterBalancePage() {
-	const {user, loading} = useAuth();
-	const router = useRouter();
-	const breadcrumb: breadcrumbItem[] = [
-		{ text: "Home", link: "/" },
-		{ text: "/" },
-		{ text: "Importer Balance" },
+const breadcrumb: BreadcrumbInterface[] = [
+		{ label: "Home", href: "/" },
+		{ label: "Importer Balance" },
 	]
 
-	const [balanceData, balanceLoading, balanceError] = useList(getDatabaseReference("balance/importer"))
-	const [totalBalanceData, totalBalanceLoading] = useObject(getDatabaseReference("balance/total/importer"))
-	const total: number = getTotalValue(balanceData)
-	const totalBalanceValue = totalBalanceData && totalBalanceData.val().value ? totalBalanceData.val().value : 0;
+export default function ImporterBalancePage() {
+	const {user, userLoading, isAdmin} = useAuth();
+	const router = useRouter();
+
+	const [balanceData, balanceLoading, balanceError] = useList(
+    user && isAdmin ? getDatabaseReference("balance/importer") : null
+  );
+	const [totalBalanceSnapshot, totalBalanceLoading, totalBalanceError] = useObject(
+    user && isAdmin ? getDatabaseReference("balance/total/importer") : null
+  );
+  const totalBalanceData = totalBalanceSnapshot?.val();
+  const total = useMemo(() => {
+      return getTotalValue(balanceData);
+    }, [balanceData]);
+	const totalBalanceValue = totalBalanceData?.value ?? 0;
 
 	const handleUpdateTotalBalance = () => {
 		updateTotalBalance("importer", total).then(() => {
@@ -40,69 +47,70 @@ export default function ImporterBalancePage() {
 		})
 	}
 
-	if (loading) return <Loading />;
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, userLoading, router]);
 
-	if (!loading && !user) {
-		router.push("/login");
-		return null;
-	}
+  if (userLoading) return <Loading />
+
+  if (!user) return null;
 
 	return (
 		<Layout breadcrumb={breadcrumb}>
-			<div className={"flex flex-col h-full"}>
-        {
-          !balanceLoading && !totalBalanceLoading && total != totalBalanceValue &&
-            <div className="flex items-center pb-2 gap-x-2">
-              <Button variant="accent" onClick={handleUpdateTotalBalance}>
-                Update Total Balance
-              </Button>
-            </div>
-        }
-				<ScrollArea className={"flex-grow -mr-4 pr-4 mb-2"}>
-					{
-						balanceLoading ? 
-						  <div className="p-4 rounded-xl bg-muted/100 flex items-center">
-								<Skeleton className="flex-wrap h-10 w-10 mr-4 rounded-full"/>
-								<div className={"flex-auto"}>
-									<Skeleton className="h-6 mb-1 w-1/2 rounded-xl"/>
-									<Skeleton className="h-4 w-2/5 rounded-xl"/>
-								</div>
-							</div>
-            : balanceError ?
-							<CardIcon
-								title={"Error"}
-								description={balanceError.message}>
-								<MdError size={28}/>
-							</CardIcon>
-            : !balanceData || balanceData.length == 0 ?
-              <CardIcon
-                title={"No Record Found"}>
-                <MdError size={28}/>
-              </CardIcon>
-            : <div className={"space-y-2"}>
-              {
-                balanceData.map((item: DataSnapshot) => {
-                  const snapshot = item.val();
-                  return (
-                    <div key={item.key}>
-                      <CardBalance type={"importer"} id={item.key!}
-                                    name={item.key!} value={snapshot.value}
-                                    date={snapshot.date}
-                                    status={snapshot.status}/>
-                    </div>
-                  )
-                })
-              }
-              </div>
-					}
-				</ScrollArea>
-        {totalBalanceData &&
-          <CardTotalBalance value={total}
-                            date={totalBalanceData.val().date}
-                            onClick={handleUpdateTotalBalance}
-                            update={total != totalBalanceValue}/>
-        }
-			</div>
+      {
+        <div className="flex flex-col h-full">
+          {
+            !balanceLoading && !totalBalanceLoading && totalBalanceData && total != totalBalanceValue &&
+              <Button className="w-fit" onClick={handleUpdateTotalBalance}>Update Total Balance</Button>
+          }
+          <ScrollArea className="grow -mr-4 pr-4 mb-2">
+            {
+              balanceLoading ? 
+                <div className="flex flex-col space-y-2">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <Skeleton key={i} className="h-14 w-full rounded-xl" />
+                  ))}
+                </div>
+              : balanceError ?
+                <CardIcon
+                  title={"Error"}
+                  description={balanceError.message}>
+                  <MdError size={28}/>
+                </CardIcon>
+              : !balanceData || balanceData.length == 0 ?
+                <CardIcon
+                  title={"No Record Found"}>
+                  <MdError size={28}/>
+                </CardIcon>
+              : <div className="flex flex-col space-y-2">
+                {
+                  balanceData.map((item: DataSnapshot) => {
+                    const val = item.val();
+                    return (
+                      <CardBalance 
+                        key={item.key!}
+                        type={"importer"}
+                        id={item.key!}
+                        name={item.key!} value={val.value}
+                        date={val.date}
+                        status={val.status}/>
+                    )
+                  })
+                }
+                </div>
+            }
+          </ScrollArea>
+          {totalBalanceData &&
+            <CardTotalBalance value={total}
+                              date={totalBalanceData.date}
+                              error={totalBalanceError?.message}
+                              onClick={handleUpdateTotalBalance}
+                              update={total != totalBalanceValue}/>
+          }
+        </div>
+      }
 		</Layout>
 	)
 }

@@ -4,7 +4,7 @@ import Layout from "@/components/layout";
 import {useAuth} from "@/hooks/use-auth";
 import {useRouter} from "next/navigation";
 import Loading from "@/components/loading";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useList } from "react-firebase-hooks/database";
 import { getCurrentYear, getDatabaseReference } from "@/lib/utils";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
@@ -40,6 +40,10 @@ export default function FilesPage() {
   const { year, changeYear } = useFilesYear(validYears);
   
   const [filesData, filesLoading, filesError] = useList(getDatabaseReference(`files/info/${year}`));
+
+  const reversedFilesData = useMemo(() => {
+    return filesData?.slice().reverse() ?? [];
+  }, [filesData]);
 
   useEffect(() => {
     if (!userLoading && !user) {
@@ -84,7 +88,7 @@ export default function FilesPage() {
               </CardIcon>
             : <div className={"grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-2"}>
               {
-                filesData.map((file: DataSnapshot) => {
+                reversedFilesData.map((file: DataSnapshot) => {
                   return (
                     <FilesCard key={file.key}
                               fileNo={Number(file.key)} 

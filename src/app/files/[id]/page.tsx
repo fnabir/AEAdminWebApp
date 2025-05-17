@@ -26,6 +26,7 @@ import { FileInfoRow } from "./file-info-row";
 import { useFileTotalExpenses } from "@/hooks/use-file-total-expense";
 import { useFileData } from "@/hooks/use-file-data";
 import CardSection from "@/components/card/card-section";
+import { updateTransaction } from "@/lib/functions";
 
 export default function FileDetailsPage() {
 	const {user, userLoading, isAdmin} = useAuth();
@@ -49,6 +50,7 @@ export default function FileDetailsPage() {
     customExpenseData,
     otherExpenseData,
     deliveryExpenseData,
+    importerTransactionInfo,
     fileLoading,
     fileError,
   } = useFileData(fileYear, fileNo);
@@ -98,6 +100,27 @@ export default function FileDetailsPage() {
   const handlePrint = () => {
     if (contentRef.current) reactToPrintFn();
   };
+
+  const updatedBillTransaction = useMemo(() => fileDetails?.deliveryDate ? {
+    title: fileName,
+    details: fileInfo?.itemName,
+    value: balanceValue,
+    date: fileDetails.deliveryDate
+  } : null, [fileName, fileInfo?.itemName, balanceValue, fileDetails?.deliveryDate])
+
+  const handleUpdateTransaction = () => {
+    if (updatedBillTransaction) {
+      updateTransaction("importer", fileInfo.importer, "bill", `${fileYear}-${fileNo}`, updatedBillTransaction)
+    }
+  };
+
+  const isTransactionUpdated = updatedBillTransaction && importerTransactionInfo ? 
+                                updatedBillTransaction.title === importerTransactionInfo.title &&
+                                updatedBillTransaction.details === importerTransactionInfo.details &&
+                                updatedBillTransaction.value === importerTransactionInfo.value &&
+                                updatedBillTransaction.date === importerTransactionInfo.date
+                                : false;
+
 
   useEffect(() => {
     if (!userLoading && !user) {
@@ -179,6 +202,10 @@ export default function FileDetailsPage() {
                   { showPrintLayout ? <FaAlignLeft/> : <FaPrint/>}
                   Layout
                 </Button>
+                { (fileDetails?.deliveryDate && !isTransactionUpdated) && <Button onClick={handleUpdateTransaction}>{!importerTransactionInfo ? "Add Balance to Transaction" : 
+                    "Update Balance in Transaction"}
+                  </Button>
+                }
               </div>
             )
           }

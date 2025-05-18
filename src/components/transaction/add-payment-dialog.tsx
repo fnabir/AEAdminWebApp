@@ -15,10 +15,11 @@ import { InputDate } from "@/components/generic/input-date";
 import { format } from "date-fns";
 
 type AddPaymentDialogProps = {
-  importer: string;
+  type: string;
+  id: string;
 };
 
-export default function AddPaymentDialog({ importer }: AddPaymentDialogProps) {
+export default function AddPaymentDialog({ type, id }: AddPaymentDialogProps) {
 
   const [open, setOpen] = useState<boolean>(false);
 	const [detailsLabel, setDetailsLabel] = useState<string>("Details");
@@ -70,7 +71,7 @@ export default function AddPaymentDialog({ importer }: AddPaymentDialogProps) {
 	};
 
   const onSubmit = async (data: TransactionFormData) => {
-    addNewTransaction("importer", importer, "payment", data.date, {
+    addNewTransaction(type, id, "payment", data.date, {
       title: data.title,
       details: data.details,
       value: data.value,

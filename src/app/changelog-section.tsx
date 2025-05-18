@@ -12,10 +12,13 @@ function getChangelog(isAdmin: boolean): Record<string, ChangelogItem[]> {
     added: [
       {
         access: isAdmin,
-        details: "Option to add bill and payment for importers.",
+        details: "Added option to add expense and payment transaction for staffs.",
       },
       {
-        details: "Option to add and update bill balance directly from File Details page.",
+        details: "Added option to add payment transaction for importers.",
+      },
+      {
+        details: "Added option to add bills for importers from files.",
       },
     ],
     changed: [],

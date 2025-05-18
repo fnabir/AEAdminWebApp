@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 ### Security
 
+## [0.3.0] - 2025-05-18
+
+### Added
+- Added option to add expense and payment transaction for staffs.
+- Added option to add payment transaction for importers.
+- Added option to add bills for importers from files.
+
 ## [0.2.0] - 2025-05-14
 
 ### Added

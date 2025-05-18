@@ -60,14 +60,12 @@ export default function StaffBalancePage() {
 	return (
 		<Layout breadcrumb={breadcrumb}>
 			{
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full gap-2">
           {
             !balanceLoading && !totalBalanceLoading && totalBalanceData && total != totalBalanceValue &&
-              <div className="flex items-center pb-2 gap-x-2">
-                <Button variant="accent" onClick={handleUpdateTotalBalance}>
-                  Update Total Balance
-                </Button>
-              </div>
+              <Button className="w-fit" onClick={handleUpdateTotalBalance}>
+                Update Total Balance
+              </Button>
           }
           <ScrollArea className="grow -mr-4 pr-4 mb-2">
             {

@@ -4,9 +4,9 @@ import Layout from "@/components/layout";
 import {useAuth} from "@/hooks/use-auth";
 import {usePathname, useRouter} from "next/navigation";
 import Loading from "@/components/loading";
-import React from "react";
-import { useList, useObject } from "react-firebase-hooks/database";
-import { getDatabaseReference, getTotalValue, showToast } from "@/lib/utils";
+import React, { useEffect } from "react";
+import { useObject } from "react-firebase-hooks/database";
+import { formatCurrency, getDatabaseReference, showToast } from "@/lib/utils";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import CardIcon from "@/components/card/card-icon";
@@ -14,101 +14,178 @@ import { MdError } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import CardTotalBalance from "@/components/card/card-total-balance";
 import { updateBalance } from "@/lib/functions";
-import CardTransaction from "@/components/card/card-transaction";
+import { BreadcrumbInterface } from "@/lib/interfaces";
+import { useTransactionData } from "@/hooks/use-transaction-data";
+import { FaListUl } from "react-icons/fa6";
+import CardSection from "@/components/card/card-section";
+import { FaRegMoneyBillAlt } from "react-icons/fa";
+import { TransactionRow } from "@/components/transaction/transaction-row";
+import AddPaymentDialog from "@/components/transaction/add-payment-dialog";
+import AddExpenseDialog from "@/components/transaction/add-expense-dialog";
 
 export default function StaffTransactionPage() {
-	const {user, loading, userRole} = useAuth()
-
-  const path = usePathname();
-	const staffUid: string = decodeURIComponent(path.substring(path.lastIndexOf("/") + 1));
-  const router = useRouter()
-
-  const [transactionData, transactionLoading, transactionError] = useList(getDatabaseReference(`transaction/staff/${staffUid}`))
-  const staffInfo = useObject(getDatabaseReference(`info/user/${staffUid}`))[0]?.val()
-  const staffName = staffInfo?.name
-  const [totalBalanceData, totalBalanceLoading] = useObject(getDatabaseReference(`balance/staff/${staffUid}`))
-  const total: number = getTotalValue(transactionData)
-  const totalBalanceValue = totalBalanceData?.val().value;
+  const {user, userLoading, isAdmin} = useAuth()
   
-  const breadcrumb: {text: string, link?: string}[] = [
-    { text: "Home", link: "/" },
-    { text: "/" },
-    { text: "Staff", link: `/staff` },
-    { text: "/" },
-    { text: staffName }
-  ]
+  const path = usePathname();
+  const staffUid: string = decodeURIComponent(path.substring(path.lastIndexOf("/") + 1));
+  const router = useRouter();
+
+  const {
+    dataLoading,
+    dataError,
+    billData,
+    paymentData,
+    totalBalanceData,
+    totalBill,
+    totalPayment,
+    totalBalance,
+    totalBalanceValue,
+    totalBalanceError
+  } = useTransactionData(user, isAdmin, "staff", staffUid);
+
+  const staffInfo = useObject(getDatabaseReference(`info/user/${staffUid}`))[0]?.val();
+  const staffName = staffInfo?.name;
+  
+  const breadcrumb: BreadcrumbInterface[] = [
+    { label: "Home", href: "/" },
+    { label: "Staff", href: `/staff` },
+    { label: staffName }
+  ];
 
   const handleUpdateTotalBalance = () => {
-      updateBalance("staff", staffUid, total).then(() => {
-        showToast("Success", "Total balance updated successfully", "success");
-      }).catch((error) => {
-        showToast("Error", `Error updating total balance: ${error.message}`, "error");
-      })
+    updateBalance("staff", staffUid, totalBalance).then(() => {
+      showToast("Success", "Total balance updated successfully", "success");
+    }).catch((error) => {
+      showToast("Error", `Error updating total balance: ${error.message}`, "error");
+    })
+  };
+
+	useEffect(() => {
+    if (!userLoading && !user) {
+      router.push('/login');
     }
+  }, [user, userLoading, router]);
 
-	if (loading) return <Loading />
+  if (userLoading) return <Loading />
 
-	if (!loading && !user) {
-		router.push("/login")
-		return null
-	}
-
+  if (!user) return null;
+  
 	return (
 		<Layout breadcrumb={breadcrumb}>
-			<div className={"flex flex-col h-full space-y-2"}>
+			<div className={"flex flex-col h-full gap-2"}>
         {
-          !transactionLoading && !totalBalanceLoading && total != totalBalanceValue &&
-          <div className="flex items-center gap-x-2">
-            <Button variant="accent" onClick={handleUpdateTotalBalance}>
+          !dataLoading && totalBalanceData && totalBalance != totalBalanceValue &&
+            <Button className="w-fit" onClick={handleUpdateTotalBalance}>
               Update Total Balance
             </Button>
-            </div>
         }
         <ScrollArea className={"grow overflow-auto -mr-4 pr-4"}>
           {
-            transactionLoading ? 
-              <div className="p-4 rounded-xl bg-muted/100 flex items-center">
-                <Skeleton className="flex-wrap h-10 w-10 mr-4 rounded-full"/>
-                <div className={"flex-auto"}>
-                  <Skeleton className="h-6 mb-1 w-1/2 rounded-xl"/>
-                  <Skeleton className="h-4 w-2/5 rounded-xl"/>
-                </div>
+            dataLoading ? 
+              <div className="grid grid-cols-2 gap-2 lg:gap-6">
+                {Array.from({ length: 2 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 rounded-lg" />
+                ))}
               </div>
-            : transactionError ?
+            : dataError ?
               <CardIcon
                 title={"Error"}
-                description={transactionError.message}>
+                description={dataError.message ?? "Error occurred retrieving transaction data."}>
                 <MdError size={28}/>
               </CardIcon>
-            : !transactionData || transactionData.length == 0 ?
+            : (!billData) && (!paymentData) ? 
               <CardIcon
                 title={"No Record Found"}>
                 <MdError size={28}/>
               </CardIcon>
-            : <div className={"space-y-1 lg:space-y-2"}>
-              {
-                transactionData.map((item) => {
-                  const snapshot = item.val()
-                  return (
-                    <div key={item.key}>
-                      <CardTransaction type={"staff"} uid={staffUid} transactionId={item.key!}
-                                              title={snapshot.title} details={snapshot.details}
-                                              value={snapshot.value} date={snapshot.date} access={userRole}/>
-                    </div>
-                  )
-                })
-              }
-              </div>
+            : <div className="grid grid-cols-2 gap-2 lg:gap-6">
+                <CardSection
+                  title="Expense"
+                  icon={FaListUl}
+                  iconColor="text-blue-500"
+                  backdropColor="bg-blue-500"
+                  className="col-span-2 xl:col-span-1"
+                  contentClassName="flex flex-col gap-2 lg: gap-4"
+                >
+                  <ScrollArea className="flex-1 overflow-auto">
+                    {
+                      !billData || billData.length == 0 ?
+                        <CardIcon
+                          title={"No Bill Record Found"}>
+                          <MdError size={28}/>
+                        </CardIcon>
+                      : billData.map((item) => {
+                        const val = item.val()
+                        return (
+                          <TransactionRow
+                            key={item.key}
+                            type="staff"
+                            id={staffUid}
+                            transactionType="bill"
+                            transactionId={item.key!}
+                            title={val.title}
+                            details={val.details}
+                            value={val.value}
+                            date={val.date}/>
+                        )
+                      })
+                    }
+                  </ScrollArea>
+                  <div className="flex justify-between bg-secondary rounded-lg p-2 text-xl font-semibold">
+                    <div>Total Bill</div>
+                    <div>{formatCurrency(totalBill, 2)}</div>
+                  </div>
+                  <AddExpenseDialog staffUid={staffUid}/>
+                </CardSection>
+               
+                <CardSection
+                  title="Payment"
+                  icon={FaRegMoneyBillAlt}
+                  iconColor="text-green-500"
+                  backdropColor="bg-green-500"
+                  className="col-span-2 xl:col-span-1"
+                  contentClassName="flex flex-col gap-2 lg: gap-4"
+                >
+                  <ScrollArea className="flex-1 overflow-auto">
+                    {
+                      !paymentData || paymentData.length == 0 ?
+                        <CardIcon
+                          title={"No Payment Record Found"}>
+                          <MdError size={28}/>
+                        </CardIcon>
+                      : paymentData.map((item) => {
+                        const val = item.val()
+                        return (
+                          <TransactionRow
+                            key={item.key}
+                            type="staff"
+                            id={staffUid}
+                            transactionType="payment"
+                            transactionId={item.key!}
+                            title={val.title}
+                            details={val.details}
+                            value={val.value}
+                            date={val.date}/>
+                        )
+                      })
+                    }
+                  </ScrollArea>
+                  <div className="flex justify-between bg-secondary rounded-lg p-2 text-xl font-semibold">
+                    <div>Total Payment</div>
+                    <div>{formatCurrency(totalPayment, 2)}</div>
+                  </div>
+                  <AddPaymentDialog type="staff" id={staffUid}/>
+                </CardSection>
+            </div>
           }
         </ScrollArea>
-        <div>
-          {totalBalanceData &&
-            <CardTotalBalance value={total}
-                              date={totalBalanceData.val().date}
-                              onClick={handleUpdateTotalBalance}
-                              update={total != totalBalanceValue}/>
-          }
-        </div>
+        {totalBalanceData &&
+          <CardTotalBalance value={totalBalance}
+                            date={totalBalanceData.date}
+                            onClick={handleUpdateTotalBalance}
+                            update={totalBalance != totalBalanceValue}
+                            error={totalBalanceError?.message}/>
+        }
 			</div>
 		</Layout>
 	)

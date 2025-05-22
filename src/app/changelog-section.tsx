@@ -10,19 +10,18 @@ type ChangelogItem = {
 function getChangelog(isAdmin: boolean): Record<string, ChangelogItem[]> {
   return {
     added: [
+    ],
+    changed: [
       {
         access: isAdmin,
-        details: "Added option to add expense and payment transaction for staffs.",
-      },
-      {
-        details: "Added option to add payment transaction for importers.",
-      },
-      {
-        details: "Added option to add bills for importers from files.",
-      },
+        details: "Loading winodow now shows up as soon as the page found and fades out at the end."
+      }
     ],
-    changed: [],
     fixed: [
+      {
+        access: isAdmin,
+        details: "Changing year to see the files would create another entry to url history. Thus clicking back would take through the change of years in the same page."
+      }
     ],
   };
 }

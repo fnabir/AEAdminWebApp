@@ -8,12 +8,23 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 ### Security
 
+## [0.3.1] - 2025-05-22
+
+### Changed
+- Loading winodow now shows up as soon as the page found and fades out at the end.
+
+### Fixed
+- Changing year to see the files would create another entry to url history. Thus clicking back would take through the change of years in the same page.
+
 ## [0.3.0] - 2025-05-18
 
 ### Added
 - Added option to add expense and payment transaction for staffs.
 - Added option to add payment transaction for importers.
 - Added option to add bills for importers from files.
+
+### Fixed
+- Fixed unnecessary page re-rendering.
 
 ## [0.2.0] - 2025-05-14
 

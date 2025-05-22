@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,} from "@/components/ui/sidebar"
 import {MdAccountCircle, MdLogout, MdMoreHoriz} from "react-icons/md";
-import Link from "next/link";
+import Link from "@/components/link";
 import {logout} from "@/lib/functions";
 import {useRouter} from "next/navigation";
 

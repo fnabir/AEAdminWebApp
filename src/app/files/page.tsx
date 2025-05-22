@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import CardIcon from "@/components/card/card-icon";
 import { MdError, MdFileOpen } from "react-icons/md";
 import { DataSnapshot } from "firebase/database";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Card } from "@/components/ui/card";
 import { CopyText } from "@/components/generic/copy-text";
 import InputDropDown from "@/components/generic/input-dropdown";

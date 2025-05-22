@@ -1,5 +1,5 @@
 import { formatCurrency } from "@/lib/utils";
-import Link from "next/link";
+import Link from "@/components/link";
 import {Badge} from "@/components/ui/badge";
 import {Card, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {BalanceInterface} from "@/lib/interfaces";

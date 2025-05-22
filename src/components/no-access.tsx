@@ -1,6 +1,6 @@
 import { MdOutlineWarningAmber } from "react-icons/md";
 import { Button } from "./ui/button";
-import Link from "next/link";
+import Link from "@/components/link";
 
 export default function NoAccess() {
 	return (

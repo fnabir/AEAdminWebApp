@@ -15,7 +15,7 @@ import {
   FaBriefcase,
   FaFileContract,
   FaGlobe,
-  FaMicrosoft, FaMoneyBill,
+  FaMicrosoft,
   FaSquareFacebook,
   FaUser,
 } from "react-icons/fa6";
@@ -39,12 +39,6 @@ const navData = {
       title: "Files",
       url: "/files",
       icon: FaFileContract,
-    },
-    {
-      title: "Expense",
-      url: "/expense",
-      icon: FaMoneyBill,
-      access: "admin",
     },
   ],
   balance: [
@@ -74,7 +68,7 @@ const navData = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const {user, userRole} = useAuth();
+  const {user, isAdmin} = useAuth();
   let userData: { name: string, email: string } = {
     name: "", email: "",
   };
@@ -105,8 +99,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navData.dashboard} />
-        <NavMain items={navData.main} userAccess={userRole}/>
-        {userRole == "admin" && <NavMain label={"Balance"} items={navData.balance}/>}
+        <NavMain items={navData.main} isAdmin={isAdmin}/>
+        {isAdmin && <NavMain label={"Balance"} items={navData.balance}/>}
         <NavLinks items={navData.links}/>
       </SidebarContent>
       <SidebarFooter>

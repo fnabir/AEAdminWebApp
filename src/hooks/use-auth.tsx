@@ -9,9 +9,9 @@ export const useAuth = () => {
   const [user, userLoading, userError] = useAuthState(auth);
 
   const userRef = user ? getDatabaseReference(`info/user/${user.uid}`) : null;
-  const userData = useObject(userRef)[0];
+  const userData = useObject(userRef)[0]?.val();
 
-  const userRole = userData?.val()?.role ?? "user";
-  const isAdmin = userRole === "admin";
-	return { user, userRole, isAdmin, userLoading, userError };
+  const userRole = userData?.role ?? "";
+  const isAdmin = userRole  === "admin";
+	return { user, isAdmin, userLoading, userError };
 };

@@ -26,7 +26,7 @@ export function useFilesYear(validYears: number[]) {
 
   const changeYear = (newYear: number) => {
     setYear(newYear);
-    router.push(`?year=${newYear}`);
+    router.replace(`?year=${newYear}`);
   };
 
   return { year, changeYear };

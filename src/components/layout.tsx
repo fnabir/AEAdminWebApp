@@ -5,13 +5,31 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import {ThemeToggle} from "@/components/header/themeToggle";
 import { BreadcrumbInterface } from "@/lib/interfaces";
 import BreadcrumbSection from "./header/breadcrumbSection";
+import Loading from "./loading";
 
 const Layout: FC<{ breadcrumb: BreadcrumbInterface[], children: ReactNode }> = ({breadcrumb, children}) => {
+  const [showLoader, setShowLoader] = useState(true);
+  
+  useEffect(() => {
+    const handleLoad = () => {
+      setTimeout(() => setShowLoader(false), 600);
+    };
+
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+      return () => window.removeEventListener('load', handleLoad);
+    }
+  }, []);
+
   return(
+    <>
+    {showLoader && <Loading />}
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
@@ -57,6 +75,7 @@ const Layout: FC<{ breadcrumb: BreadcrumbInterface[], children: ReactNode }> = (
         </div>
       </SidebarInset>
     </SidebarProvider>
+    </>
   )
 }
 

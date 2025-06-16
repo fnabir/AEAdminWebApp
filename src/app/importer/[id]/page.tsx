@@ -98,7 +98,7 @@ export default function ImporterTransactionPage() {
                   iconColor="text-blue-500"
                   backdropColor="bg-blue-500"
                   className="col-span-2 xl:col-span-1"
-                  contentClassName="flex flex-col gap-2 lg: gap-4"
+                  contentClassName="flex flex-col gap-2 lg:gap-4"
                 >
                   <ScrollArea className="flex-1 overflow-auto">
                     {
@@ -136,7 +136,7 @@ export default function ImporterTransactionPage() {
                   iconColor="text-green-500"
                   backdropColor="bg-green-500"
                   className="col-span-2 xl:col-span-1"
-                  contentClassName="flex flex-col gap-2 lg: gap-4"
+                  contentClassName="flex flex-col gap-2 lg:gap-4"
                 >
                   <ScrollArea className="flex-1 overflow-auto">
                     {

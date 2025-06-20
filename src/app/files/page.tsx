@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import AddFileDialog from "./add-file-dialog";
 import { useFilesYear } from "@/hooks/use-files-year";
 import { BreadcrumbInterface } from "@/lib/interfaces";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const breadcrumb: BreadcrumbInterface[] = [
   { label: "Home", href: "/" },
@@ -39,11 +40,21 @@ export default function FilesPage() {
 	const router = useRouter();
   const { year, changeYear } = useFilesYear(validYears);
   
+  const [statusFilters, setStatusFilters] = React.useState<string[]>(["new", "assessment", "duty payment", "delivery"]);
   const [filesData, filesLoading, filesError] = useList(getDatabaseReference(`files/info/${year}`));
 
   const reversedFilesData = useMemo(() => {
     return filesData?.slice().reverse() ?? [];
   }, [filesData]);
+
+  const filteredFiles = useMemo(() => {
+  if (!statusFilters.length) return reversedFilesData;
+
+  return reversedFilesData.filter((file: DataSnapshot) => {
+    const status = file.val()?.status?.toLowerCase();
+    return statusFilters.includes(status);
+  });
+}, [reversedFilesData, statusFilters]);
 
   useEffect(() => {
     if (!userLoading && !user) {
@@ -57,15 +68,32 @@ export default function FilesPage() {
 
 	return (
 		<Layout breadcrumb={breadcrumb}>
-			<div className="flex flex-col h-full">
-        <div className="flex items-center space-x-2 divide-x-2 divide-slate-500">
+			<div className="flex flex-col h-full space-y-2">
+        <div className="flex flex-wrap items-center space-x-2">
           <InputDropDown label={"Year"}
-                        className="max-w-full w-36 -translate-y-2 pr-2"
+                        className="max-w-full w-36 -translate-y-2"
                         options={getYearsRange()}
                         value={year.toString()}
                         onChange={(e) => changeYear(Number(e.target.value))}
             />
           <AddFileDialog year={year} filesData={filesData}/>
+          <ToggleGroup type="multiple" variant="outline" value={statusFilters} onValueChange={setStatusFilters}>
+            <ToggleGroupItem value="new" aria-label="Toggle new">
+              <div>New</div>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="assessment" aria-label="Toggle assessment">
+              <div>Assessment</div>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="duty payment" aria-label="Toggle duty payment">
+              <div>Duty Payment</div>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="delivery" aria-label="Toggle delivery">
+              <div>Delivery</div>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="done" aria-label="Toggle done">
+              <div>Done</div>
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
         <ScrollArea className={"grow overflow-auto -mr-4 pr-4"}>
           {
@@ -88,7 +116,7 @@ export default function FilesPage() {
               </CardIcon>
             : <div className={"grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-2"}>
               {
-                reversedFilesData.map((file: DataSnapshot) => {
+                filteredFiles.map((file: DataSnapshot) => {
                   return (
                     <FilesCard key={file.key}
                               fileNo={Number(file.key)} 
@@ -113,7 +141,7 @@ function FilesCard({fileNo, fileYear, data}: { fileNo: number; fileYear: number;
   const be = val.be;
   const status = val.status;
   return (
-    <Card className="col-span-1 backdrop-blur-sm overflow-hidden p-2 transition-all duration-150 border border-slate-500 hover:border-blue-500 -space-y-1">
+    <Card className="col-span-1 backdrop-blur-sm overflow-hidden p-2 transition-all duration-150 border border-slate-500 hover:border-blue-500 gap-0">
       <div className="w-full flex items-center justify-between">
         <div className="wrap w-14 font-bold font-mono border border-slate-500 rounded-lg text-center p-1 text-lg">{fileNo}</div>
         {status && status !== "Select" && <Badge className="text-sm h-6">{status}</Badge>}
@@ -130,18 +158,14 @@ function FilesCard({fileNo, fileYear, data}: { fileNo: number; fileYear: number;
           </TooltipProvider>
         </Link>
       </div>
-        <div className="text-xl font-bold">{val.importer}</div>
-        <div>
-          <div>{val.itemPackage}</div>
-          <div className="truncate whitespace-nowrap">{val.itemName}</div>
-        </div>
-        <div>
-          {bl && <CopyText text={`B/L: ${bl}`} copyText={bl} className="text-sm"/>}
-          <div className="flex divide-x divide-slate-500 text-sm">
-            {be && be != 0 ? <CopyText text={`B/E: ${be}`} copyText={be.toString()} className="mr-1"/> : null}
-            {lc && lc != 0 ? <CopyText text={`LC: ${lc}`} copyText={lc.toString()} className="ml-1"/> : null}
-          </div>
-        </div>
+      <div className="text-lg font-bold">{val.importer}</div>
+      <div className="text-[15px]">{val.itemPackage}</div>
+      <div className="text-[15px] truncate whitespace-nowrap">{val.itemName}</div>
+      {bl && <CopyText text={`B/L: ${bl}`} copyText={bl} className="text-sm"/>}
+      <div className="flex divide-x divide-slate-500 text-sm">
+        {be && be != 0 ? <CopyText text={`B/E: ${be}`} copyText={be.toString()} className="mr-1"/> : null}
+        {lc && lc != 0 ? <CopyText text={`LC: ${lc}`} copyText={lc.toString()} className="ml-1"/> : null}
+      </div>
     </Card>
   )
 }

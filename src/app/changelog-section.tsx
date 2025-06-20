@@ -10,17 +10,19 @@ type ChangelogItem = {
 function getChangelog(isAdmin: boolean): Record<string, ChangelogItem[]> {
   return {
     added: [
+      {
+        access: isAdmin,
+        details: "Added option to show files depending on file status."
+      },
+      {
+        access: isAdmin,
+        details: "Staff expense also shows in file details page."
+      }
     ],
     changed: [
       {
         access: isAdmin,
-        details: "Loading winodow now shows up as soon as the page found and fades out at the end."
-      }
-    ],
-    fixed: [
-      {
-        access: isAdmin,
-        details: "Changing year to see the files would create another entry to url history. Thus clicking back would take through the change of years in the same page."
+        details: "Staff expense now requires file no."
       }
     ],
   };

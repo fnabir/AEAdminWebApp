@@ -46,6 +46,7 @@ export default function FileDetailsPage() {
     fileName,
     breadcrumb,
     dutyData,
+    staffExpenseData,
     portExpenseData,
     customExpenseData,
     otherExpenseData,
@@ -76,6 +77,7 @@ export default function FileDetailsPage() {
   
   const {
     totalDuty,
+    totalStaffExpense,
     totalPortExpense,
     totalCustomExpense,
     totalOtherExpense,
@@ -86,6 +88,7 @@ export default function FileDetailsPage() {
     fileDutyValue,
     fileDutyPaid,
     dutyData,
+    staffExpenseData,
     portExpenseData,
     customExpenseData,
     otherExpenseData,
@@ -393,6 +396,10 @@ export default function FileDetailsPage() {
                         assessmentRef={fileDetails?.assessmentRef}
                         paid={fileDetails?.dutyPaid}
                         total={totalDuty}
+                      />
+                      <PrintExpenseRow
+                        data={staffExpenseData}
+                        total={totalStaffExpense}
                       />
                       <PrintExpenseRow
                         data={portExpenseData}

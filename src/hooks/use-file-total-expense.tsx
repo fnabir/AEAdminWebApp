@@ -6,6 +6,7 @@ interface ExpenseHookProps {
   fileDutyValue: number,
   fileDutyPaid: boolean,
   dutyData?: DataSnapshot[];
+  staffExpenseData?: DataSnapshot[];
   portExpenseData?: DataSnapshot[];
   customExpenseData?: DataSnapshot[];
   otherExpenseData?: DataSnapshot[];
@@ -19,6 +20,7 @@ export function useFileTotalExpenses({
   fileDutyValue = 0,
   fileDutyPaid = false,
   dutyData = [],
+  staffExpenseData = [],
   portExpenseData = [],
   customExpenseData = [],
   otherExpenseData = [],
@@ -32,6 +34,10 @@ export function useFileTotalExpenses({
     return fileDutyValue ?? getTotalValue(dutyData);
   }, [dutyData, fileDutyValue]);
 
+  const totalStaffExpense = useMemo(() => {
+    return getTotalValue(staffExpenseData);
+  }, [staffExpenseData]);
+  
   const totalPortExpense = useMemo(() => {
     return getTotalValue(portExpenseData);
   }, [portExpenseData]);
@@ -75,6 +81,7 @@ export function useFileTotalExpenses({
 
   return {
     totalDuty,
+    totalStaffExpense,
     totalPortExpense,
     totalCustomExpense,
     totalOtherExpense,

@@ -28,6 +28,7 @@ export function useFileData(fileYear: number, fileNo: number) {
   ], [fileYear, fileName]);
 
   const dutyData = useList(getDatabaseReference(`files/expense/${fileYear}/${fileNo}/duty`))[0];
+  const staffExpenseData = useList(getDatabaseReference(`files/expense/${fileYear}/${fileNo}/staff`))[0];
   const portExpenseData = useList(getDatabaseReference(`files/expense/${fileYear}/${fileNo}/port`))[0];
   const customExpenseData = useList(getDatabaseReference(`files/expense/${fileYear}/${fileNo}/custom`))[0];
   const otherExpenseData = useList(getDatabaseReference(`files/expense/${fileYear}/${fileNo}/other`))[0];
@@ -43,6 +44,7 @@ export function useFileData(fileYear: number, fileNo: number) {
     fileName,
     breadcrumb,
     dutyData,
+    staffExpenseData,
     portExpenseData,
     customExpenseData,
     otherExpenseData,

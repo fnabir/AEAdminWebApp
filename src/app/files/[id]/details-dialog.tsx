@@ -243,12 +243,12 @@ const DetailsDialog = ({
           />
           <DialogFooter className={"sm:justify-center pt-8 gap-4"}>
             <DialogClose asChild>
-              <Button type="button" size="lg" variant="destructive">
+              <Button type="button" variant="destructive">
                 Close
               </Button>
             </DialogClose>
-            <Button type="submit" size="lg">Submit</Button>
-            <Button type="reset" size="lg" variant={"accent"}>Reset</Button>
+            <Button type="submit">Submit</Button>
+            <Button type="reset" variant={"accent"}>Reset</Button>
           </DialogFooter>
         </form>
       </DialogContent>

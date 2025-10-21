@@ -1,0 +1,21 @@
+{
+  // 1. Set Prettier as the default formatter for all file types
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // 2. Enable format on save globally or only for files Prettier supports
+  "editor.formatOnSave": true,
+
+  // Optional: Set default formatting for specific file types (e.g., TypeScript/JavaScript)
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

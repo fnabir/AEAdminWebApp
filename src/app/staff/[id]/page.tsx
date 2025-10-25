@@ -107,10 +107,6 @@ export default function StaffTransactionPage() {
             >
               <MdError size={28} />
             </CardIcon>
-          ) : !billData && !paymentData ? (
-            <CardIcon title={'No Record Found'}>
-              <MdError size={28} />
-            </CardIcon>
           ) : (
             <div className="grid grid-cols-2 gap-2 lg:gap-6">
               <CardSection
@@ -140,6 +136,7 @@ export default function StaffTransactionPage() {
                           details={val.details}
                           value={val.value}
                           date={val.date}
+                          isAdmin
                         />
                       );
                     })
@@ -179,6 +176,7 @@ export default function StaffTransactionPage() {
                           details={val.details}
                           value={val.value}
                           date={val.date}
+                          isAdmin
                         />
                       );
                     })

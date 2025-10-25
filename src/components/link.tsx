@@ -11,7 +11,8 @@ export default function Link({
   ...rest
 }: Parameters<typeof NextLink>[0]) {
   const router = useRouter();
-  const [_, startTransition] = useTransition();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isPending, startTransition] = useTransition();
   return (
     <NextLink
       href={href}

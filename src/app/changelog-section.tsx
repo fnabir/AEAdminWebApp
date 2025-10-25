@@ -7,28 +7,28 @@ type ChangelogItem = {
   details: string;
 };
 
-function getChangelog(isAdmin: boolean): Record<string, ChangelogItem[]> {
+function getChangelog(): Record<string, ChangelogItem[]> {
   return {
     added: [
       {
-        access: isAdmin,
-        details: "Added option to show files depending on file status."
+        details: 'Added staff access.',
       },
-      {
-        access: isAdmin,
-        details: "Staff expense also shows in file details page."
-      }
     ],
     changed: [
       {
-        access: isAdmin,
-        details: "Staff expense now requires file no."
-      }
+        details: 'Staff can only add expense record but only admin can delete.',
+      },
     ],
   };
 }
 
-function ChangelogCategory({ title, items }: { title: string, items: ChangelogItem[] }) {
+function ChangelogCategory({
+  title,
+  items,
+}: {
+  title: string;
+  items: ChangelogItem[];
+}) {
   const visibleItems = items.filter((item) => item.access ?? true);
   if (visibleItems.length === 0) return null;
 
@@ -44,8 +44,8 @@ function ChangelogCategory({ title, items }: { title: string, items: ChangelogIt
   );
 }
 
-export default function ChangelogSection({ isAdmin }: { isAdmin: boolean }) {
-  const changelog = getChangelog(isAdmin);
+export default function ChangelogSection() {
+  const changelog = getChangelog();
 
   return (
     <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm overflow-hidden">
@@ -53,8 +53,12 @@ export default function ChangelogSection({ isAdmin }: { isAdmin: boolean }) {
         <div className="bg-secondary p-2 border-b border-slate-700/50">
           <div className="text-center">
             <div className="text-sm">VERSION</div>
-            <div className="text-3xl font-mono text-cyan-500">{packageJson.version}</div>
-            <div className="text-sm text-secondary-foreground">{format(new Date(packageJson.releaseDate), "dd MMMM yyyy")}</div>
+            <div className="text-3xl font-mono text-cyan-500">
+              {packageJson.version}
+            </div>
+            <div className="text-sm text-secondary-foreground">
+              {format(new Date(packageJson.releaseDate), 'dd MMMM yyyy')}
+            </div>
           </div>
         </div>
         <div className="p-4 text-sm text-start divide-y divide-slate-500 space-y-1">

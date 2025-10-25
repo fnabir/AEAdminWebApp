@@ -281,18 +281,20 @@ export default function FileDetailsPage() {
                   <FileInfoRow title="LC No" value={fileInfo?.lc} />
                   <FileInfoRow title="Vessel" value={fileDetails?.vessel} />
                   <FileInfoRow title="Rotation No" value={fileDetails?.rotNo} />
-                  {fileDetails?.cnfValue && (
-                    <FileInfoRow
-                      title="C&F Value"
-                      value={formatCurrency(fileDetails.cnfValue, 2)}
-                    />
-                  )}
-                  {fileDetails?.assessableValue && (
-                    <FileInfoRow
-                      title="Assessable Value"
-                      value={formatCurrency(fileDetails.assessableValue, 2)}
-                    />
-                  )}
+                  {fileDetails?.cnfValue != null &&
+                    fileDetails.cnfValue !== 0 && (
+                      <FileInfoRow
+                        title="C&F Value"
+                        value={formatCurrency(fileDetails.cnfValue, 2)}
+                      />
+                    )}
+                  {fileDetails?.assessableValue != null &&
+                    fileDetails.assessableValue !== 0 && (
+                      <FileInfoRow
+                        title="Assessable Value"
+                        value={formatCurrency(fileDetails.assessableValue, 2)}
+                      />
+                    )}
                   {(fileInfo?.be || fileInfo?.be !== 0) && (
                     <FileInfoRow title="B/E No" value={`C-${fileInfo.be}`} />
                   )}

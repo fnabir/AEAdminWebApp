@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/firebase/config';
@@ -11,7 +11,8 @@ export const useAuth = () => {
   const userRef = user ? getDatabaseReference(`info/user/${user.uid}`) : null;
   const userData = useObject(userRef)[0]?.val();
 
-  const userRole = userData?.role ?? "";
-  const isAdmin = userRole  === "admin";
-	return { user, isAdmin, userLoading, userError };
+  const userRole = userData?.role ?? '';
+  const isAdmin = userRole === 'admin';
+  const isStaff = userRole === 'staff';
+  return { user, isAdmin, isStaff, userLoading, userError };
 };

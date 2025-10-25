@@ -170,6 +170,7 @@ export default function ImporterTransactionPage() {
                           details={val.details}
                           value={val.value}
                           date={val.date}
+                          isAdmin
                         />
                       );
                     })

@@ -3,7 +3,6 @@
 import { useTransition } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import Loading from './loading';
 
 export default function Link({
   href,
@@ -12,12 +11,7 @@ export default function Link({
   ...rest
 }: Parameters<typeof NextLink>[0]) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-
-  if (isPending) {
-    return <Loading/>
-  }
-
+  const [_, startTransition] = useTransition();
   return (
     <NextLink
       href={href}

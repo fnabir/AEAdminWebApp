@@ -46,6 +46,12 @@ Production branch is the branch which gest build on new push and deployed automa
 
 ## Changelog
 
+### 1.1.0 [2025-10-29]
+
+#### Added
+
+- Add note option for files.
+
 ### 1.0.0 [2025-10-26]
 
 #### Added

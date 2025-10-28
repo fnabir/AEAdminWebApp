@@ -11,12 +11,7 @@ function getChangelog(): Record<string, ChangelogItem[]> {
   return {
     added: [
       {
-        details: 'Added staff access.',
-      },
-    ],
-    changed: [
-      {
-        details: 'Staff can only add expense record but only admin can delete.',
+        details: 'Add note option for files.',
       },
     ],
   };
@@ -61,7 +56,7 @@ export default function ChangelogSection() {
             </div>
           </div>
         </div>
-        <div className="p-4 text-sm text-start divide-y divide-slate-500 space-y-1">
+        <div className="p-4 text-sm text-start bg-white dark:bg-transparent divide-y divide-slate-500 space-y-1">
           {Object.entries(changelog).map(([key, items]) => (
             <ChangelogCategory key={key} title={key} items={items} />
           ))}

@@ -311,6 +311,9 @@ export default function FileDetailsPage() {
                     title="Delivery Date"
                     value={fileDetails?.deliveryDate}
                   />
+                  {fileInfo?.note && (
+                    <FileInfoRow title="Note" value={fileInfo?.note} />
+                  )}
                 </CardSection>
 
                 {dutyData && dutyData.length !== 0 && (

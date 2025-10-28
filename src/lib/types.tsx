@@ -1,13 +1,13 @@
 export type options = {
-  value: string,
-  label?: string,
-}
+  value: string;
+  label?: string;
+};
 
 export type expenseDataType = {
-  id: number,
-  details: string,
-  value: number,
-}
+  id: number;
+  details: string;
+  value: number;
+};
 
 export type FileInfoType = {
   importer: string;
@@ -17,16 +17,17 @@ export type FileInfoType = {
   bl?: string;
   lc?: number;
   be?: number;
-  type?: "export" | "import";
+  type?: 'export' | 'import';
   status: string;
-}
+  note?: string;
+};
 
 export type FileDetailsType = {
   vessel?: string;
   rotNo?: string;
   cnfValue?: number;
   assessableValue?: number;
-  beDate?:string;
+  beDate?: string;
   assessmentDate?: string;
   dutyPaymentDate?: string;
   deliveryDate?: string;
@@ -36,4 +37,4 @@ export type FileDetailsType = {
   dutyValue?: number;
   paid?: number;
   remarks?: string;
-}
+};

@@ -1,19 +1,28 @@
-import { addNewFile, getNextFileNo } from "@/lib/functions";
-import { FileInfoFormData, FileInfoFormSchema } from "@/lib/schemas";
-import { generateFileCode, getDatabaseReference, showToast } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useListKeys } from "react-firebase-hooks/database";
-import { useForm } from "react-hook-form";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
-import { MdAdd } from "react-icons/md";
-import { Button } from "@/components/ui/button";
-import InputText from "@/components/generic/input-text";
-import InputDropDown from "@/components/generic/input-dropdown";
-import { DataSnapshot } from "firebase/database";
-import { fileStatusOptions } from "@/lib/arrays";
-import { ButtonLoading } from "@/components/generic/button-loading";
+import { addNewFile, getNextFileNo } from '@/lib/functions';
+import { FileInfoFormData, FileInfoFormSchema } from '@/lib/schemas';
+import { generateFileCode, getDatabaseReference, showToast } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useListKeys } from 'react-firebase-hooks/database';
+import { useForm } from 'react-hook-form';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { MdAdd } from 'react-icons/md';
+import { Button } from '@/components/ui/button';
+import InputText from '@/components/generic/input-text';
+import InputDropDown from '@/components/generic/input-dropdown';
+import { DataSnapshot } from 'firebase/database';
+import { fileStatusOptions } from '@/lib/arrays';
+import { ButtonLoading } from '@/components/generic/button-loading';
 
 type AddFileDialogProps = {
   year: number;
@@ -21,13 +30,14 @@ type AddFileDialogProps = {
 };
 
 export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
-
   const [open, setOpen] = useState<boolean>(false);
   const [newFile, setNewFile] = useState<boolean>(false);
   const [newFileNo, setNewFileNo] = useState<number | undefined>();
-  const suggestedFileNo = getNextFileNo(filesData)
+  const suggestedFileNo = getNextFileNo(filesData);
   const importerNames = useListKeys(getDatabaseReference(`info/importer`))[0];
-  const importerNameOptions = importerNames?.map((importerName) => ({ value: importerName}));
+  const importerNameOptions = importerNames?.map((importerName) => ({
+    value: importerName,
+  }));
 
   const {
     register,
@@ -36,6 +46,9 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
     formState: { errors, isSubmitting },
   } = useForm<FileInfoFormData>({
     resolver: zodResolver(FileInfoFormSchema),
+    defaultValues: {
+      status: 'New',
+    },
   });
 
   const handleDialogChange = (state: boolean) => {
@@ -47,12 +60,19 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
 
   const handleCheckNewFile = () => {
     if (!newFileNo) {
-      showToast("Error", "Input New File No", "error");
+      showToast('Error', 'Input New File No', 'error');
       setNewFile(false);
       return;
     }
-    if (filesData && filesData.some(snapshot => Number(snapshot.key) === newFileNo)) {
-      showToast("Error", `File No ${newFileNo}/${year} already exists`, "error");
+    if (
+      filesData &&
+      filesData.some((snapshot) => Number(snapshot.key) === newFileNo)
+    ) {
+      showToast(
+        'Error',
+        `File No ${newFileNo}/${year} already exists`,
+        'error',
+      );
       setNewFile(false);
     } else {
       setNewFile(true);
@@ -70,97 +90,134 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
     <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>
         <Button>
-          <MdAdd/> Add New File
+          <MdAdd /> Add New File
         </Button>
       </DialogTrigger>
-      <DialogContent className={"border-2 border-blue-500"}>
+      <DialogContent className={'border-2 border-blue-500'}>
         <DialogHeader>
-          <DialogTitle>{ (newFile && newFileNo) ? generateFileCode(newFileNo, year) : "Add New File"}</DialogTitle>
+          <DialogTitle>
+            {newFile && newFileNo
+              ? generateFileCode(newFileNo, year)
+              : 'Add New File'}
+          </DialogTitle>
           <DialogDescription>
             Click submit to add the new file
           </DialogDescription>
         </DialogHeader>
-				<Separator orientation={"horizontal"} className="bg-card-foreground mt-2"/>
-        <form onSubmit={handleSubmit(onSubmit)} onReset={() => {setNewFile(false);setNewFileNo(undefined);reset();}}>
-          {!newFile ?
+        <Separator
+          orientation={'horizontal'}
+          className="bg-card-foreground mt-2"
+        />
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          onReset={() => {
+            setNewFile(false);
+            setNewFileNo(undefined);
+            reset();
+          }}
+        >
+          {!newFile ? (
             <div className="flex items-baseline space-x-2">
-              <InputText label="New File No"
-                        onChange={(e) => setNewFileNo(Number(e.target.value))}
-                        className="grow"
+              <InputText
+                label="New File No"
+                onChange={(e) => setNewFileNo(Number(e.target.value))}
+                className="grow"
               />
-              <Button className="-translate-y-0.25" variant="secondary" onClick={() => {setNewFileNo(suggestedFileNo);setNewFile(true);}}>
+              <Button
+                className="-translate-y-px"
+                variant="secondary"
+                onClick={() => {
+                  setNewFileNo(suggestedFileNo);
+                  setNewFile(true);
+                }}
+              >
                 {`Suggestion : ${generateFileCode(suggestedFileNo, year)}`}
               </Button>
             </div>
-            :
+          ) : (
             <div>
-              <InputDropDown label="Importer"
-                            options={importerNameOptions ?? []}
-                            {...register('importer')}
-                            error={errors.importer?.message || ""}
-                            required
+              <InputDropDown
+                label="Importer"
+                options={importerNameOptions ?? []}
+                {...register('importer')}
+                error={errors.importer?.message || ''}
+                required
               />
-              <InputText label="Package Details"
-                        {...register("itemPackage")}
-                        error={errors.itemPackage?.message || ""}
-                        required
+              <InputText
+                label="Package Details"
+                {...register('itemPackage')}
+                error={errors.itemPackage?.message || ''}
+                required
               />
-              <InputText label="Item Name"
-                        {...register("itemName")}
-                        error={errors.itemName?.message || ""}
-                        required
+              <InputText
+                label="Item Name"
+                {...register('itemName')}
+                error={errors.itemName?.message || ''}
+                required
               />
               <div className="flex space-x-2">
-                <InputText label="B/L No"
-                        {...register("bl")}
-                        error={errors.bl?.message || ""}
-                        className="flex-[1]"
+                <InputText
+                  label="B/L No"
+                  {...register('bl')}
+                  error={errors.bl?.message || ''}
+                  className="flex-1"
                 />
-                <InputText type="number"
-                          label="LC No"
-                          defaultValue={0}
-                          {...register("lc", {valueAsNumber: true})}
-                          error={errors.lc?.message || ""}
-                          className="flex-[1]"
+                <InputText
+                  type="number"
+                  label="LC No"
+                  defaultValue={0}
+                  {...register('lc', { valueAsNumber: true })}
+                  error={errors.lc?.message || ''}
+                  className="flex-1"
                 />
               </div>
               <div className="flex space-x-2">
-                <InputText type="number"
-                          label="B/E No"
-                          defaultValue={0}
-                          {...register("be", {valueAsNumber: true})}
-                          error={errors.be?.message || ""}
-                          pre="C"
-                          className="flex-[1]"
+                <InputText
+                  type="number"
+                  label="B/E No"
+                  defaultValue={0}
+                  {...register('be', { valueAsNumber: true })}
+                  error={errors.be?.message || ''}
+                  pre="C"
+                  className="flex-1"
                 />
-                <InputDropDown label="Status"
-                            options={fileStatusOptions}
-                            {...register('status')}
-                            className="flex-[1]"
+                <InputDropDown
+                  label="Status"
+                  options={fileStatusOptions}
+                  {...register('status')}
+                  className="flex-1"
                 />
               </div>
             </div>
-          }
+          )}
 
-          <DialogFooter className={"sm:justify-center pt-8 gap-4"}>
+          <DialogFooter className={'sm:justify-center pt-8 gap-4'}>
             <DialogClose asChild>
               <Button type="button" variant="destructive">
                 Close
               </Button>
             </DialogClose>
-            {!newFile && <Button type="button" onClick={handleCheckNewFile}>Check</Button>}
+            {!newFile && (
+              <Button type="button" onClick={handleCheckNewFile}>
+                Check
+              </Button>
+            )}
             {newFile && (
               <ButtonLoading
-              type="submit"
-              loading = {isSubmitting}
-              text = "Submit"
-              loadingText="Submitting..."
-            />
+                type="submit"
+                loading={isSubmitting}
+                text="Submit"
+                loadingText="Submitting..."
+              />
             )}
-            {newFile && <Button type="reset" variant={"accent"}>Reset</Button>}
+            {newFile && (
+              <Button type="reset" variant={'accent'}>
+                Reset
+              </Button>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -98,7 +98,7 @@ export const FileDetailsFormSchema = z.object({
   assessmentRef: z.number().optional(),
   dutyRef: z.number().optional(),
   remarks: z.string().optional(),
-  status: z.string().optional(),
+  status: z.string().nonempty(),
   note: z.string().optional(),
 });
 

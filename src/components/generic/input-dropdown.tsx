@@ -1,6 +1,6 @@
-import React, { FC, useId } from "react";
-import { options } from "@/lib/types";
-import { FaChevronDown } from "react-icons/fa"; // Small down arrow
+import React, { FC, useId } from 'react';
+import { options } from '@/lib/types';
+import { FaChevronDown } from 'react-icons/fa'; // Small down arrow
 
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: options[];
@@ -31,13 +31,16 @@ const InputDropDown: FC<Props> = ({
         <select
           id={id}
           className={`w-full appearance-none p-2 rounded-lg border focus:border-blue-400 focus:outline-hidden focus:ring-0 peer
-            ${disabled ? "bg-gray-700 text-primary/50" : "text-primary bg-transparent"} 
-            ${error ? "text-red-500 border-red-500" : "border-gray-600"}
+            ${
+              disabled
+                ? 'bg-gray-700 text-primary/50'
+                : 'text-primary bg-transparent'
+            } 
+            ${error ? 'text-red-500 border-red-500' : 'border-gray-600'}
             pr-8`}
           disabled={disabled}
           {...rest}
         >
-          
           <option value="" hidden>
             Select
           </option>
@@ -64,7 +67,15 @@ const InputDropDown: FC<Props> = ({
           peer-focus:top-2 peer-focus:scale-[.85] peer-focus:-translate-y-5 peer-focus:rtl:translate-x-1/4 peer-focus:rtl:left-auto start-1`}
         >
           {label}
-          <span className={required ? "absolute text-red-500 text-xl pl-[0.1rem] -translate-y-1" : "hidden"}>*</span>
+          <span
+            className={
+              required
+                ? 'absolute text-red-500 text-xl pl-[0.1rem] -translate-y-1'
+                : 'hidden'
+            }
+          >
+            *
+          </span>
         </label>
       </div>
 

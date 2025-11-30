@@ -1,30 +1,27 @@
 import { Button } from '@/components/ui/button';
+export type ButtonProps = React.ComponentPropsWithoutRef<typeof Button>;
 
-type ButtonLoadingProps = {
-  type: 'submit' | 'reset' | 'button' | undefined;
-  loading: boolean;
-  text: string;
-  loadingText: string;
-  className?: string;
+type ButtonLoadingProps = ButtonProps & {
+  loading?: boolean;
+  loadingText?: string;
 };
 
 export function ButtonLoading({
-  type,
-  loading,
-  text,
-  loadingText,
-  className,
+  loading = false,
+  loadingText = 'Loading...',
+  children,
+  ...props
 }: ButtonLoadingProps) {
   return (
     <Button
-      type={type}
-      className={`transition-all duration-150 ${className}`}
+      className={`transition-all duration-150`}
       disabled={loading}
+      {...props}
     >
       {loading && (
         <div className="size-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
       )}
-      {loading ? loadingText : text}
+      {loading ? loadingText : children}
     </Button>
   );
 }

@@ -28,7 +28,7 @@ export function getChangelog(version: string): ChangelogItem | null {
   return changelog[version] ?? null;
 }
 
-export default function ChangelogSection(isAdmin: boolean) {
+export default function ChangelogSection(isAdmin: { isAdmin: boolean }) {
   const versionLog = changelog[packageJson.version] ?? null;
 
   function renderDetail(detail: string, index: number) {

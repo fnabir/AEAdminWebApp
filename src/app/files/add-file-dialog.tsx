@@ -206,9 +206,10 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
               <ButtonLoading
                 type="submit"
                 loading={isSubmitting}
-                text="Submit"
                 loadingText="Submitting..."
-              />
+              >
+                Submit
+              </ButtonLoading>
             )}
             {newFile && (
               <Button type="reset" variant={'accent'}>

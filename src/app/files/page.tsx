@@ -27,6 +27,8 @@ import AddFileDialog from './add-file-dialog';
 import { useFilesYear } from '@/hooks/use-files-year';
 import { BreadcrumbInterface } from '@/lib/interfaces';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import ChangeFileNoDialog from './change-file-no-dialog';
+import DeleteFileDialog from './delete-file-dialog';
 
 const breadcrumb: BreadcrumbInterface[] = [
   { label: 'Home', href: '/' },
@@ -34,7 +36,7 @@ const breadcrumb: BreadcrumbInterface[] = [
 ];
 
 const currentYear = getCurrentYear();
-const getYearsRange = (start = 2024, end = currentYear) =>
+const getYearsRange = (start = 2021, end = currentYear) =>
   Array.from({ length: end - start + 1 }, (_, i) => ({
     value: String(start + i),
   })).reverse();
@@ -90,6 +92,7 @@ export default function FilesPage() {
             onChange={(e) => changeYear(Number(e.target.value))}
           />
           <AddFileDialog year={year} filesData={filesData} />
+          <ChangeFileNoDialog year={year} filesData={filesData} />
           <ToggleGroup
             type="multiple"
             variant="outline"
@@ -183,18 +186,21 @@ function FilesCard({
         {status && status !== 'Select' && (
           <Badge className="text-sm h-6">{status}</Badge>
         )}
-        <Link href={`/files/${fileYear}-${fileNo}`}>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <MdFileOpen
-                  className={`size-8 p-1 border border-card-foreground text-card-foreground rounded-md cursor-pointer hover:bg-card-foreground/20`}
-                />
-              </TooltipTrigger>
-              <TooltipContent>View File Details</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </Link>
+        <div className="space-x-1.5">
+          <Link href={`/files/${fileYear}-${fileNo}`}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <MdFileOpen
+                    className={`size-8 p-1 border border-card-foreground text-card-foreground rounded-md cursor-pointer hover:bg-card-foreground/20`}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>View File Details</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </Link>
+          <DeleteFileDialog year={fileYear} fileNo={fileNo} />
+        </div>
       </div>
       <div className="text-lg font-bold">{val.importer}</div>
       <div className="text-[15px]">{val.itemPackage}</div>

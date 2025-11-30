@@ -86,7 +86,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-svh items-center justify-center">
       <div className="relative md:py-3 w-full max-w-md mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-sky-500 to-sky-900 shadow-lg transform md:-rotate-6 rounded-2xl" />
+        <div className="absolute inset-0 bg-linear-to-r from-sky-500 to-sky-900 shadow-lg transform md:-rotate-6 rounded-2xl" />
         <Card className="w-full mx-auto bg-black/80 ring-1 ring-blue-800/5 shadow-black shadow-lg md:rounded-2xl backdrop-blur-2xl text-center">
           <CardHeader>
             <Image

@@ -215,7 +215,7 @@ export default function Home() {
           </div>
 
           <div className="col-span-12 lg:col-span-3 space-y-6 pb-6">
-            <ChangelogSection />
+            <ChangelogSection isAdmin={isAdmin} />
 
             <CardSection title="Status Overview" contentClassName="space-y-2">
               {Object.entries(statusFiles).map(

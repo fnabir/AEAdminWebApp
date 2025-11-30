@@ -3,44 +3,69 @@ import packageJson from '../../package.json';
 import { format } from 'date-fns';
 
 type ChangelogItem = {
-  access?: boolean;
-  details: string;
+  date: string;
+  details: string[];
 };
 
-function getChangelog(): Record<string, ChangelogItem[]> {
-  return {
-    added: [
-      {
-        details: 'Add note option for files.',
-      },
+const changelog: Record<string, ChangelogItem> = {
+  '1.2.0': {
+    date: '2025-11-30',
+    details: [
+      '[FEATURE] Swap file no option.',
+      '[ADMIN][FEATURE] Delete file option.',
+      '[UPDATE] File can be added back up to 2021.',
+      '[UPDATE] Duty and Port input field will take up to 10 entries.',
+      '[FIX] New file without status not showed until all the filters are disabled.',
     ],
-  };
+  },
+  '1.1.0': {
+    date: '2025-10-29',
+    details: ['[FEATURE] Note option for files.'],
+  },
+};
+
+export function getChangelog(version: string): ChangelogItem | null {
+  return changelog[version] ?? null;
 }
 
-function ChangelogCategory({
-  title,
-  items,
-}: {
-  title: string;
-  items: ChangelogItem[];
-}) {
-  const visibleItems = items.filter((item) => item.access ?? true);
-  if (visibleItems.length === 0) return null;
+export default function ChangelogSection(isAdmin: boolean) {
+  const versionLog = changelog[packageJson.version] ?? null;
 
-  return (
-    <div className="pb-1">
-      <div className="uppercase">{title}</div>
-      <ul className="list-disc ml-5 my-1 space-y-1 text-sm">
-        {visibleItems.map((item, i) => (
-          <li key={i}>{item.details}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+  function renderDetail(detail: string, index: number) {
+    const isAdminOnly = detail.startsWith('[ADMIN]');
+    if (isAdminOnly && !isAdmin) return null;
 
-export default function ChangelogSection() {
-  const changelog = getChangelog();
+    const cleanDetail = detail.replace('[ADMIN]', '').trim();
+
+    const tagMatch = cleanDetail.match(/^\[(.*?)\]/);
+    const tag = tagMatch ? tagMatch[1] : null;
+
+    const message = tagMatch
+      ? cleanDetail.replace(tagMatch[0], '').trim()
+      : cleanDetail;
+
+    return (
+      <div key={index} className="py-1 flex items-start gap-2">
+        {tag && (
+          <span
+            className={`font-semibold ${
+              tag === 'FEATURE'
+                ? 'text-green-500'
+                : tag === 'UPDATE'
+                ? 'text-sky-500'
+                : tag === 'FIX'
+                ? 'text-red-500'
+                : 'text-gray-500'
+            }`}
+          >
+            [{tag}]
+          </span>
+        )}
+
+        <span className="text-slate-800 dark:text-slate-200">{message}</span>
+      </div>
+    );
+  }
 
   return (
     <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm overflow-hidden">
@@ -56,10 +81,14 @@ export default function ChangelogSection() {
             </div>
           </div>
         </div>
-        <div className="p-4 text-sm text-start bg-white dark:bg-transparent divide-y divide-slate-500 space-y-1">
-          {Object.entries(changelog).map(([key, items]) => (
-            <ChangelogCategory key={key} title={key} items={items} />
-          ))}
+        <div className="p-4 text-sm text-start bg-white dark:bg-transparent">
+          {versionLog ? (
+            versionLog.details.map((detail, index) =>
+              renderDetail(detail, index),
+            )
+          ) : (
+            <div className="py-1">No changelog available for this version.</div>
+          )}
         </div>
       </CardContent>
     </Card>

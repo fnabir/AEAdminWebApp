@@ -43,7 +43,7 @@ const getYearsRange = (start = 2021, end = currentYear) =>
 const validYears = getYearsRange().map((y) => Number(y.value));
 
 export default function FilesPage() {
-  const { user, userLoading } = useAuth();
+  const { user, userLoading, isAdmin } = useAuth();
   const router = useRouter();
   const { year, changeYear } = useFilesYear(validYears);
 
@@ -152,6 +152,7 @@ export default function FilesPage() {
                     fileNo={Number(file.key)}
                     fileYear={year}
                     data={file}
+                    isAdmin={isAdmin}
                   />
                 );
               })}
@@ -167,10 +168,12 @@ function FilesCard({
   fileNo,
   fileYear,
   data,
+  isAdmin,
 }: {
   fileNo: number;
   fileYear: number;
   data: DataSnapshot;
+  isAdmin: boolean;
 }) {
   const val = data.val();
   const bl = val.bl;
@@ -199,7 +202,7 @@ function FilesCard({
               </Tooltip>
             </TooltipProvider>
           </Link>
-          <DeleteFileDialog year={fileYear} fileNo={fileNo} />
+          {isAdmin && <DeleteFileDialog year={fileYear} fileNo={fileNo} />}
         </div>
       </div>
       <div className="text-lg font-bold">{val.importer}</div>

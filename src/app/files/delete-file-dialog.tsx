@@ -55,7 +55,7 @@ export default function DeleteFileDialog({
         </button>
       </DialogTrigger>
 
-      <DialogContent className="border-2 border-blue-500">
+      <DialogContent className="border-2 border-red-500">
         <DialogHeader>
           <DialogTitle>Delete File</DialogTitle>
           <DialogDescription>

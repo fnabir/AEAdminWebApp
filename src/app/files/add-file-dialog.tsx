@@ -120,6 +120,7 @@ export default function AddFileDialog({ year, filesData }: AddFileDialogProps) {
             <div className="flex items-baseline space-x-2">
               <InputText
                 label="New File No"
+                value={newFileNo ?? ''}
                 onChange={(e) => setNewFileNo(Number(e.target.value))}
                 className="grow"
               />

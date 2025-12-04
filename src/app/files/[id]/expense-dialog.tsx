@@ -21,7 +21,7 @@ import { MdAdd } from 'react-icons/md';
 interface ExpenseDialogProps {
   fileNo: number;
   fileYear: number;
-  type: 'duty' | 'port' | 'custom' | 'other' | 'delivery';
+  type: 'port' | 'custom' | 'other' | 'delivery';
   data: DataSnapshot[] | undefined;
   title: string;
 }
@@ -38,7 +38,7 @@ const ExpenseDialog = ({
     { id: 1, details: '', value: 0 },
   ]);
 
-  const maxLength = type === 'port' || 'duty' ? 10 : 3;
+  const maxLength = type === 'port' ? 10 : 3;
 
   const addDataSet = () => {
     if (dataSets.length < maxLength) {

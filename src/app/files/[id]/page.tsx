@@ -4,7 +4,7 @@ import Layout from '@/components/layout';
 import { useAuth } from '@/hooks/use-auth';
 import { usePathname, useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { cn, formatCurrency } from '@/lib/utils';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import CardIcon from '@/components/card/card-icon';
@@ -27,6 +27,9 @@ import { useFileTotalExpenses } from '@/hooks/use-file-total-expense';
 import { useFileData } from '@/hooks/use-file-data';
 import CardSection from '@/components/card/card-section';
 import { updateTransaction } from '@/lib/functions';
+import DutyDialog from './duty-dialog';
+
+const DUTY_ORDER = ['CD', 'RD', 'SD', 'VAT', 'AIT', 'AT', 'DF', 'ZZZ'] as const;
 
 export default function FileDetailsPage() {
   const { user, userLoading, isAdmin } = useAuth();
@@ -48,6 +51,7 @@ export default function FileDetailsPage() {
     fileName,
     breadcrumb,
     dutyData,
+    dutyObject,
     staffExpenseData,
     portExpenseData,
     customExpenseData,
@@ -57,6 +61,12 @@ export default function FileDetailsPage() {
     fileLoading,
     fileError,
   } = useFileData(fileYear, fileNo);
+
+  const sortedDutyData = dutyData?.sort((a, b) => {
+    const keyA = (a.key ?? 'ZZZ') as (typeof DUTY_ORDER)[number] | 'ZZZ';
+    const keyB = (b.key ?? 'ZZZ') as (typeof DUTY_ORDER)[number] | 'ZZZ';
+    return DUTY_ORDER.indexOf(keyA) - DUTY_ORDER.indexOf(keyB);
+  });
 
   const fileDutyValue = fileDetails?.dutyValue ?? 0;
   const fileDutyPaid: boolean = fileDetails?.dutyPaid ? true : false;
@@ -170,12 +180,11 @@ export default function FileDetailsPage() {
                 fileInfo={fileInfo}
                 fileDetails={fileDetails}
               />
-              <ExpenseDialog
+              <DutyDialog
                 fileNo={fileNo}
                 fileYear={fileYear}
-                type="duty"
-                data={dutyData}
-                title="Duty"
+                assesableValue={fileDetails?.assessableValue ?? 0}
+                data={dutyObject}
               />
             </div>
             {isAdmin && (
@@ -335,10 +344,20 @@ export default function FileDetailsPage() {
                         value={`R-${fileDetails.dutyRef}`}
                       />
                     )}
-                    {dutyData.map((item, index) => (
+                    {sortedDutyData?.map((item, index) => (
                       <div key={index}>
                         <FileInfoRow
-                          title={item.val().details}
+                          title={`${
+                            item.key
+                              ? item.key == 'DF'
+                                ? 'DF/VAT'
+                                : item.key
+                              : ''
+                          } ${
+                            item.val().percentage && item.val().percentage > 0
+                              ? `- ${item.val().percentage}%`
+                              : ''
+                          }`}
                           value={formatCurrency(item.val().value, 2)}
                         />
                       </div>
@@ -392,9 +411,9 @@ export default function FileDetailsPage() {
                     {fileDetails?.remarks && (
                       <div className="flex">
                         <div className="grow">Remarks</div>
-                        <pre className="font-sans text-sm py-1">
+                        <div className="flex-auto whitespace-pre-wrap wrap-break-word text-right">
                           {fileDetails.remarks}
-                        </pre>
+                        </div>
                       </div>
                     )}
                   </CardSection>

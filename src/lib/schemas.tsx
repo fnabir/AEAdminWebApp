@@ -2,21 +2,19 @@ import { z } from 'zod';
 
 export const LoginFormSchema = z.object({
   email: z.email({
-          error: 'Invalid email address'
-    }),
-  password: z
-    .string()
-    .min(6, {
-        error: 'Password must be at least 6 characters long'
-    }),
+    error: 'Invalid email address',
+  }),
+  password: z.string().min(6, {
+    error: 'Password must be at least 6 characters long',
+  }),
 });
 
 export type LoginFormData = z.infer<typeof LoginFormSchema>;
 
 export const ForgotPasswordSchema = z.object({
   email: z.email({
-          error: 'Invalid email address'
-    }),
+    error: 'Invalid email address',
+  }),
 });
 
 export type ForgotPasswordFormData = z.infer<typeof ForgotPasswordSchema>;
@@ -31,8 +29,8 @@ export const ChangePasswordSchema = z
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     path: ['confirmNewPassword'],
-      error: 'Passwords do not match'
-});
+    error: 'Passwords do not match',
+  });
 
 export type ChangePasswordFormData = z.infer<typeof ChangePasswordSchema>;
 
@@ -52,7 +50,7 @@ export const FileInfoFormSchema = z.object({
     .string()
     .nonempty('Importer Name is required')
     .refine((val) => val != 'Select', {
-        error: 'Choose Importer'
+      error: 'Choose Importer',
     }),
   itemPackage: z.string().nonempty('Package Details is required'),
   itemName: z.string().nonempty('Item Name is required'),
@@ -69,7 +67,7 @@ export const FileDetailsFormSchema = z.object({
     .string()
     .nonempty('Importer Name is required')
     .refine((val) => val != 'Select', {
-        error: 'Choose Importer'
+      error: 'Choose Importer',
     }),
   itemCount: z.string().nonempty('Item Count is required'),
   itemPackage: z.string().nonempty('Package Details is required'),
@@ -82,14 +80,14 @@ export const FileDetailsFormSchema = z.object({
     .number()
     .nonnegative('Amount must be positive')
     .refine((val) => !isNaN(val), {
-        error: 'Input cannot be empty or not a number'
+      error: 'Input cannot be empty or not a number',
     })
     .optional(),
   assessableValue: z
     .number()
     .nonnegative('Amount must be positive')
     .refine((val) => !isNaN(val), {
-        error: 'Input cannot be empty or not a number'
+      error: 'Input cannot be empty or not a number',
     })
     .optional(),
   be: z.number().optional(),
@@ -102,7 +100,7 @@ export const FileDetailsFormSchema = z.object({
     .number()
     .nonnegative('Amount must be positive')
     .refine((val) => !isNaN(val), {
-        error: 'Input cannot be empty or not a number'
+      error: 'Input cannot be empty or not a number',
     })
     .optional(),
   assessmentRef: z.number().optional(),
@@ -114,20 +112,53 @@ export const FileDetailsFormSchema = z.object({
 
 export type FileDetailsFormData = z.infer<typeof FileDetailsFormSchema>;
 
+const DutySchema = z
+  .object({
+    percentage: z.number().min(0, 'Percentage cannot be negative').optional(),
+    value: z.number().min(0, 'Value cannot be negative').optional(),
+  })
+  .refine(
+    (data) => {
+      if (!data.percentage || data.percentage === 0) return true;
+
+      return data.value !== undefined && data.value > 0;
+    },
+    {
+      message: 'Value must be set when percentage is greater than 0.',
+      path: ['value'],
+    },
+  );
+
+const DutyValueSchema = z.object({
+  value: z.number().min(0, 'Value cannot be negative').optional(),
+});
+
+export const FileDutyFormSchema = z.object({
+  CD: DutySchema,
+  RD: DutySchema,
+  SD: DutySchema,
+  VAT: DutySchema,
+  AIT: DutySchema,
+  AT: DutySchema,
+  DF: DutyValueSchema,
+});
+
+export type FileDutyFormData = z.infer<typeof FileDutyFormSchema>;
+
 export const FilePaymentFormSchema = z.object({
   dutyPaid: z.string().optional(),
   dutyValue: z
     .number()
     .nonnegative('Amount must be positive')
     .refine((val) => !isNaN(val), {
-        error: 'Input cannot be empty or not a number'
+      error: 'Input cannot be empty or not a number',
     })
     .optional(),
   paid: z
     .number()
     .nonnegative('Amount must be positive')
     .refine((val) => !isNaN(val), {
-        error: 'Input cannot be empty or not a number'
+      error: 'Input cannot be empty or not a number',
     })
     .optional(),
   remarks: z.string().optional(),
@@ -140,16 +171,19 @@ export const TransactionFormSchema = z.object({
     .string()
     .nonempty('Title is required')
     .refine((val) => val != 'Select', {
-        error: 'Choose Bill No'
+      error: 'Choose Bill No',
     }),
   details: z.string().optional(),
   value: z
     .number({
-        error: (issue) => issue.input === undefined ? 'Number is required' : 'Input must be a number'
+      error: (issue) =>
+        issue.input === undefined
+          ? 'Number is required'
+          : 'Input must be a number',
     })
     .nonnegative('Amount must be positive')
     .refine((val) => !isNaN(val), {
-        error: 'Input cannot be empty or not a number'
+      error: 'Input cannot be empty or not a number',
     }),
   date: z.string().nonempty('Date is required'),
 });

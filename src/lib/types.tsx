@@ -3,6 +3,25 @@ export type options = {
   label?: string;
 };
 
+export type DutyWithPercentage = {
+  percentage: number;
+  value: number;
+};
+
+export type DutyValueOnly = {
+  value: number;
+};
+
+export type FileDutyData = {
+  CD?: DutyWithPercentage;
+  RD?: DutyWithPercentage;
+  SD?: DutyWithPercentage;
+  VAT?: DutyWithPercentage;
+  AIT?: DutyWithPercentage;
+  AT?: DutyWithPercentage;
+  DF?: DutyValueOnly;
+};
+
 export type expenseDataType = {
   id: number;
   details: string;

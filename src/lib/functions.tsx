@@ -234,6 +234,26 @@ export async function updateFile(
     });
 }
 
+export async function setFileDuty(
+  fileNo: number,
+  fileYear: number,
+  data: object,
+) {
+  try {
+    await set(
+      getDatabaseReference(`files/expense/${fileYear}/${fileNo}/duty`),
+      data,
+    );
+    showToast('Successful', `Updated the file duty successfully.`, 'success');
+  } catch (error) {
+    showToast(
+      'Error',
+      `Failed to update the file duty expense: ${error}`,
+      'error',
+    );
+  }
+}
+
 export async function updateFileExpense(
   fileNo: number,
   fileYear: number,

@@ -8,6 +8,14 @@ type ChangelogItem = {
 };
 
 const changelog: Record<string, ChangelogItem> = {
+  '1.2.1': {
+    date: '2025-12-04',
+    details: [
+      '[UPDATE] Change file duty input dialog to update value automatically based on percentage.',
+      '[ADMIN][FIX] Delete file was available to non-admin users.',
+      '[FIX] Adding new file not accepting file no input after first time.',
+    ],
+  },
   '1.2.0': {
     date: '2025-11-30',
     details: [
@@ -28,13 +36,15 @@ export function getChangelog(version: string): ChangelogItem | null {
   return changelog[version] ?? null;
 }
 
-export default function ChangelogSection(isAdmin: { isAdmin: boolean }) {
+export default function ChangelogSection({ isAdmin }: { isAdmin: boolean }) {
   const versionLog = changelog[packageJson.version] ?? null;
 
-  function renderDetail(detail: string, index: number) {
-    const isAdminOnly = detail.startsWith('[ADMIN]');
-    if (isAdminOnly && !isAdmin) return null;
+  const filteredDetails =
+    versionLog?.details.filter((detail) => {
+      return detail.startsWith('[ADMIN]') ? isAdmin : true;
+    }) ?? [];
 
+  function renderDetail(detail: string, index: number) {
     const cleanDetail = detail.replace('[ADMIN]', '').trim();
 
     const tagMatch = cleanDetail.match(/^\[(.*?)\]/);
@@ -45,7 +55,7 @@ export default function ChangelogSection(isAdmin: { isAdmin: boolean }) {
       : cleanDetail;
 
     return (
-      <div key={index} className="py-1 flex items-start gap-2">
+      <div key={index} className="py-1 space-x-2">
         {tag && (
           <span
             className={`font-semibold ${
@@ -66,7 +76,6 @@ export default function ChangelogSection(isAdmin: { isAdmin: boolean }) {
       </div>
     );
   }
-
   return (
     <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm overflow-hidden">
       <CardContent className="-m-2 p-0 text-center">
@@ -82,10 +91,8 @@ export default function ChangelogSection(isAdmin: { isAdmin: boolean }) {
           </div>
         </div>
         <div className="p-4 text-sm text-start bg-white dark:bg-transparent">
-          {versionLog ? (
-            versionLog.details.map((detail, index) =>
-              renderDetail(detail, index),
-            )
+          {versionLog && filteredDetails.length > 0 ? (
+            filteredDetails.map((detail, index) => renderDetail(detail, index))
           ) : (
             <div className="py-1">No changelog available for this version.</div>
           )}

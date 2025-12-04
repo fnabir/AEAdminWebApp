@@ -46,6 +46,12 @@ Production branch is the branch which gest build on new push and deployed automa
 
 ## Changelog
 
+### 1.2.1 [2025-12-04]
+
+- [UPDATE] Change file duty input dialog to update value automatically based on percentage.
+- [FIX] Delete file was available to non-admin users.
+- [FIX] Adding new file not accepting file no input after first time.
+
 ### 1.2.0 [2025-11-30]
 
 - [FEATURE] Swap file no option.

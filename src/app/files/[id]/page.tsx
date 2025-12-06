@@ -294,7 +294,7 @@ export default function FileDetailsPage() {
                     fileDetails.cnfValue !== 0 && (
                       <FileInfoRow
                         title="C&F Value"
-                        value={formatCurrency(fileDetails.cnfValue, 2)}
+                        value={formatCurrency(fileDetails.cnfValue, 2, '$')}
                       />
                     )}
                   {fileDetails?.assessableValue != null &&
@@ -536,6 +536,7 @@ export default function FileDetailsPage() {
                                     {formatCurrency(
                                       fileDetails.assessableValue,
                                       2,
+                                      'TK.',
                                     )}
                                   </div>
                                 </div>

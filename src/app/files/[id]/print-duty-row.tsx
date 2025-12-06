@@ -46,15 +46,18 @@ const PrintDutyRow = ({
                     : `${item.key} - ${item.val().percentage}%`}
                 </div>
                 <div className="py-1">
-                  {formatCurrency(item.val().value, 2)}
+                  {formatCurrency(item.val().value, 2, 'TK.')}
                 </div>
               </div>
             ))}
           </div>
         </td>
-        <td className={'w-1/6 p-1 text-end'}>
+        <td className={'w-1/6 p-1'}>
           {paid && <div className="text-center text-sm">{paid}</div>}
-          <div className="text-[15px]">{formatCurrency(total, 2)}</div>
+          <div className="flex text-[15px]">
+            <div className="flex-1">TK.</div>
+            {formatCurrency(total, 2, '')}
+          </div>
         </td>
       </tr>
     )

@@ -46,6 +46,11 @@ Production branch is the branch which gest build on new push and deployed automa
 
 ## Changelog
 
+### 1.2.2 [2025-12-07]
+
+- [UPDATE] Add option to insert and delete expense row.
+- [UPDATE] Change currency symbol for print.
+
 ### 1.2.1 [2025-12-04]
 
 - [UPDATE] Change file duty input dialog to update value automatically based on percentage.

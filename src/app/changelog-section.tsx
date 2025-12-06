@@ -8,6 +8,13 @@ type ChangelogItem = {
 };
 
 const changelog: Record<string, ChangelogItem> = {
+  '1.2.2': {
+    date: '2025-12-07',
+    details: [
+      '[ADMIN][UPDATE] Add option to insert and delete expense row.',
+      '[ADMIN][UPDATE] Change currency symbol for print.',
+    ],
+  },
   '1.2.1': {
     date: '2025-12-04',
     details: [
@@ -86,7 +93,7 @@ export default function ChangelogSection({ isAdmin }: { isAdmin: boolean }) {
               {packageJson.version}
             </div>
             <div className="text-sm text-secondary-foreground">
-              {format(new Date(packageJson.releaseDate), 'dd MMMM yyyy')}
+              {format(new Date(versionLog.date), 'dd MMMM yyyy')}
             </div>
           </div>
         </div>

@@ -228,11 +228,11 @@ function FilesCard({
         ) : null}
       </div>
       {val.note && (
-        <div className="flex">
-          <pre className="flex-wrap">Note: </pre>
-          <pre className="flex-auto whitespace-pre-wrap wrap-break-word">
+        <div className="flex space-x-2">
+          <div className="flex-wrap">Note: </div>
+          <div className="flex-auto whitespace-pre-wrap wrap-break-word">
             {val.note}
-          </pre>
+          </div>
         </div>
       )}
     </Card>

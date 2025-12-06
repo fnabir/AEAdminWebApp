@@ -13,10 +13,9 @@ import {
 } from '@/components/ui/dialog';
 import { updateFileExpense } from '@/lib/functions';
 import { expenseDataType } from '@/lib/types';
-import { showToast } from '@/lib/utils';
 import { DataSnapshot } from 'firebase/database';
 import { useEffect, useState } from 'react';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdDelete } from 'react-icons/md';
 
 interface ExpenseDialogProps {
   fileNo: number;
@@ -40,15 +39,23 @@ const ExpenseDialog = ({
 
   const maxLength = type === 'port' ? 10 : 3;
 
-  const addDataSet = () => {
-    if (dataSets.length < maxLength) {
-      setDataSets((prev: expenseDataType[]) => [
-        ...prev,
-        { id: prev.length + 1, details: '', value: 0 },
-      ]);
-    } else {
-      showToast('Limit', 'Maximum number of expense reached!', 'error');
-    }
+  const insertRow = (id: number) => {
+    if (dataSets.length >= maxLength) return;
+
+    setDataSets((prev) => {
+      const index = prev.findIndex((item) => item.id === id);
+      const newItem = { id: Date.now(), details: '', value: 0 };
+
+      const updated = [...prev];
+      updated.splice(index + 1, 0, newItem);
+      return updated;
+    });
+  };
+
+  const deleteRow = (id: number) => {
+    if (dataSets.length === 1) return;
+
+    setDataSets((prev) => prev.filter((item) => item.id !== id));
   };
 
   const handleDataChange = (
@@ -81,6 +88,8 @@ const ExpenseDialog = ({
     }
   }, [data]);
 
+  console.log(dataSets);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -95,21 +104,11 @@ const ExpenseDialog = ({
         </DialogHeader>
         <Separator orientation={'horizontal'} />
         <form className="flex-col text-center" onSubmit={() => handleSubmit()}>
-          {dataSets.length < maxLength && (
-            <Button
-              type="button"
-              variant="default"
-              size="sm"
-              onClick={() => addDataSet()}
-            >
-              <MdAdd /> Add
-            </Button>
-          )}
           {dataSets.map((set, index) => (
             <div key={set.id} className="flex flex-row gap-x-2 items-baseline">
               <InputText
                 label={`Details ${index + 1}`}
-                className={`flex-[0.75]`}
+                className={`flex-[0.72]`}
                 defaultValue={dataSets[index].details}
                 onChange={(e) => {
                   handleDataChange(set.id, 'details', e.target.value);
@@ -119,13 +118,33 @@ const ExpenseDialog = ({
                 label={`Amount ${index + 1}`}
                 type="number"
                 pre={`৳`}
-                className={`flex-[0.25]`}
+                className={`flex-[0.28]`}
                 step={0.01}
                 defaultValue={dataSets[index].value}
                 onChange={(e) =>
                   handleDataChange(set.id, 'value', Number(e.target.value))
                 }
               />
+              {dataSets.length < maxLength && (
+                <Button
+                  type="button"
+                  variant="default"
+                  size="icon"
+                  onClick={() => insertRow(set.id)}
+                >
+                  <MdAdd />
+                </Button>
+              )}
+              {dataSets.length > 1 && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  onClick={() => deleteRow(set.id)}
+                >
+                  <MdDelete />
+                </Button>
+              )}
             </div>
           ))}
           <DialogFooter className={'sm:justify-center pt-8 gap-4'}>

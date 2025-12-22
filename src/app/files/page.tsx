@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import AddFileDialog from './add-file-dialog';
-import { useFilesYear } from '@/hooks/use-files-year';
+import { useYear } from '@/hooks/use-year';
 import { BreadcrumbInterface } from '@/lib/interfaces';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import ChangeFileNoDialog from './change-file-no-dialog';
@@ -45,7 +45,7 @@ const validYears = getYearsRange().map((y) => Number(y.value));
 export default function FilesPage() {
   const { user, userLoading, isAdmin } = useAuth();
   const router = useRouter();
-  const { year, changeYear } = useFilesYear(validYears);
+  const { year, changeYear } = useYear(validYears);
 
   const [statusFilters, setStatusFilters] = React.useState<string[]>([
     'new',

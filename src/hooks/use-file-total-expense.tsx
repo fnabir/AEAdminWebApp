@@ -1,10 +1,10 @@
-import { getTotalValue } from "@/lib/utils";
-import { DataSnapshot } from "firebase/database";
-import { useMemo } from "react";
+import { getTotalValue } from '@/lib/utils';
+import { DataSnapshot } from 'firebase/database';
+import { useMemo } from 'react';
 
 interface ExpenseHookProps {
-  fileDutyValue: number,
-  fileDutyPaid: boolean,
+  fileDutyValue: number;
+  fileDutyPaid: boolean;
   dutyData?: DataSnapshot[];
   staffExpenseData?: DataSnapshot[];
   portExpenseData?: DataSnapshot[];
@@ -29,19 +29,20 @@ export function useFileTotalExpenses({
   commissionValue = 0,
   paidValue = 0,
 }: ExpenseHookProps) {
-
   const totalDuty = useMemo(() => {
-    return fileDutyValue ?? getTotalValue(dutyData);
+    return fileDutyValue && fileDutyValue != 0
+      ? fileDutyValue
+      : getTotalValue(dutyData);
   }, [dutyData, fileDutyValue]);
 
   const totalStaffExpense = useMemo(() => {
     return getTotalValue(staffExpenseData);
   }, [staffExpenseData]);
-  
+
   const totalPortExpense = useMemo(() => {
     return getTotalValue(portExpenseData);
   }, [portExpenseData]);
-  
+
   const totalCustomExpense = useMemo(() => {
     return getTotalValue(customExpenseData);
   }, [customExpenseData]);
@@ -72,7 +73,7 @@ export function useFileTotalExpenses({
     totalOtherExpense,
     totalDeliveryExpense,
     miscellaneousValue,
-    commissionValue
+    commissionValue,
   ]);
 
   const balanceValue = useMemo(() => {

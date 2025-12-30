@@ -8,6 +8,14 @@ type ChangelogItem = {
 };
 
 const changelog: Record<string, ChangelogItem> = {
+  '1.3.0': {
+    date: '2025-12-30',
+    details: [
+      '[ADMIN][FEATURE] Add P/O Requisition Page.',
+      '[ADMIN][FIX] Fixed alignment issues in the expense and balance of file print layout.',
+      '[FIX] Resolved a logic error to ensure accurate duty totals when values are set to zero.',
+    ],
+  },
   '1.2.2': {
     date: '2025-12-07',
     details: [

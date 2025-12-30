@@ -79,12 +79,12 @@ const InputText = forwardRef<HTMLInputElement, Props>(
             }`}
           >
             {label}
-            {required && <span className="pl-1 text-red-500">*</span>}
+            {required && <span className="pl-1 text-destructive">*</span>}
             {readOnly && <span className="pl-1">(Read-only)</span>}
           </label>
         </div>
-        {error ? (
-          <div className="m-1 text-sm text-red-500">{error}</div>
+        {error && error.length > 0 ? (
+          <div className="m-1 text-sm text-destructive">{error}</div>
         ) : helperText ? (
           <div className="m-1 text-sm text-sky-500">{helperText}</div>
         ) : null}

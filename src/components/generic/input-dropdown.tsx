@@ -36,7 +36,7 @@ const InputDropDown: FC<Props> = ({
                 ? 'bg-gray-700 text-primary/50'
                 : 'text-primary bg-transparent'
             } 
-            ${error ? 'text-red-500 border-red-500' : 'border-gray-600'}
+            ${error ? 'text-destructive border-destructive' : 'border-gray-600'}
             pr-8`}
           disabled={disabled}
           {...rest}
@@ -62,7 +62,7 @@ const InputDropDown: FC<Props> = ({
 
         <label
           htmlFor={id}
-          className={`absolute text-md text-card-foreground duration-300 scale-[0.85] transform -translate-y-5 top-2 z-10 origin-[0] bg-background px-2
+          className={`absolute text-md text-card-foreground duration-300 scale-[0.85] transform -translate-y-5 top-2 z-10 origin-left bg-background px-2
           peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2
           peer-focus:top-2 peer-focus:scale-[.85] peer-focus:-translate-y-5 peer-focus:rtl:translate-x-1/4 peer-focus:rtl:left-auto start-1`}
         >
@@ -70,7 +70,7 @@ const InputDropDown: FC<Props> = ({
           <span
             className={
               required
-                ? 'absolute text-red-500 text-xl pl-[0.1rem] -translate-y-1'
+                ? 'absolute text-destructive text-xl pl-[0.1rem] -translate-y-1'
                 : 'hidden'
             }
           >
@@ -79,8 +79,8 @@ const InputDropDown: FC<Props> = ({
         </label>
       </div>
 
-      {error ? (
-        <div className="m-1 text-sm text-red-500">{error}</div>
+      {error && error.length > 0 ? (
+        <div className="m-1 text-sm text-destructive">{error}</div>
       ) : helperText ? (
         <div className="m-1 text-sm text-sky-500">{helperText}</div>
       ) : null}

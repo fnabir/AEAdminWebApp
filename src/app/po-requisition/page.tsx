@@ -10,7 +10,7 @@ import { getCurrentYear, getDatabaseReference } from '@/lib/utils';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import CardIcon from '@/components/card/card-icon';
-import { MdChangeCircle, MdError, MdFileOpen } from 'react-icons/md';
+import { MdError, MdFileOpen } from 'react-icons/md';
 import InputDropDown from '@/components/generic/input-dropdown';
 import { useYear } from '@/hooks/use-year';
 import { BreadcrumbInterface } from '@/lib/interfaces';

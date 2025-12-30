@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { getCurrentYear } from '@/lib/utils';
 
@@ -7,29 +7,50 @@ export function useYear(validYears: number[]) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const currentYear = getCurrentYear();
-  const [year, setYear] = useState(currentYear);
+  const currentYear = useMemo(() => getCurrentYear(), []);
+  const yearParam = searchParams.get('year');
+
+  const [year, setYear] = useState<number>(currentYear);
 
   useEffect(() => {
-    const selectedYear = searchParams.get('year');
-
-    if (selectedYear) {
-      const newYear = Number(selectedYear);
-
-      if (validYears.includes(newYear)) {
-        setYear(newYear);
-      } else {
-        setYear(currentYear);
-        router.replace(pathname);
-      }
-    } else {
-      setYear(currentYear);
+    if (!yearParam) {
+      if (year !== currentYear) setYear(currentYear);
+      return;
     }
-  }, [searchParams, validYears, router, currentYear, pathname]);
+
+    const parsed = Number(yearParam);
+
+    if (Number.isNaN(parsed) || !validYears.includes(parsed)) {
+      if (year !== currentYear) setYear(currentYear);
+
+      const params = new URLSearchParams(searchParams);
+      params.delete('year');
+      router.replace(`${pathname}?${params.toString()}`);
+
+      return;
+    }
+
+    if (parsed !== year) {
+      setYear(parsed);
+    }
+  }, [
+    yearParam,
+    validYears,
+    currentYear,
+    year,
+    router,
+    pathname,
+    searchParams,
+  ]);
 
   const changeYear = (newYear: number) => {
+    if (newYear === year || !validYears.includes(newYear)) return;
+
+    const params = new URLSearchParams(searchParams);
+    params.set('year', String(newYear));
+
     setYear(newYear);
-    router.replace(`${pathname}?year=${newYear}`);
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   return { year, changeYear };

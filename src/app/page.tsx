@@ -13,9 +13,9 @@ import {
 import Link from '@/components/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { useList, useObject } from 'react-firebase-hooks/database';
+import { useList, useListKeys, useObject } from 'react-firebase-hooks/database';
 import { IconType } from 'react-icons';
-import { DataSnapshot } from 'firebase/database';
+import { child, DataSnapshot, get } from 'firebase/database';
 import {
   FaBookOpen,
   FaBriefcase,
@@ -30,12 +30,19 @@ import { BreadcrumbInterface } from '@/lib/interfaces';
 import { FileInfoType } from '@/lib/types';
 import CardSection from '@/components/card/card-section';
 
+type KeyCount = {
+  key: string;
+  count: number;
+};
+
 const breadcrumb: BreadcrumbInterface[] = [{ label: 'Home' }];
 const currentYear = getCurrentYear();
 
 export default function Home() {
   const { user, userLoading, isAdmin, isStaff } = useAuth();
   const router = useRouter();
+
+  const [counts, setCounts] = useState<KeyCount[]>([]);
 
   const [fileLastYear, fileLastYearLoading] = useList(
     getDatabaseReference(`files/info/${currentYear - 1}`),
@@ -52,6 +59,35 @@ export default function Home() {
   const [staffBalanceData, staffBalanceLoading] = useObject(
     getDatabaseReference(`balance/staff/${user?.uid}`),
   );
+  const [requisitionData = [], requisitionLoading] = useListKeys(
+    getDatabaseReference('requisition'),
+  );
+
+  useEffect(() => {
+    if (requisitionLoading || !requisitionData) return;
+
+    async function loadCounts() {
+      const results = await Promise.all(
+        requisitionData.map(async (key) => {
+          const snapshot = await get(
+            child(getDatabaseReference('files/info'), key),
+          );
+
+          return {
+            key,
+            count: snapshot.exists() ? snapshot.size : 0,
+          };
+        }),
+      );
+
+      setCounts(results);
+    }
+
+    loadCounts();
+  }, [requisitionData, requisitionLoading]);
+
+  const highestCount =
+    counts.length > 0 ? Math.max(...counts.map((item) => item.count)) : 0;
 
   const getInitialShowBalance = () => {
     if (typeof window !== 'undefined') {
@@ -121,7 +157,7 @@ export default function Home() {
             <Card className="backdrop-blur-sm overflow-hidden">
               <div className="-z-1 absolute -top-5 -right-5 size-30 rounded-full opacity-40 blur-2xl bg-cyan-500" />
               <CardHeader className="flex items-center border-b-2 border-slate-700 pb-3">
-                <CardTitle className="text-2xl font-bold w-full flex items-center justify-center space-x-2">
+                <CardTitle className="text-xl lg:text-2xl font-semibold w-full flex items-center justify-center space-x-2">
                   <div>Balance</div>
                   <div className="grow">
                     <Button
@@ -219,10 +255,11 @@ export default function Home() {
 
             <CardSection title="Status Overview" contentClassName="space-y-2">
               {Object.entries(statusFiles).map(
-                ([status, files]) =>
+                ([status, files], index) =>
                   status !== 'done' && (
                     <FileStatusCount
                       key={status}
+                      index={index}
                       title={status.replace(/([A-Z])/g, ' $1').trim()}
                       count={files.length}
                       total={fileCount - (statusFiles['done']?.length || 0)}
@@ -231,6 +268,33 @@ export default function Home() {
                   ),
               )}
             </CardSection>
+
+            {isAdmin && (
+              <Link href={'/po-requisition'}>
+                <CardSection
+                  title="P/O Requisition"
+                  className="hover:border-sky-500"
+                  contentClassName="space-y-2"
+                >
+                  {requisitionData.length == 0 ? (
+                    <p>No data available</p>
+                  ) : (
+                    counts
+                      .sort((a, b) => Number(b.key) - Number(a.key))
+                      .map((item, index) => (
+                        <FileStatusCount
+                          key={item.key}
+                          index={index}
+                          title={item.key}
+                          count={item.count}
+                          total={highestCount}
+                          loading={requisitionLoading}
+                        />
+                      ))
+                  )}
+                </CardSection>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -306,25 +370,27 @@ function FileStatus({
 }
 
 function FileStatusCount({
+  index,
   title,
   count,
   total,
   loading,
 }: {
+  index: number;
   title: string;
   count: number;
   total: number;
   loading: boolean;
 }) {
   const getColor = () => {
-    switch (title) {
-      case 'new':
+    switch (index) {
+      case 0:
         return 'from-cyan-500 to-blue-500';
-      case 'assessment':
+      case 1:
         return 'from-green-500 to-emerald-500';
-      case 'dutyPayment':
+      case 2:
         return 'from-blue-500 to-indigo-500';
-      case 'delivery':
+      case 3:
         return 'from-purple-500 to-pink-500';
     }
   };

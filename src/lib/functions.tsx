@@ -1,15 +1,20 @@
 import { auth } from '@/firebase/config';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { DataSnapshot, remove, set, update } from 'firebase/database';
+import { DataSnapshot, get, remove, set, update } from 'firebase/database';
 import {
   generateDatabaseKey,
+  generateFileCode,
   getDatabaseReference,
   showToast,
 } from '@/lib/utils';
 import { expenseDataType } from '@/lib/types';
 import { format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
-import { TransactionFormData } from './schemas';
+import {
+  RequisitionChargeFormData,
+  RequisitionFormData,
+  TransactionFormData,
+} from './schemas';
 
 export async function login(email: string, password: string) {
   return signInWithEmailAndPassword(auth, email, password);
@@ -66,6 +71,101 @@ export async function addNewFile(
     });
 }
 
+export async function addNewRequisition(
+  year: number,
+  data: RequisitionFormData,
+) {
+  try {
+    const filesObj = Object.fromEntries(
+      data.files.map((fileNo) => [fileNo, { portCharge: 0 }]),
+    );
+
+    const { ref, ...restData } = data;
+
+    await set(getDatabaseReference(`requisition/${year}/${ref}`), {
+      ...restData,
+      files: filesObj,
+    });
+
+    showToast(
+      'Successful',
+      'Added the new requisition successfully.',
+      'success',
+    );
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : 'Unknown error occurred';
+    showToast('Error', `Failed to add the requisition: ${message}`, 'error');
+  }
+}
+
+export async function changeRequisitionRef(
+  year: number,
+  ref: string,
+  newRef: string,
+) {
+  const oldRef = getDatabaseReference(`requisition/${year}/${ref}`);
+  const newRefRef = getDatabaseReference(`requisition/${year}/${newRef}`);
+
+  try {
+    const snapshot = await get(oldRef);
+
+    if (!snapshot.exists()) {
+      showToast('Error', `Original reference ${ref} does not exist.`, 'error');
+      return;
+    }
+
+    const data = snapshot.val();
+
+    await set(newRefRef, data);
+    await remove(oldRef);
+
+    showToast(
+      'Success',
+      `Reference changed from ${ref} to ${newRef}.`,
+      'success',
+    );
+  } catch (error: any) {
+    showToast('Error', `Failed to change reference: ${error.message}`, 'error');
+  }
+}
+
+export async function updateRequisitionCharges(
+  year: number,
+  ref: number,
+  fileNo: number,
+  data: RequisitionChargeFormData,
+) {
+  try {
+    await update(
+      getDatabaseReference(`requisition/${year}/${ref}/files/${fileNo}`),
+      data,
+    );
+
+    showToast(
+      'Success',
+      `Updated the ${generateFileCode(
+        fileNo,
+        year,
+      )} requisition charges successfully.`,
+      'success',
+    );
+
+    return true;
+  } catch (error: any) {
+    showToast(
+      'Failed',
+      `Failed to update the ${generateFileCode(
+        fileNo,
+        year,
+      )} requisition charges: ${error.message}`,
+      'error',
+    );
+
+    return false;
+  }
+}
+
 export async function deleteFile(fileNo: number, fileYear: number) {
   const infoRef = getDatabaseReference(`files/info/${fileYear}/${fileNo}`);
   const expenseRef = getDatabaseReference(
@@ -85,6 +185,23 @@ export async function deleteFile(fileNo: number, fileYear: number) {
     showToast('Deleted', 'Deleted the file successfully.', 'success');
   } catch (error: any) {
     showToast('Failed', `Failed to delete the file: ${error.message}`, 'error');
+  }
+}
+
+export async function deleteRequisition(year: number, ref: string) {
+  try {
+    remove(getDatabaseReference(`requisition/${year}/${ref}`));
+    showToast(
+      'Deleted',
+      'Deleted the requisition letter successfully.',
+      'success',
+    );
+  } catch (error: any) {
+    showToast(
+      'Failed',
+      `Failed to delete the requisition letter: ${error.message}`,
+      'error',
+    );
   }
 }
 
@@ -129,27 +246,32 @@ export async function updateTransaction(
   transactionId: string,
   data: TransactionFormData,
 ) {
-  await update(
-    getDatabaseReference(
-      `transaction/${type}/${id}/${transactionType}/${transactionId}`,
-    ),
-    data,
-  )
-    .then(() => {
-      updateBalanceUpdateDate(type, id);
-      showToast(
-        'Success',
-        `Updated the ${transactionType} transaction successfully.`,
-        'success',
-      );
-    })
-    .catch((error) => {
-      showToast(
-        'Failed',
-        `Failed to update the ${transactionType} transaction: ${error.message}`,
-        'error',
-      );
-    });
+  try {
+    await update(
+      getDatabaseReference(
+        `transaction/${type}/${id}/${transactionType}/${transactionId}`,
+      ),
+      data,
+    );
+
+    await updateBalanceUpdateDate(type, id);
+
+    showToast(
+      'Success',
+      `Updated the ${transactionType} transaction successfully.`,
+      'success',
+    );
+
+    return true;
+  } catch (error: any) {
+    showToast(
+      'Failed',
+      `Failed to update the ${transactionType} transaction: ${error.message}`,
+      'error',
+    );
+
+    return false;
+  }
 }
 
 export async function deleteTransaction(

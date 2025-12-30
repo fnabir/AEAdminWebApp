@@ -62,6 +62,33 @@ export const FileInfoFormSchema = z.object({
 
 export type FileInfoFormData = z.infer<typeof FileInfoFormSchema>;
 
+export const RequisitionFormSchema = z.object({
+  ref: z.number('Reference is required'),
+  files: z
+    .array(z.string().nonempty('Required'))
+    .min(1, 'Select at least one file')
+    .max(4, 'Maximum 4 files'),
+  letterDate: z.string().nonempty(),
+  arrival: z.string().nonempty(),
+  delivery: z.string().nonempty(),
+});
+
+export type RequisitionFormData = z.infer<typeof RequisitionFormSchema>;
+
+export const RequisitionChargeFormSchema = z.object({
+  port: z.number().optional(),
+  noc: z.number().optional(),
+  examine: z.number().optional(),
+  section: z.number().optional(),
+  labour: z.number().optional(),
+  truck: z.number().optional(),
+  assessment: z.number().optional(),
+});
+
+export type RequisitionChargeFormData = z.infer<
+  typeof RequisitionChargeFormSchema
+>;
+
 export const FileDetailsFormSchema = z.object({
   importer: z
     .string()

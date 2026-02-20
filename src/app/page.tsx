@@ -70,7 +70,7 @@ export default function Home() {
       const results = await Promise.all(
         requisitionData.map(async (key) => {
           const snapshot = await get(
-            child(getDatabaseReference('files/info'), key),
+            child(getDatabaseReference('requisition'), key),
           );
 
           return {

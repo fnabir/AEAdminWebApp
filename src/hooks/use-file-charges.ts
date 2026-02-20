@@ -47,8 +47,15 @@ export function useFileCharges(
       ) {
         duty = Number(details[fileNo].dutyValue);
       } else {
-        const dutyData = expenses[fileNo]?.duty;
-        duty = dutyData ? getTotalValue(dutyData) : 0;
+        const dutyData = expenses[fileNo]?.duty as
+          | Record<string, { value: number }>
+          | undefined;
+        duty = dutyData
+          ? Object.values(dutyData).reduce(
+              (sum: number, item) => sum + Number(item?.value || 0),
+              0,
+            )
+          : 0;
       }
 
       const fileCharges = filesData[fileNo] ?? {};

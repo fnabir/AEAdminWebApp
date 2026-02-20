@@ -77,7 +77,7 @@ export async function addNewRequisition(
 ) {
   try {
     const filesObj = Object.fromEntries(
-      data.files.map((fileNo) => [fileNo, { portCharge: 0 }]),
+      data.files.map((fileNo) => [fileNo, { port: 0 }]),
     );
 
     const { ref, ...restData } = data;

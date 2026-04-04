@@ -74,16 +74,12 @@ export function formatCurrency(
   precision: number = 0,
   symbol: string = '৳',
 ): string {
-  let signed: boolean = true;
-  if (initialValue >= 0) signed = false;
-
-  const strValue = String(Math.abs(initialValue));
-  const split = strValue.split('.');
-  const formattedValue = split[0].replace(/(\d)(?=(\d{3})(\d{2})*$)/g, '$1,');
-  const cents =
-    split.length > 1
-      ? String(split[1]).padEnd(precision, '0')
-      : '0'.repeat(precision);
+  const signed = initialValue < 0;
+  const absValue = Math.abs(initialValue);
+  const strValue = absValue.toFixed(precision);
+  const [intPart, decimalPart] = strValue.split('.');
+  const formattedValue = intPart.replace(/(\d)(?=(\d{3})(\d{2})*$)/g, '$1,');
+  const cents = precision > 0 ? decimalPart : '';
 
   return `${signed ? '-' : ''} ${symbol} ${formattedValue.split('').join('')}${
     precision > 0 ? '.' + cents : ''

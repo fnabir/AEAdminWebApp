@@ -8,6 +8,14 @@ type ChangelogItem = {
 };
 
 const changelog: Record<string, ChangelogItem> = {
+  '1.4.0': {
+    date: '2026-04-05',
+    details: [
+      '[ADMIN][UPDATE] Update the header font in job file print layout.',
+      '[ADMIN][FIX] Change File No would not swap the file details and expense.',
+      '[ADMIN][FIX] Total duty would show more than 2 decimal points.',
+    ],
+  },
   '1.3.0': {
     date: '2025-12-30',
     details: [
@@ -77,10 +85,10 @@ export default function ChangelogSection({ isAdmin }: { isAdmin: boolean }) {
               tag === 'FEATURE'
                 ? 'text-green-500'
                 : tag === 'UPDATE'
-                ? 'text-sky-500'
-                : tag === 'FIX'
-                ? 'text-red-500'
-                : 'text-gray-500'
+                  ? 'text-sky-500'
+                  : tag === 'FIX'
+                    ? 'text-red-500'
+                    : 'text-gray-500'
             }`}
           >
             [{tag}]

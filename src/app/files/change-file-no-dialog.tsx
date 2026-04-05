@@ -16,7 +16,7 @@ import InputText from '@/components/generic/input-text';
 import { DataSnapshot } from 'firebase/database';
 import { ButtonLoading } from '@/components/generic/button-loading';
 import { showToast } from '@/lib/utils';
-import { addNewFile } from '@/lib/functions';
+import { addNewFile, swapFile } from '@/lib/functions';
 
 type AddFileDialogProps = {
   year: number;
@@ -60,14 +60,7 @@ export default function ChangeFileNoDialog({
     const fileObj1 = fileRef1.val();
     const fileObj2 = fileRef2.val();
 
-    try {
-      await addNewFile(fileNo1, year, fileObj2);
-      await addNewFile(fileNo2, year, fileObj1);
-      showToast('File numbers swapped successfully!', 'Success', 'success');
-    } catch (error) {
-      console.error(error);
-      showToast('Failed to swap file numbers.', 'Error', 'error');
-    }
+    swapFile([fileNo1, fileNo2], year, [fileObj1, fileObj2]);
 
     setIsSubmitting(false);
     setOpen(false);

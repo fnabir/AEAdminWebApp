@@ -71,6 +71,46 @@ export async function addNewFile(
     });
 }
 
+export async function swapFile(
+  [fileNo1, fileNo2]: number[],
+  fileYear: number,
+  [fileInfo1, fileInfo2]: object[],
+) {
+  try {
+    const fileDetails1 = (
+      await get(getDatabaseReference(`files/details/${fileYear}/${fileNo1}`))
+    ).val();
+    const fileDetails2 = (
+      await get(getDatabaseReference(`files/details/${fileYear}/${fileNo2}`))
+    ).val();
+
+    const fileExpense1 = (
+      await get(getDatabaseReference(`files/expense/${fileYear}/${fileNo1}`))
+    ).val();
+    const fileExpense2 = (
+      await get(getDatabaseReference(`files/expense/${fileYear}/${fileNo2}`))
+    ).val();
+
+    const updates: Record<string, any> = {};
+
+    updates[`files/info/${fileYear}/${fileNo1}`] = fileInfo2;
+    updates[`files/info/${fileYear}/${fileNo2}`] = fileInfo1;
+
+    updates[`files/details/${fileYear}/${fileNo1}`] = fileDetails2;
+    updates[`files/details/${fileYear}/${fileNo2}`] = fileDetails1;
+
+    updates[`files/expense/${fileYear}/${fileNo1}`] = fileExpense2;
+    updates[`files/expense/${fileYear}/${fileNo2}`] = fileExpense1;
+
+    await update(getDatabaseReference(), updates);
+
+    showToast('Successful', 'Swapped the files successfully.', 'success');
+  } catch (error: any) {
+    console.error(error);
+    showToast('Error', `Failed to swap files: ${error.message}`, 'error');
+  }
+}
+
 export async function addNewRequisition(
   year: number,
   data: RequisitionFormData,
@@ -382,11 +422,14 @@ export async function updateFileExpense(
   type: string,
   dataSet: expenseDataType[],
 ) {
-  const data = dataSet.reduce((acc, item) => {
-    if (item.details != '' && item.value != 0)
-      acc[item.id] = { details: item.details, value: item.value };
-    return acc;
-  }, {} as Record<number, { details: string; value: number }>);
+  const data = dataSet.reduce(
+    (acc, item) => {
+      if (item.details != '' && item.value != 0)
+        acc[item.id] = { details: item.details, value: item.value };
+      return acc;
+    },
+    {} as Record<number, { details: string; value: number }>,
+  );
   try {
     await set(
       getDatabaseReference(`files/expense/${fileYear}/${fileNo}/${type}`),

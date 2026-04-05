@@ -43,8 +43,11 @@ export function generateDatabaseKey(databaseReference: string): string {
 }
 
 export function getDatabaseReference(
-  databaseReference: string,
+  databaseReference?: string,
 ): DatabaseReference {
+  if (!databaseReference || databaseReference.trim() === '') {
+    return ref(database);
+  }
   return child(ref(database), databaseReference);
 }
 

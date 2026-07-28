@@ -467,8 +467,8 @@ export default function FileDetailsPage() {
                               <div>{`LC No. ${fileInfo.lc}`}</div>
                             ) : null}
                           </div>
-                          <div className="w-2/5 py-2 px-1 rounded-md border-2 border-accent-foreground text-center leading-5">
-                            <div className="font-bold text-xl leading-8 uppercase">
+                          <div className="w-2/5 py-2 px-1 rounded-md border-2 border-accent-foreground text-center text-sm leading-5">
+                            <div className="font-semibold text-3xl leading-8 uppercase">
                               {fileInfo.importer}
                             </div>
                             <div>{importerInfo?.address1}</div>

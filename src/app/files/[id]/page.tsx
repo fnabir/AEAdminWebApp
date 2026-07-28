@@ -1,35 +1,35 @@
-'use client';
+"use client";
 
-import Layout from '@/components/layout';
-import { useAuth } from '@/hooks/use-auth';
-import { usePathname, useRouter } from 'next/navigation';
-import Loading from '@/components/loading';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { cn, formatCurrency } from '@/lib/utils';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
-import CardIcon from '@/components/card/card-icon';
-import { MdError } from 'react-icons/md';
-import { Button } from '@/components/ui/button';
-import { FaAlignLeft, FaPrint } from 'react-icons/fa6';
-import { useReactToPrint } from 'react-to-print';
-import ExpenseDialog from './expense-dialog';
-import DetailsDialog from './details-dialog';
-import PrintHeaderRow from './print-header-row';
-import PrintExpenseRow from './print-expense-row';
-import PrintSingleExpenseRow from './print-single-expense-row';
-import PrintTotalRow from './print-total-row';
-import { format, parse } from 'date-fns';
-import PrintDutyRow from './print-duty-row';
-import PaidDialog from './paid-remarks-dialog';
-import { ExpenseSection } from './expense-section';
-import { FileInfoRow } from './file-info-row';
-import { useFileTotalExpenses } from '@/hooks/use-file-total-expense';
-import { useFileData } from '@/hooks/use-file-data';
-import CardSection from '@/components/card/card-section';
-import { updateTransaction } from '@/lib/functions';
-import DutyDialog from './duty-dialog';
+import Layout from "@/components/layout";
+import { useAuth } from "@/hooks/use-auth";
+import { usePathname, useRouter } from "next/navigation";
+import Loading from "@/components/loading";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { cn, formatCurrency } from "@/lib/utils";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import CardIcon from "@/components/card/card-icon";
+import { MdError } from "react-icons/md";
+import { Button } from "@/components/ui/button";
+import { FaAlignLeft, FaPrint } from "react-icons/fa6";
+import { useReactToPrint } from "react-to-print";
+import ExpenseDialog from "./expense-dialog";
+import DetailsDialog from "./details-dialog";
+import PrintHeaderRow from "./print-header-row";
+import PrintExpenseRow from "./print-expense-row";
+import PrintSingleExpenseRow from "./print-single-expense-row";
+import PrintTotalRow from "./print-total-row";
+import { format, parse } from "date-fns";
+import PrintDutyRow from "./print-duty-row";
+import PaidDialog from "./paid-remarks-dialog";
+import { ExpenseSection } from "./expense-section";
+import { FileInfoRow } from "./file-info-row";
+import { useFileTotalExpenses } from "@/hooks/use-file-total-expense";
+import { useFileData } from "@/hooks/use-file-data";
+import CardSection from "@/components/card/card-section";
+import { updateTransaction } from "@/lib/functions";
+import DutyDialog from "./duty-dialog";
 
-const DUTY_ORDER = ['CD', 'RD', 'SD', 'VAT', 'AIT', 'AT', 'DF', 'ZZZ'] as const;
+const DUTY_ORDER = ["CD", "RD", "SD", "VAT", "AIT", "AT", "DF", "ZZZ"] as const;
 
 export default function FileDetailsPage() {
   const { user, userLoading, isAdmin } = useAuth();
@@ -37,8 +37,8 @@ export default function FileDetailsPage() {
 
   const path = usePathname();
   const file = decodeURIComponent(
-    path.substring(path.lastIndexOf('/') + 1),
-  ).split('-');
+    path.substring(path.lastIndexOf("/") + 1),
+  ).split("-");
   const fileNo = Number(file[1]);
   const fileYear = Number(file[0]);
 
@@ -63,8 +63,8 @@ export default function FileDetailsPage() {
   } = useFileData(fileYear, fileNo);
 
   const sortedDutyData = dutyData?.sort((a, b) => {
-    const keyA = (a.key ?? 'ZZZ') as (typeof DUTY_ORDER)[number] | 'ZZZ';
-    const keyB = (b.key ?? 'ZZZ') as (typeof DUTY_ORDER)[number] | 'ZZZ';
+    const keyA = (a.key ?? "ZZZ") as (typeof DUTY_ORDER)[number] | "ZZZ";
+    const keyB = (b.key ?? "ZZZ") as (typeof DUTY_ORDER)[number] | "ZZZ";
     return DUTY_ORDER.indexOf(keyA) - DUTY_ORDER.indexOf(keyB);
   });
 
@@ -141,9 +141,9 @@ export default function FileDetailsPage() {
   const handleUpdateTransaction = () => {
     if (updatedBillTransaction) {
       updateTransaction(
-        'importer',
+        "importer",
         fileInfo.importer,
-        'bill',
+        "bill",
         `${fileYear}-${fileNo}`,
         updatedBillTransaction,
       );
@@ -160,7 +160,7 @@ export default function FileDetailsPage() {
 
   useEffect(() => {
     if (!userLoading && !user) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [user, userLoading, router]);
 
@@ -170,7 +170,7 @@ export default function FileDetailsPage() {
 
   return (
     <Layout breadcrumb={breadcrumb}>
-      <div className={'flex flex-col h-full'}>
+      <div className={"flex flex-col h-full"}>
         {fileInfo && (
           <div className="wrap flex flex-wrap  items-center pb-2 gap-1 divide-x-2 divide-slate-400">
             <div className="flex space-x-1 pr-1">
@@ -242,20 +242,20 @@ export default function FileDetailsPage() {
                 {fileDetails?.deliveryDate && !isTransactionUpdated && (
                   <Button onClick={handleUpdateTransaction}>
                     {!importerTransactionInfo
-                      ? 'Add Balance to Transaction'
-                      : 'Update Balance in Transaction'}
+                      ? "Add Balance to Transaction"
+                      : "Update Balance in Transaction"}
                   </Button>
                 )}
               </div>
             )}
           </div>
         )}
-        <ScrollArea className={'grow -mr-4 pr-4 mb-2'}>
+        <ScrollArea className={"grow -mr-4 pr-4 mb-2"}>
           {fileError ? (
             <CardIcon
-              title={'Error'}
+              title={"Error"}
               description={
-                fileError.message ?? 'Error occurred. Please try again'
+                fileError.message ?? "Error occurred. Please try again"
               }
             >
               <MdError size={28} />
@@ -268,7 +268,7 @@ export default function FileDetailsPage() {
             <div>
               <div
                 className={`${
-                  showPrintLayout ? 'hidden' : ''
+                  showPrintLayout ? "hidden" : ""
                 } grid grid-cols-1 lg:grid-cols-8 xl:grid-cols-12 gap-2`}
               >
                 <CardSection
@@ -294,7 +294,7 @@ export default function FileDetailsPage() {
                     fileDetails.cnfValue !== 0 && (
                       <FileInfoRow
                         title="C&F Value"
-                        value={formatCurrency(fileDetails.cnfValue, 2, '$')}
+                        value={formatCurrency(fileDetails.cnfValue, 2, "$")}
                       />
                     )}
                   {fileDetails?.assessableValue != null &&
@@ -349,14 +349,14 @@ export default function FileDetailsPage() {
                         <FileInfoRow
                           title={`${
                             item.key
-                              ? item.key == 'DF'
-                                ? 'DF/VAT'
+                              ? item.key == "DF"
+                                ? "DF/VAT"
                                 : item.key
-                              : ''
+                              : ""
                           } ${
                             item.val().percentage && item.val().percentage > 0
                               ? `- ${item.val().percentage}%`
-                              : ''
+                              : ""
                           }`}
                           value={formatCurrency(item.val().value, 2)}
                         />
@@ -397,15 +397,15 @@ export default function FileDetailsPage() {
                       />
                     )}
                     <FileInfoRow
-                      title={'Total'}
+                      title={"Total"}
                       value={formatCurrency(totalValue, 2)}
                     />
                     <FileInfoRow
-                      title={'Paid'}
+                      title={"Paid"}
                       value={formatCurrency(paidValue, 2)}
                     />
                     <FileInfoRow
-                      title={'Balance'}
+                      title={"Balance"}
                       value={formatCurrency(totalValue - paidValue, 2)}
                     />
                     {fileDetails?.remarks && (
@@ -448,7 +448,7 @@ export default function FileDetailsPage() {
                 )}
               </div>
               <div
-                className={cn('flex flex-col gap-2 print:block', {
+                className={cn("flex flex-col gap-2 print:block", {
                   hidden: !showPrintLayout,
                 })}
                 ref={contentRef}
@@ -458,8 +458,8 @@ export default function FileDetailsPage() {
                     <PrintHeaderRow />
 
                     <tr className="border-4 border-double border-accent-foreground leading-5.5 text-[15px]">
-                      <td className={'p-2 space-y-2'} colSpan={3}>
-                        <div className={'flex space-x-2'}>
+                      <td className={"p-2 space-y-2"} colSpan={3}>
+                        <div className={"flex space-x-2"}>
                           <div className="w-3/10 p-1 rounded-md border-2 border-accent-foreground flex flex-col items-center justify-center text-center">
                             <div>{fileInfo.itemPackage}</div>
                             <div>{fileInfo.itemName}</div>
@@ -473,6 +473,9 @@ export default function FileDetailsPage() {
                             </div>
                             <div>{importerInfo?.address1}</div>
                             <div>{importerInfo?.address2}</div>
+                            {importerInfo?.address3 && (
+                              <div>{importerInfo?.address3}</div>
+                            )}
                           </div>
                           <div className="w-3/10 p-2 rounded-md border-2 border-accent-foreground flex flex-col items-center justify-center">
                             <div className="flex flex-row  w-full space-x-2">
@@ -486,10 +489,10 @@ export default function FileDetailsPage() {
                                   {format(
                                     parse(
                                       fileDetails.deliveryDate,
-                                      'dd/MM/yy',
+                                      "dd/MM/yy",
                                       new Date(),
                                     ),
-                                    'dd/MM/yyyy',
+                                    "dd/MM/yyyy",
                                   )}
                                 </div>
                               </div>
@@ -524,7 +527,7 @@ export default function FileDetailsPage() {
                                     {formatCurrency(
                                       fileDetails.cnfValue,
                                       2,
-                                      '$',
+                                      "$",
                                     )}
                                   </div>
                                 </div>
@@ -536,7 +539,7 @@ export default function FileDetailsPage() {
                                     {formatCurrency(
                                       fileDetails.assessableValue,
                                       2,
-                                      'TK.',
+                                      "TK.",
                                     )}
                                   </div>
                                 </div>
@@ -616,13 +619,13 @@ export default function FileDetailsPage() {
 
                     <PrintSingleExpenseRow
                       title={
-                        'Automation, Photo Copy, Conveyance, Courier, Document, Bank'
+                        "Automation, Photo Copy, Conveyance, Courier, Document, Bank"
                       }
                       value={miscellaneousValue}
                     />
                     <PrintSingleExpenseRow
                       title={`Agency Commission ${
-                        minCommission ? '(Minimum)' : ''
+                        minCommission ? "(Minimum)" : ""
                       }`}
                       value={commissionValue}
                     />

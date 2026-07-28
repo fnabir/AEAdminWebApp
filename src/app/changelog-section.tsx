@@ -1,6 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card';
-import packageJson from '../../package.json';
-import { format } from 'date-fns';
+import { Card, CardContent } from "@/components/ui/card";
+import packageJson from "../../package.json";
+import { format } from "date-fns";
 
 type ChangelogItem = {
   date: string;
@@ -8,50 +8,54 @@ type ChangelogItem = {
 };
 
 const changelog: Record<string, ChangelogItem> = {
-  '1.4.0': {
-    date: '2026-04-05',
+  "1.4.1": {
+    date: "2026-07-28",
+    details: ["[ADMIN][UPDATE] Add an extra line for address in files."],
+  },
+  "1.4.0": {
+    date: "2026-04-05",
     details: [
-      '[ADMIN][UPDATE] Update the header font in job file print layout.',
-      '[ADMIN][FIX] Change File No would not swap the file details and expense.',
-      '[ADMIN][FIX] Total duty would show more than 2 decimal points.',
+      "[ADMIN][UPDATE] Update the header font in job file print layout.",
+      "[ADMIN][FIX] Change File No would not swap the file details and expense.",
+      "[ADMIN][FIX] Total duty would show more than 2 decimal points.",
     ],
   },
-  '1.3.0': {
-    date: '2025-12-30',
+  "1.3.0": {
+    date: "2025-12-30",
     details: [
-      '[ADMIN][FEATURE] Add P/O Requisition Page.',
-      '[ADMIN][FIX] Fixed alignment issues in the expense and balance of file print layout.',
-      '[FIX] Resolved a logic error to ensure accurate duty totals when values are set to zero.',
+      "[ADMIN][FEATURE] Add P/O Requisition Page.",
+      "[ADMIN][FIX] Fixed alignment issues in the expense and balance of file print layout.",
+      "[FIX] Resolved a logic error to ensure accurate duty totals when values are set to zero.",
     ],
   },
-  '1.2.2': {
-    date: '2025-12-07',
+  "1.2.2": {
+    date: "2025-12-07",
     details: [
-      '[ADMIN][UPDATE] Add option to insert and delete expense row.',
-      '[ADMIN][UPDATE] Change currency symbol for print.',
+      "[ADMIN][UPDATE] Add option to insert and delete expense row.",
+      "[ADMIN][UPDATE] Change currency symbol for print.",
     ],
   },
-  '1.2.1': {
-    date: '2025-12-04',
+  "1.2.1": {
+    date: "2025-12-04",
     details: [
-      '[UPDATE] Change file duty input dialog to update value automatically based on percentage.',
-      '[ADMIN][FIX] Delete file was available to non-admin users.',
-      '[FIX] Adding new file not accepting file no input after first time.',
+      "[UPDATE] Change file duty input dialog to update value automatically based on percentage.",
+      "[ADMIN][FIX] Delete file was available to non-admin users.",
+      "[FIX] Adding new file not accepting file no input after first time.",
     ],
   },
-  '1.2.0': {
-    date: '2025-11-30',
+  "1.2.0": {
+    date: "2025-11-30",
     details: [
-      '[FEATURE] Swap file no option.',
-      '[ADMIN][FEATURE] Delete file option.',
-      '[UPDATE] File can be added back up to 2021.',
-      '[UPDATE] Duty and Port input field will take up to 10 entries.',
-      '[FIX] New file without status not showed until all the filters are disabled.',
+      "[FEATURE] Swap file no option.",
+      "[ADMIN][FEATURE] Delete file option.",
+      "[UPDATE] File can be added back up to 2021.",
+      "[UPDATE] Duty and Port input field will take up to 10 entries.",
+      "[FIX] New file without status not showed until all the filters are disabled.",
     ],
   },
-  '1.1.0': {
-    date: '2025-10-29',
-    details: ['[FEATURE] Note option for files.'],
+  "1.1.0": {
+    date: "2025-10-29",
+    details: ["[FEATURE] Note option for files."],
   },
 };
 
@@ -64,17 +68,17 @@ export default function ChangelogSection({ isAdmin }: { isAdmin: boolean }) {
 
   const filteredDetails =
     versionLog?.details.filter((detail) => {
-      return detail.startsWith('[ADMIN]') ? isAdmin : true;
+      return detail.startsWith("[ADMIN]") ? isAdmin : true;
     }) ?? [];
 
   function renderDetail(detail: string, index: number) {
-    const cleanDetail = detail.replace('[ADMIN]', '').trim();
+    const cleanDetail = detail.replace("[ADMIN]", "").trim();
 
     const tagMatch = cleanDetail.match(/^\[(.*?)\]/);
     const tag = tagMatch ? tagMatch[1] : null;
 
     const message = tagMatch
-      ? cleanDetail.replace(tagMatch[0], '').trim()
+      ? cleanDetail.replace(tagMatch[0], "").trim()
       : cleanDetail;
 
     return (
@@ -82,13 +86,13 @@ export default function ChangelogSection({ isAdmin }: { isAdmin: boolean }) {
         {tag && (
           <span
             className={`font-semibold ${
-              tag === 'FEATURE'
-                ? 'text-green-500'
-                : tag === 'UPDATE'
-                  ? 'text-sky-500'
-                  : tag === 'FIX'
-                    ? 'text-red-500'
-                    : 'text-gray-500'
+              tag === "FEATURE"
+                ? "text-green-500"
+                : tag === "UPDATE"
+                  ? "text-sky-500"
+                  : tag === "FIX"
+                    ? "text-red-500"
+                    : "text-gray-500"
             }`}
           >
             [{tag}]
@@ -109,7 +113,7 @@ export default function ChangelogSection({ isAdmin }: { isAdmin: boolean }) {
               {packageJson.version}
             </div>
             <div className="text-sm text-secondary-foreground">
-              {format(new Date(versionLog.date), 'dd MMMM yyyy')}
+              {format(new Date(versionLog.date), "dd MMMM yyyy")}
             </div>
           </div>
         </div>
